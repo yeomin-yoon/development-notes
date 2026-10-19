@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="ko" dir="ltr"><head><title>그래프 표현 방법과 컨테이너 선택 | 윤여민</title><meta charset="utf-8"/><link rel="preload" href="../index-ae276ac8.css" as="style"/><link rel="preload" href="../prescript-2bfc6315.js" as="script"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto Sans KR:wght@400;700&amp;family=Noto Sans KR:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="개발 공부 기록"/><meta property="og:title" content="그래프 표현 방법과 컨테이너 선택 | 윤여민"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="그래프 표현 방법과 컨테이너 선택 | 윤여민"/><meta name="twitter:description" content="Summary 그래프의 핵심은 정점(Vertex)과 간선(Edge)으로 관계를 표현한다는 것이다. C++에서 일반적인 그래프는 정점에 0 ~ N-1 번호를 붙이고, 인접 리스트를 vector&lt;vector&lt;int>>로 저장하는 방식부터 고려한다."/><meta property="og:description" content="Summary 그래프의 핵심은 정점(Vertex)과 간선(Edge)으로 관계를 표현한다는 것이다. C++에서 일반적인 그래프는 정점에 0 ~ N-1 번호를 붙이고, 인접 리스트를 vector&lt;vector&lt;int>>로 저장하는 방식부터 고려한다."/><meta property="og:image:alt" content="Summary 그래프의 핵심은 정점(Vertex)과 간선(Edge)으로 관계를 표현한다는 것이다. C++에서 일반적인 그래프는 정점에 0 ~ N-1 번호를 붙이고, 인접 리스트를 vector&lt;vector&lt;int>>로 저장하는 방식부터 고려한다."/><meta property="og:image" content="https://yeomin-yoon.github.io/development-notes/static/og-image.png"/><meta property="og:image:url" content="https://yeomin-yoon.github.io/development-notes/static/og-image.png"/><meta name="twitter:image" content="https://yeomin-yoon.github.io/development-notes/static/og-image.png"/><meta property="og:image:type" content="image/.png"/><meta property="twitter:domain" content="yeomin-yoon.github.io/development-notes"/><meta property="og:url" content="https://yeomin-yoon.github.io/development-notes/computer-science/그래프-표현-방법과-컨테이너-선택"/><meta property="twitter:url" content="https://yeomin-yoon.github.io/development-notes/computer-science/그래프-표현-방법과-컨테이너-선택"/><link rel="icon" href="../static/icon.png"/><meta name="description" content="Summary 그래프의 핵심은 정점(Vertex)과 간선(Edge)으로 관계를 표현한다는 것이다. C++에서 일반적인 그래프는 정점에 0 ~ N-1 번호를 붙이고, 인접 리스트를 vector&lt;vector&lt;int>>로 저장하는 방식부터 고려한다."/><meta name="generator" content="Quartz"/><link href="../index-ae276ac8.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../component-735924e0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../component-589c1cea.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../component-bbc3f7c0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../component-2911f5d1.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../component-53b25b2b.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../component-8a06014f.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../component-77d6a441.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../component-6ee21cee.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../component-1ea6ad18.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../component-788c9ca3.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../component-4abc06bd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../component-274a3dfe.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../component-94cb6c84.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../static/resource-style-a5c806d2.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../static/resource-style-6bd36952.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" data-persist="true"/><script src="../prescript-2bfc6315.js" type="application/javascript" data-persist="true"></script><script type="application/javascript" data-persist="true">const fetchData = fetch("../static/contentIndex.json").then(data => data.json())</script></head><body data-slug="computer-science/그래프-표현-방법과-컨테이너-선택" data-basepath="/development-notes"><div id="quartz-root" class="page" data-frame="default"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="..">개발 공부 기록</a></h2><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 0.5rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button" aria-label="검색" aria-expanded="false"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>검색</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="검색어를 입력하세요" placeholder="검색어를 입력하세요"/><div class="search-layout" data-preview="true" data-field-priority="[&quot;title&quot;,&quot;content&quot;,&quot;tags&quot;]"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode" aria-label="다크 모드"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="다크 모드"><title>다크 모드</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="라이트 모드"><title>라이트 모드</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode" aria-label="리더 모드"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="리더 모드"><title>리더 모드</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer nav-files-container" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a2, b2) => {\n    if (!a2.isFolder &amp;&amp; !b2.isFolder || a2.isFolder &amp;&amp; b2.isFolder) {\n      return (a2.displayName || \&quot;\&quot;).localeCompare(b2.displayName || \&quot;\&quot;, void 0, {\n        numeric: true,\n        sensitivity: \&quot;base\&quot;\n      });\n    }\n    if (!a2.isFolder &amp;&amp; b2.isFolder) {\n      return 1;\n    }\n    return -1;\n  }&quot;,&quot;filterFn&quot;:&quot;(node) => node.slugSegment !== \&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;(node) => {\n    return node;\n  }&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-15" aria-label="탐색기"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>목차</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-15" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#" class="nav-file-title tree-item-self"></a></li></template><template id="template-folder"><li><div class="folder-container nav-folder-title tree-item-self"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon nav-folder-collapse-indicator collapse-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content tree-item-children"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../computer-science/">Computer Science</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>그래프 표현 방법과 컨테이너 선택</a></div></nav><h1 class="article-title">그래프 표현 방법과 컨테이너 선택</h1><p show-comma="false" class="content-meta"><time datetime="2026-07-10T12:57:05.000Z">2026년 7월 10일</time></p></div></div><article class="popover-hint"><div class="markdown-preview-view markdown-rendered"><blockquote class="callout abstract" data-callout="abstract">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Summary</p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>그래프의 핵심은 <strong>정점(Vertex)과 간선(Edge)으로 관계를 표현한다</strong>는 것이다.<br/>
+C++에서 일반적인 그래프는 정점에 <code>0 ~ N-1</code> 번호를 붙이고, <strong>인접 리스트를 <code>vector&lt;vector&lt;int>></code>로 저장하는 방식부터 고려한다.</strong></p>
+</div>
+</blockquote>
+<h2 id="그래프가-무엇인가">그래프가 무엇인가<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#그래프가-무엇인가" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>그래프(Graph)는 여러 대상과 대상 사이의 연결 관계를 나타내는 자료구조다.</p>
+<ul>
+<li><strong>정점(Vertex, Node)</strong>: 연결의 대상</li>
+<li><strong>간선(Edge)</strong>: 두 정점 사이의 연결</li>
+</ul>
+<p>게임 맵에서는 장소가 정점이고, 장소 사이의 이동 경로가 간선이다.</p>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;flowchart LR\n    Town[\&quot;마을&lt;br/>정점\&quot;] ---|간선| Forest[\&quot;숲&lt;br/>정점\&quot;]\n    Forest ---|간선| Castle[\&quot;성&lt;br/>정점\&quot;]&quot;">flowchart LR
+    Town[&quot;마을&lt;br/>정점&quot;] ---|간선| Forest[&quot;숲&lt;br/>정점&quot;]
+    Forest ---|간선| Castle[&quot;성&lt;br/>정점&quot;]
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>종류</th><th>의미</th><th>예시</th></tr></thead><tbody><tr><td><strong>방향 그래프</strong></td><td>간선에 방향이 있음</td><td>퀘스트 A를 완료해야 B 진행</td></tr><tr><td><strong>무방향 그래프</strong></td><td>양쪽으로 연결됨</td><td>두 장소 사이의 양방향 길</td></tr><tr><td><strong>가중 그래프</strong></td><td>간선에 거리·비용이 있음</td><td>마을에서 숲까지 5km</td></tr></tbody></table></div>
+<hr/>
+<h2 id="왜-표현-방법이-필요한가">왜 표현 방법이 필요한가<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#왜-표현-방법이-필요한가" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>그림으로 그린 그래프를 코드에서 사용하려면 정점과 간선을 메모리에 저장해야 한다. 저장 방식에 따라 메모리 사용량과 탐색 방법이 달라진다.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>표현 방법</th><th>핵심</th><th>주로 사용할 때</th></tr></thead><tbody><tr><td><strong>인접 리스트</strong></td><td>정점마다 이웃 목록 저장</td><td>일반적인 탐색과 길찾기</td></tr><tr><td><strong>인접 행렬</strong></td><td>모든 정점 쌍의 연결 여부 저장</td><td>연결 여부를 자주 확인</td></tr><tr><td><strong>간선 리스트</strong></td><td>연결된 정점 쌍만 저장</td><td>모든 간선을 차례로 처리</td></tr></tbody></table></div>
+<hr/>
+<h2 id="1-인접-리스트">1. 인접 리스트<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#1-인접-리스트" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<blockquote>
+<p><strong>핵심: 각 정점마다 직접 연결된 이웃만 저장한다. 일반적인 그래프의 기본 선택이다.</strong></p>
+</blockquote>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="text" data-theme="github-light github-dark"><code data-language="text" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>그래프                  인접 리스트</span></span>
+<span data-line><span>0 --- 1                0: [1, 2]</span></span>
+<span data-line><span>|                      1: [0]</span></span>
+<span data-line><span>2                      2: [0]</span></span></code></pre></figure>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="cpp" data-theme="github-light github-dark"><code data-language="cpp" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">std</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">::</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="property">vector</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">&lt;</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">std</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">::</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="property">vector</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">&lt;</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">int</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">>> </span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">Graph</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">3</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">);</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal">Graph[</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">0</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">] </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> {</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">1</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">2</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">};</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal">Graph[</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">1</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">] </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> {</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">0</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">};</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal">Graph[</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">2</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">] </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> {</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">0</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">};</span></span></code></pre></figure>
+<p><code>Graph[0]</code>은 “정점 0과 직접 연결된 정점 목록”이다.</p>
+<p>무방향 간선 <code>0 - 1</code>은 양쪽 목록에 모두 저장하고, 방향 간선 <code>0 → 1</code>은 <code>Graph[0]</code>에 <code>1</code>만 저장한다.</p>
+<p>가중 그래프라면 이웃 번호만 저장하지 않고 <code>{이웃 번호, 가중치}</code>를 함께 저장한다.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="cpp" data-theme="github-light github-dark"><code data-language="cpp" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">using</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="property"> Edge</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator"> =</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> std</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">::</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="property">pair</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">&lt;</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">int</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">, </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">int</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">>;</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"> // {이웃 정점, 가중치}</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">std</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">::</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="property">vector</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">&lt;</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">std</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">::</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="property">vector</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">&lt;</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="property">Edge</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">>> </span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">Graph</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="property">NodeCount</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">);</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal">Graph[</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">0</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">].</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">push_back</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">({</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">1</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">5</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">});</span></span></code></pre></figure>
+<hr/>
+<h2 id="2-인접-행렬">2. 인접 행렬<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#2-인접-행렬" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<blockquote>
+<p><strong>핵심: 연결 여부 확인은 빠르지만 정점 수의 제곱만큼 공간을 사용한다.</strong></p>
+</blockquote>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="text" data-theme="github-light github-dark"><code data-language="text" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>    0  1  2</span></span>
+<span data-line><span>0 [ 0, 1, 1 ]</span></span>
+<span data-line><span>1 [ 1, 0, 0 ]</span></span>
+<span data-line><span>2 [ 1, 0, 0 ]</span></span></code></pre></figure>
+<p><code>Matrix[0][1] == 1</code>이면 정점 0과 1이 연결되었다는 뜻이다.</p>
+<ul>
+<li>연결 여부 확인: <code>O(1)</code></li>
+<li>필요한 공간: <code>O(N²)</code></li>
+</ul>
+<p>정점이 많고 실제 연결이 적다면 빈칸이 많아지므로 인접 리스트가 보통 더 적합하다.</p>
+<hr/>
+<h2 id="3-간선-리스트">3. 간선 리스트<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#3-간선-리스트" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<blockquote>
+<p><strong>핵심: 존재하는 간선만 <code>(출발, 도착)</code> 쌍으로 저장한다.</strong></p>
+</blockquote>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="cpp" data-theme="github-light github-dark"><code data-language="cpp" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">std</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">::vector</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">&lt;</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">std</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">::pair</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">&lt;int</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">, </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">int>></span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> Edges </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">{</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    {</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">0</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">1</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">},</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    {</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">0</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">2</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">}</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">};</span></span></code></pre></figure>
+<p>모든 간선을 한 번씩 처리할 때 편리하다. 반면 특정 정점의 이웃을 찾으려면 전체 간선을 확인해야 한다.</p>
+<hr/>
+<h2 id="표현-방법-복잡도-비교">표현 방법 복잡도 비교<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#표현-방법-복잡도-비교" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p><code>V</code>는 정점 수, <code>E</code>는 간선 수, <code>deg(v)</code>는 정점 <code>v</code>에 연결된 간선 수다.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>표현 방법</th><th>공간</th><th>특정 간선 확인</th><th>정점 <code>v</code>의 이웃 순회</th><th>모든 간선 순회</th></tr></thead><tbody><tr><td><strong>인접 리스트</strong></td><td><code>O(V + E)</code></td><td>보통 <code>O(deg(v))</code></td><td><code>O(deg(v))</code></td><td><code>O(V + E)</code></td></tr><tr><td><strong>인접 행렬</strong></td><td><code>O(V²)</code></td><td><code>O(1)</code></td><td><code>O(V)</code></td><td><code>O(V²)</code></td></tr><tr><td><strong>간선 리스트</strong></td><td><code>O(E)</code></td><td><code>O(E)</code></td><td><code>O(E)</code></td><td><code>O(E)</code></td></tr></tbody></table></div>
+<blockquote class="callout note" data-callout="note">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Note</p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>인접 리스트의 간선 확인 비용은 이웃을 <code>vector</code>에 저장했을 때의 일반적인 기준이다. 이웃 목록을 정렬해 이진 탐색하거나 <code>unordered_set</code>으로 저장하면 조회 특성은 달라지지만, 정렬·해시·메모리 비용이 추가된다.</p>
+</div>
+</blockquote>
+<hr/>
+<h2 id="인접-리스트의-컨테이너-선택">인접 리스트의 컨테이너 선택<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#인접-리스트의-컨테이너-선택" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>**컨테이너(Container)**는 여러 값을 담는 자료구조다. <code>vector</code>, <code>map</code>, <code>set</code> 등이 컨테이너에 해당한다.</p>
+<p><code>vector&lt;vector&lt;int>></code>는 <code>vector</code> 안에 또 다른 <code>vector</code>를 담은 2중 구조다.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="cpp" data-theme="github-light github-dark"><code data-language="cpp" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">std</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">::vector</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">&lt;</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">             // 바깥 컨테이너</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">    std</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">::vector</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">&lt;int></span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">     // 안쪽 컨테이너</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">></span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> Graph;</span></span></code></pre></figure>
+<ul>
+<li><strong>바깥 컨테이너</strong>: 모든 정점의 이웃 목록을 모아 둔다.</li>
+<li><strong>안쪽 컨테이너</strong>: 정점 하나의 이웃들을 모아 둔다.</li>
+</ul>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="text" data-theme="github-light github-dark"><code data-language="text" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>Graph                           ← 바깥 컨테이너</span></span>
+<span data-line><span>├─ Graph[0] → [1, 2]            ← 정점 0의 안쪽 컨테이너</span></span>
+<span data-line><span>├─ Graph[1] → [0]               ← 정점 1의 안쪽 컨테이너</span></span>
+<span data-line><span>└─ Graph[2] → [0, 5]            ← 정점 2의 안쪽 컨테이너</span></span></code></pre></figure>
+<p>서랍장으로 비유하면 바깥 컨테이너는 <strong>서랍장 전체</strong>, 안쪽 컨테이너는 <strong>정점별 서랍 하나</strong>다. 각 서랍 안에는 그 정점과 연결된 이웃 번호가 들어 있다.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="cpp" data-theme="github-light github-dark"><code data-language="cpp" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal">Graph[</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">2</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">].</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">push_back</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">5</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">);</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">//    │             └─ 이웃 5를 추가</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">//    └─ 정점 2의 안쪽 컨테이너를 선택</span></span></code></pre></figure>
+<blockquote class="callout note" data-callout="note">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Note</p></div>
+                  
+                </div>
+<div class="callout-content">
+<p><strong>바깥 컨테이너는 정점을 찾고, 안쪽 컨테이너는 그 정점의 이웃을 저장한다.</strong></p>
+</div>
+</blockquote>
+<p>이제 바깥 컨테이너부터 선택한다. <strong>ID는 정점을 구분하기 위해 붙인 번호나 키</strong>다.</p>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;flowchart LR\n    A{\&quot;ID를 0 ~ N-1로&lt;br/>만들 수 있는가?\&quot;}\n    A -->|예| V[\&quot;vector&lt;br/>기본 선택\&quot;]\n    A -->|아니요| B{\&quot;정렬 또는&lt;br/>범위 검색 필요?\&quot;}\n    B -->|아니요| U[\&quot;unordered_map\&quot;]\n    B -->|예| M[\&quot;map\&quot;]&quot;">flowchart LR
+    A{&quot;ID를 0 ~ N-1로&lt;br/>만들 수 있는가?&quot;}
+    A -->|예| V[&quot;vector&lt;br/>기본 선택&quot;]
+    A -->|아니요| B{&quot;정렬 또는&lt;br/>범위 검색 필요?&quot;}
+    B -->|아니요| U[&quot;unordered_map&quot;]
+    B -->|예| M[&quot;map&quot;]
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<hr/>
+<h2 id="바깥-컨테이너-vector">바깥 컨테이너: <code>vector</code><a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#바깥-컨테이너-vector" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>ID가 <code>0, 1, 2, ... N-1</code>이면 ID를 그대로 인덱스로 사용한다.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="cpp" data-theme="github-light github-dark"><code data-language="cpp" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">std</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">::</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="property">vector</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">&lt;</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">std</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">::</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="property">vector</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">&lt;</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">int</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">>> </span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">Graph</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="property">NodeCount</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">);</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal">Graph[</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">2</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">].</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">push_back</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">5</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">);</span></span></code></pre></figure>
+<p>별도의 키 검색이 필요 없고 구조가 단순하다. 그래프 내부 ID를 직접 정할 수 있다면 이 형태부터 고려한다.</p>
+<hr/>
+<h2 id="바깥-컨테이너-unordered_map">바깥 컨테이너: <code>unordered_map</code><a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#바깥-컨테이너-unordered_map" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>ID가 <code>105</code>, <code>3009</code>, <code>80000</code>처럼 크게 흩어져 있고 정렬이 필요 없다면 존재하는 ID만 저장한다.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="cpp" data-theme="github-light github-dark"><code data-language="cpp" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">std</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">::unordered_map</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">&lt;int</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">, </span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">std</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">::vector</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">&lt;int>></span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> Graph;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal">Graph[</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">105</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">].</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">push_back</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">3009</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">);</span></span></code></pre></figure>
+<p>평균 조회는 <code>O(1)</code>이지만 해시 계산과 버킷을 위한 추가 비용이 있다.</p>
+<hr/>
+<h2 id="바깥-컨테이너-map">바깥 컨테이너: <code>map</code><a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#바깥-컨테이너-map" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>ID 순서대로 순회하거나 특정 ID 범위를 찾아야 할 때 사용한다. 키가 정렬된 상태로 유지되며 조회는 <code>O(log N)</code>이다.</p>
+<hr/>
+<h2 id="이웃-목록의-컨테이너-선택">이웃 목록의 컨테이너 선택<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#이웃-목록의-컨테이너-선택" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>대부분은 이웃 목록도 <code>vector</code>로 시작한다. 메모리가 연속적이고 순회가 빠르며, 그래프 탐색은 이웃을 차례로 읽는 일이 많기 때문이다.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>요구 사항</th><th>먼저 고려할 컨테이너</th></tr></thead><tbody><tr><td>이웃을 주로 순회</td><td><code>vector</code></td></tr><tr><td>이웃을 정렬된 순서로 유지</td><td>정렬된 <code>vector</code> 또는 <code>set</code></td></tr><tr><td>연결 존재 여부를 자주 확인하고 삽입·삭제도 잦음</td><td><code>unordered_set</code> 검토</td></tr></tbody></table></div>
+<p><code>set</code>이나 <code>unordered_set</code>은 중복 방지와 조회에는 편하지만 메모리 오버헤드와 순회 비용이 커질 수 있다. 실제로 필요한 연산이 무엇인지 확인한 뒤 선택한다.</p>
+<hr/>
+<h2 id="희소한-id도-vector로-바꿀-수-있다">희소한 ID도 vector로 바꿀 수 있다<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#희소한-id도-vector로-바꿀-수-있다" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>외부 ID에 <code>0 ~ N-1</code>의 내부 번호를 새로 붙이는 방식을 **ID 압축(ID Compression)**이라고 한다.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="text" data-theme="github-light github-dark"><code data-language="text" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>외부 ID: 105, 3009, 80000</span></span>
+<span data-line><span>내부 ID:   0,    1,     2</span></span></code></pre></figure>
+<p>그래프 탐색이 많다면 외부 ID를 한 번 내부 ID로 변환한 뒤 <code>vector</code>를 사용하는 방식이 유리할 수 있다.</p>
+<hr/>
+<h2 id="실전-선택-기준">실전 선택 기준<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#실전-선택-기준" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>상황</th><th>먼저 고려할 방식</th></tr></thead><tbody><tr><td>일반적인 BFS, DFS, 게임 길찾기</td><td>인접 리스트 + <code>vector</code></td></tr><tr><td>연결 여부를 매우 자주 확인</td><td>인접 행렬</td></tr><tr><td>모든 간선을 순서대로 처리</td><td>간선 리스트</td></tr><tr><td>희소한 외부 ID를 그대로 사용</td><td>인접 리스트 + <code>unordered_map</code></td></tr><tr><td>ID 정렬 또는 범위 검색 필요</td><td>인접 리스트 + <code>map</code></td></tr></tbody></table></div>
+<hr/>
+<h2 id="정리">정리<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#정리" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>그래프에서 먼저 정할 것은 <strong>무엇이 정점이고 무엇이 간선인지</strong>다.</p>
+<p>일반적인 시작점은 다음과 같다.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="text" data-theme="github-light github-dark"><code data-language="text" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>정점에 0 ~ N-1 번호 부여</span></span>
+<span data-line><span>        ↓</span></span>
+<span data-line><span>정점마다 연결된 이웃 저장</span></span>
+<span data-line><span>        ↓</span></span>
+<span data-line><span>vector&lt;vector&lt;int>> 인접 리스트</span></span></code></pre></figure>
+<ul>
+<li>기본 표현: 인접 리스트</li>
+<li>기본 컨테이너: <code>vector&lt;vector&lt;int>></code></li>
+<li>연결 확인 중심: 인접 행렬</li>
+<li>간선 전체 처리 중심: 간선 리스트</li>
+<li>희소한 외부 ID: <code>unordered_map</code> 또는 ID 압축 검토</li>
+</ul>
+<hr/>
+<p><a href="../정리집-목차" class="internal internal-link alias" data-slug="정리집-목차">정리집 목차</a> · <a href="../c++/cache-locality" class="internal internal-link alias" data-slug="c++/cache-locality">Cache Locality</a> · <a href="../c++/stl-컨테이너-선택-기준" class="internal internal-link alias" data-slug="c++/stl-컨테이너-선택-기준">STL 컨테이너 선택 기준</a></p></div></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="toc"><button type="button" class="toc-header" aria-controls="toc-15" aria-expanded="true"><h3>목차</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-0" class="toc-content overflow"><li class="depth-0"><a href="#그래프가-무엇인가" data-for="그래프가-무엇인가">그래프가 무엇인가</a></li><li class="depth-0"><a href="#왜-표현-방법이-필요한가" data-for="왜-표현-방법이-필요한가">왜 표현 방법이 필요한가</a></li><li class="depth-0"><a href="#1-인접-리스트" data-for="1-인접-리스트">1. 인접 리스트</a></li><li class="depth-0"><a href="#2-인접-행렬" data-for="2-인접-행렬">2. 인접 행렬</a></li><li class="depth-0"><a href="#3-간선-리스트" data-for="3-간선-리스트">3. 간선 리스트</a></li><li class="depth-0"><a href="#표현-방법-복잡도-비교" data-for="표현-방법-복잡도-비교">표현 방법 복잡도 비교</a></li><li class="depth-0"><a href="#인접-리스트의-컨테이너-선택" data-for="인접-리스트의-컨테이너-선택">인접 리스트의 컨테이너 선택</a></li><li class="depth-0"><a href="#바깥-컨테이너-vector" data-for="바깥-컨테이너-vector">바깥 컨테이너: vector</a></li><li class="depth-0"><a href="#바깥-컨테이너-unordered_map" data-for="바깥-컨테이너-unordered_map">바깥 컨테이너: unordered_map</a></li><li class="depth-0"><a href="#바깥-컨테이너-map" data-for="바깥-컨테이너-map">바깥 컨테이너: map</a></li><li class="depth-0"><a href="#이웃-목록의-컨테이너-선택" data-for="이웃-목록의-컨테이너-선택">이웃 목록의 컨테이너 선택</a></li><li class="depth-0"><a href="#희소한-id도-vector로-바꿀-수-있다" data-for="희소한-id도-vector로-바꿀-수-있다">희소한 ID도 vector로 바꿀 수 있다</a></li><li class="depth-0"><a href="#실전-선택-기준" data-for="실전-선택-기준">실전 선택 기준</a></li><li class="depth-0"><a href="#정리" data-for="정리">정리</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Created with <a href="https://quartz.jzhao.xyz/">Quartz v5.0.0</a> © 2026</p><ul><li><a href="https://github.com/HyeseonLikesPizza/yeoeunseon/tree/main/yeoeunseon/%EC%9C%A4%EC%97%AC%EB%AF%BC">원본 기록</a></li></ul></footer></div></div></body><script src="../static/resource-after-e13fffa1.js" type="application/javascript" data-persist="true"></script><script src="../static/resource-after-8b336f9a.js" type="application/javascript" data-persist="true"></script><script src="../static/resource-after-baba652b.js" type="application/javascript" data-persist="true"></script><script src="../static/resource-after-5eb75950.js" type="module" data-persist="true"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript" data-persist="true"></script><script src="../postscript-5e06a1c1.js" type="module" data-persist="true"></script></html>

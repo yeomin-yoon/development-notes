@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="ko" dir="ltr"><head><title>STL 컨테이너 선택 기준 | 윤여민</title><meta charset="utf-8"/><link rel="preload" href="../index-ae276ac8.css" as="style"/><link rel="preload" href="../prescript-2bfc6315.js" as="script"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto Sans KR:wght@400;700&amp;family=Noto Sans KR:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="개발 공부 기록"/><meta property="og:title" content="STL 컨테이너 선택 기준 | 윤여민"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="STL 컨테이너 선택 기준 | 윤여민"/><meta name="twitter:description" content="Summary 컨테이너는 종류를 다 외우기보다, 언제 쓰는지를 먼저 잡는다. 먼저 vector, unordered_map, unordered_set을 기본 축으로 잡고, 정렬·앞뒤 삽입·고정 크기·특수 규칙이 필요할 때 다른 컨테이너를 붙인다."/><meta property="og:description" content="Summary 컨테이너는 종류를 다 외우기보다, 언제 쓰는지를 먼저 잡는다. 먼저 vector, unordered_map, unordered_set을 기본 축으로 잡고, 정렬·앞뒤 삽입·고정 크기·특수 규칙이 필요할 때 다른 컨테이너를 붙인다."/><meta property="og:image:alt" content="Summary 컨테이너는 종류를 다 외우기보다, 언제 쓰는지를 먼저 잡는다. 먼저 vector, unordered_map, unordered_set을 기본 축으로 잡고, 정렬·앞뒤 삽입·고정 크기·특수 규칙이 필요할 때 다른 컨테이너를 붙인다."/><meta property="og:image" content="https://yeomin-yoon.github.io/development-notes/static/og-image.png"/><meta property="og:image:url" content="https://yeomin-yoon.github.io/development-notes/static/og-image.png"/><meta name="twitter:image" content="https://yeomin-yoon.github.io/development-notes/static/og-image.png"/><meta property="og:image:type" content="image/.png"/><meta property="twitter:domain" content="yeomin-yoon.github.io/development-notes"/><meta property="og:url" content="https://yeomin-yoon.github.io/development-notes/c++/stl-컨테이너-선택-기준"/><meta property="twitter:url" content="https://yeomin-yoon.github.io/development-notes/c++/stl-컨테이너-선택-기준"/><link rel="icon" href="../static/icon.png"/><meta name="description" content="Summary 컨테이너는 종류를 다 외우기보다, 언제 쓰는지를 먼저 잡는다. 먼저 vector, unordered_map, unordered_set을 기본 축으로 잡고, 정렬·앞뒤 삽입·고정 크기·특수 규칙이 필요할 때 다른 컨테이너를 붙인다."/><meta name="generator" content="Quartz"/><link href="../index-ae276ac8.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../component-735924e0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../component-589c1cea.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../component-bbc3f7c0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../component-2911f5d1.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../component-53b25b2b.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../component-8a06014f.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../component-77d6a441.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../component-6ee21cee.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../component-1ea6ad18.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../component-788c9ca3.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../component-4abc06bd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../component-274a3dfe.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../component-94cb6c84.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../static/resource-style-a5c806d2.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../static/resource-style-6bd36952.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" data-persist="true"/><script src="../prescript-2bfc6315.js" type="application/javascript" data-persist="true"></script><script type="application/javascript" data-persist="true">const fetchData = fetch("../static/contentIndex.json").then(data => data.json())</script></head><body data-slug="c++/stl-컨테이너-선택-기준" data-basepath="/development-notes"><div id="quartz-root" class="page" data-frame="default"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="..">개발 공부 기록</a></h2><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 0.5rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button" aria-label="검색" aria-expanded="false"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>검색</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="검색어를 입력하세요" placeholder="검색어를 입력하세요"/><div class="search-layout" data-preview="true" data-field-priority="[&quot;title&quot;,&quot;content&quot;,&quot;tags&quot;]"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode" aria-label="다크 모드"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="다크 모드"><title>다크 모드</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="라이트 모드"><title>라이트 모드</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode" aria-label="리더 모드"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="리더 모드"><title>리더 모드</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer nav-files-container" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a2, b2) => {\n    if (!a2.isFolder &amp;&amp; !b2.isFolder || a2.isFolder &amp;&amp; b2.isFolder) {\n      return (a2.displayName || \&quot;\&quot;).localeCompare(b2.displayName || \&quot;\&quot;, void 0, {\n        numeric: true,\n        sensitivity: \&quot;base\&quot;\n      });\n    }\n    if (!a2.isFolder &amp;&amp; b2.isFolder) {\n      return 1;\n    }\n    return -1;\n  }&quot;,&quot;filterFn&quot;:&quot;(node) => node.slugSegment !== \&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;(node) => {\n    return node;\n  }&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-6" aria-label="탐색기"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>목차</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-6" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#" class="nav-file-title tree-item-self"></a></li></template><template id="template-folder"><li><div class="folder-container nav-folder-title tree-item-self"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon nav-folder-collapse-indicator collapse-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content tree-item-children"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../c++/">C++</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>STL 컨테이너 선택 기준</a></div></nav><h1 class="article-title">STL 컨테이너 선택 기준</h1><p show-comma="false" class="content-meta"><time datetime="2026-07-10T12:57:05.000Z">2026년 7월 10일</time></p></div></div><article class="popover-hint"><div class="markdown-preview-view markdown-rendered"><blockquote class="callout abstract" data-callout="abstract">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Summary</p></div>
+                  
+                </div>
+<div class="callout-content">
+<p><strong>컨테이너는 종류를 다 외우기보다, 언제 쓰는지를 먼저 잡는다.</strong></p>
+<p>먼저 <code>vector</code>, <code>unordered_map</code>, <code>unordered_set</code>을 기본 축으로 잡고, 정렬·앞뒤 삽입·고정 크기·특수 규칙이 필요할 때 다른 컨테이너를 붙인다.</p>
+</div>
+</blockquote>
+<hr/>
+<h2 id="기본-분류">기본 분류<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#기본-분류" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>묶음</th><th>컨테이너</th><th>핵심 질문</th></tr></thead><tbody><tr><td>순서대로 담는 것</td><td><code>vector</code>, <code>array</code>, <code>deque</code>, <code>list</code></td><td>순회, 인덱스, 삽입·삭제 위치</td></tr><tr><td>key나 값으로 찾는 것</td><td><code>unordered_map</code>, <code>map</code>, <code>unordered_set</code>, <code>set</code></td><td>key 검색, 존재 확인, 정렬 필요 여부</td></tr><tr><td>꺼내는 규칙만 정해진 것</td><td><code>stack</code>, <code>queue</code>, <code>priority_queue</code></td><td>LIFO, FIFO, 우선순위</td></tr></tbody></table></div>
+<p>종류가 많아 보여도 실제 선택 질문은 세 개다.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="text" data-theme="github-light github-dark"><code data-language="text" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>순서대로 담을 건가?</span></span>
+<span data-line><span>key나 값으로 찾을 건가?</span></span>
+<span data-line><span>꺼내는 규칙이 정해져 있나?</span></span></code></pre></figure>
+<hr/>
+<h2 id="우선순위">우선순위<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#우선순위" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>우선순위</th><th>우선 볼 것</th><th>이유</th></tr></thead><tbody><tr><td>1순위</td><td><code>vector</code></td><td>가장 흔한 “저장 + 순회 + 인덱스 접근” 기본값</td></tr><tr><td>2순위</td><td><code>unordered_map</code>, <code>unordered_set</code></td><td>key 검색과 존재 확인에서 자주 사용</td></tr><tr><td>3순위</td><td><code>map</code>, <code>set</code></td><td>정렬된 순서나 범위 검색이 필요할 때</td></tr><tr><td>4순위</td><td><code>deque</code></td><td>앞뒤 삽입·삭제가 중요할 때</td></tr><tr><td>특수</td><td><code>array</code>, <code>list</code>, <code>stack</code>, <code>queue</code>, <code>priority_queue</code></td><td>조건이 명확할 때 선택</td></tr></tbody></table></div>
+<blockquote class="callout tip" data-callout="tip">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Important</p></div>
+                  
+                </div>
+<div class="callout-content">
+<p><code>std::list</code>는 “중간 삽입·삭제가 O(1)”이라는 이유만으로 고르지 않는다. 위치를 찾는 순회 비용과 캐시 비용까지 같이 봐야 한다.</p>
+</div>
+</blockquote>
+<hr/>
+<h2 id="빠른-선택표">빠른 선택표<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#빠른-선택표" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>가장 중요한 요구</th><th>먼저 볼 컨테이너</th></tr></thead><tbody><tr><td>많이 담고 자주 순회</td><td><code>std::vector</code></td></tr><tr><td>key로 빠르게 찾음, 순서 필요 없음</td><td><code>std::unordered_map</code></td></tr><tr><td>값의 존재 여부만 빠르게 확인</td><td><code>std::unordered_set</code></td></tr><tr><td>key 정렬 또는 범위 검색 필요</td><td><code>std::map</code></td></tr><tr><td>중복 없는 값을 정렬된 순서로 유지</td><td><code>std::set</code></td></tr><tr><td>앞과 뒤에서 넣고 뺌</td><td><code>std::deque</code></td></tr><tr><td>크기가 고정</td><td><code>std::array</code></td></tr><tr><td>정해진 방식으로만 꺼냄</td><td><code>std::stack</code>, <code>std::queue</code>, <code>std::priority_queue</code></td></tr><tr><td>중간 삽입·삭제와 주소 안정성이 정말 중요</td><td><code>std::list</code> 검토</td></tr></tbody></table></div>
+<hr/>
+<h2 id="선택할-때-같이-보는-것">선택할 때 같이 보는 것<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#선택할-때-같이-보는-것" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>기준</th><th>봐야 하는 이유</th></tr></thead><tbody><tr><td>가장 자주 하는 작업</td><td>순회, 검색, 삽입, 삭제 중 무엇이 중심인지가 선택을 결정한다.</td></tr><tr><td>메모리 배치</td><td>연속 메모리는 순회와 캐시 효율에 유리하다.</td></tr><tr><td>인덱스 접근</td><td><code>vector</code>, <code>array</code>, <code>deque</code>는 가능하지만 <code>list</code>, <code>map</code>, <code>set</code>은 다르다.</td></tr><tr><td>정렬 필요 여부</td><td>정렬된 순서가 필요하면 <code>map</code>, <code>set</code> 또는 정렬된 <code>vector</code>를 검토한다.</td></tr><tr><td>중복 허용 여부</td><td>중복 없는 값 모음이면 <code>set</code> 계열이 맞다.</td></tr><tr><td>주소/반복자 안정성</td><td>컨테이너에 따라 삽입·삭제 후 기존 포인터와 반복자가 무효화될 수 있다.</td></tr></tbody></table></div>
+<p><code>Big-O</code>는 중요하지만 전부는 아니다. <code>vector</code> 순회와 <code>list</code> 순회는 둘 다 <code>O(N)</code>이지만, <code>vector</code>는 연속 메모리라 캐시에 유리하고 <code>list</code>는 노드 포인터를 따라가야 해서 실제 순회가 느릴 수 있다.</p>
+<hr/>
+<h2 id="1순위-stdvector">1순위: <code>std::vector</code><a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#1순위-stdvector" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>항목</th><th>내용</th></tr></thead><tbody><tr><td>역할</td><td>크기가 변하는 동적 배열</td></tr><tr><td>구조</td><td>원소가 연속된 메모리에 저장됨</td></tr><tr><td>강점</td><td>전체 순회, 인덱스 접근, 끝에 추가</td></tr><tr><td>약점</td><td>중간 삽입·삭제 시 뒤쪽 원소 이동, 재할당 시 주소 무효화 가능</td></tr><tr><td>선택 기준</td><td><strong>많이 담고 자주 순회하면 <code>vector</code>부터 시작한다.</strong></td></tr></tbody></table></div>
+<p><code>vector</code>가 기본값인 이유는 실제 코드에서 “모아두고 순서대로 읽는” 데이터가 많기 때문이다. 원소가 연속되어 있어 다음 원소 접근을 CPU가 예측하기 쉽고, 캐시 라인에도 주변 원소가 함께 들어올 가능성이 높다.</p>
+<p>개수를 대략 알고 있다면 <code>reserve()</code>로 재할당을 줄일 수 있다. 반대로 중간 삭제가 잦다면 매번 뒤쪽 원소가 앞으로 이동한다는 점을 고려해야 한다.</p>
+<hr/>
+<h2 id="2순위-검색과-존재-확인">2순위: 검색과 존재 확인<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#2순위-검색과-존재-확인" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="stdunordered_map"><code>std::unordered_map</code><a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#stdunordered_map" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>항목</th><th>내용</th></tr></thead><tbody><tr><td>역할</td><td>key로 value를 빠르게 찾는 해시 테이블</td></tr><tr><td>구조</td><td>key → hash → bucket → value</td></tr><tr><td>강점</td><td>순서가 필요 없는 빠른 key 검색</td></tr><tr><td>약점</td><td>정렬 순서 없음, 해시 충돌과 rehash 비용</td></tr><tr><td>선택 기준</td><td><strong>순서 필요 없는 key 검색은 <code>unordered_map</code>.</strong></td></tr></tbody></table></div>
+<p>ID로 플레이어를 찾거나, 이름으로 데이터를 찾는 식의 “key로 바로 접근”하는 문제에 잘 맞는다. 평균적으로 검색이 빠르지만, 원소가 늘어나 rehash가 발생하면 반복자가 무효화될 수 있다.</p>
+<h3 id="stdunordered_set"><code>std::unordered_set</code><a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#stdunordered_set" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>항목</th><th>내용</th></tr></thead><tbody><tr><td>역할</td><td>중복 없는 값의 존재 여부를 빠르게 확인하는 해시 집합</td></tr><tr><td>구조</td><td>value → hash → bucket</td></tr><tr><td>강점</td><td>방문 여부, 중복 방지, 빠른 존재 확인</td></tr><tr><td>약점</td><td>정렬 순서 없음, rehash 비용</td></tr><tr><td>선택 기준</td><td><strong>순서 필요 없는 존재 확인은 <code>unordered_set</code>.</strong></td></tr></tbody></table></div>
+<p><code>map</code>은 key로 value를 찾지만, <code>set</code>은 값 자체가 key 역할을 한다. BFS 방문 체크, 이미 처리한 ID 확인처럼 “있나 없나”가 핵심이면 <code>unordered_set</code>을 먼저 본다.</p>
+<hr/>
+<h2 id="3순위-정렬이-필요할-때">3순위: 정렬이 필요할 때<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#3순위-정렬이-필요할-때" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="stdmap"><code>std::map</code><a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#stdmap" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>항목</th><th>내용</th></tr></thead><tbody><tr><td>역할</td><td>key를 정렬된 순서로 유지하는 key-value 컨테이너</td></tr><tr><td>구조</td><td>정렬된 트리 구조</td></tr><tr><td>강점</td><td>정렬 순회, 범위 검색, <code>lower_bound</code></td></tr><tr><td>약점</td><td>단순 검색만 보면 <code>unordered_map</code>보다 불리할 수 있음</td></tr><tr><td>선택 기준</td><td><strong>정렬된 key나 범위 검색이 필요하면 <code>map</code>.</strong></td></tr></tbody></table></div>
+<p><code>map</code>은 key가 정렬된 상태로 유지된다. 특정 점수 이상, 특정 ID 범위, 정렬된 순회처럼 key 순서가 의미를 가지면 <code>map</code>이 자연스럽다.</p>
+<h3 id="stdset"><code>std::set</code><a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#stdset" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>항목</th><th>내용</th></tr></thead><tbody><tr><td>역할</td><td>중복 없는 값을 정렬된 순서로 유지하는 집합</td></tr><tr><td>구조</td><td>정렬된 트리 구조</td></tr><tr><td>강점</td><td>정렬 순회, 범위 검색, 중복 방지</td></tr><tr><td>약점</td><td>정렬이 필요 없으면 <code>unordered_set</code>보다 불필요할 수 있음</td></tr><tr><td>선택 기준</td><td><strong>정렬된 집합은 <code>set</code>.</strong></td></tr></tbody></table></div>
+<p>중복을 막으면서 정렬된 순서가 필요할 때 사용한다. 값의 존재 여부만 빠르게 확인하면 되는 상황이라면 <code>unordered_set</code>이 더 자연스럽다.</p>
+<hr/>
+<h2 id="4순위-앞뒤-삽입삭제">4순위: 앞뒤 삽입·삭제<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#4순위-앞뒤-삽입삭제" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="stddeque"><code>std::deque</code><a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#stddeque" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>항목</th><th>내용</th></tr></thead><tbody><tr><td>역할</td><td>앞과 뒤에서 넣고 빼기 좋은 컨테이너</td></tr><tr><td>구조</td><td>여러 블록을 이어 붙인 형태에 가까움</td></tr><tr><td>강점</td><td><code>push_front</code>, <code>pop_front</code>, <code>push_back</code>, <code>pop_back</code></td></tr><tr><td>약점</td><td><code>vector</code>처럼 완전한 한 덩어리 연속 메모리는 아님</td></tr><tr><td>선택 기준</td><td><strong>앞뒤로 드나들면 <code>deque</code>.</strong></td></tr></tbody></table></div>
+<p><code>vector</code>는 앞쪽에 원소를 넣으면 기존 원소들을 뒤로 밀어야 한다. 반면 <code>deque</code>는 앞과 뒤의 삽입·삭제를 처리하기 좋게 설계되어 있다. 슬라이딩 윈도우, 양방향 큐처럼 양 끝 작업이 중심이면 고려한다.</p>
+<hr/>
+<h2 id="특수한-경우">특수한 경우<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#특수한-경우" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="stdarray"><code>std::array</code><a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#stdarray" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>항목</th><th>내용</th></tr></thead><tbody><tr><td>역할</td><td>크기가 컴파일 타임에 정해진 고정 배열</td></tr><tr><td>구조</td><td>연속 메모리, 크기 <code>N</code>이 타입에 포함됨</td></tr><tr><td>강점</td><td>고정 크기 데이터, <code>size()</code>, <code>begin()</code>, <code>end()</code> 사용 가능</td></tr><tr><td>약점</td><td>실행 중 크기 변경 불가</td></tr><tr><td>선택 기준</td><td><strong>고정 크기면 <code>array</code>, 변하는 크기면 <code>vector</code>.</strong></td></tr></tbody></table></div>
+<p><code>std::array&lt;int, 3></code>과 <code>std::array&lt;int, 4></code>는 서로 다른 타입이다. 작은 고정 테이블, 방향 벡터, 고정 개수 슬롯처럼 크기가 변하지 않는 데이터에 잘 맞는다.</p>
+<h3 id="stdlist"><code>std::list</code><a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#stdlist" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>항목</th><th>내용</th></tr></thead><tbody><tr><td>역할</td><td>노드들이 포인터로 연결된 양방향 연결 리스트</td></tr><tr><td>구조</td><td>각 원소가 별도 노드, 노드끼리 연결</td></tr><tr><td>강점</td><td>위치를 이미 알 때 중간 삽입·삭제, 노드 주소 안정성</td></tr><tr><td>약점</td><td>인덱스 접근 불가, 순회 비용과 캐시 비용이 큼</td></tr><tr><td>선택 기준</td><td><strong>위치를 이미 아는 중간 삽입·삭제나 주소 안정성이 필요할 때만 검토한다.</strong></td></tr></tbody></table></div>
+<p><code>list</code>의 중간 삽입·삭제가 빠르다는 말은 “그 위치의 반복자를 이미 알고 있다”는 전제가 붙는다. 삭제할 위치를 찾기 위해 매번 처음부터 순회한다면 그 비용이 커진다.</p>
+<p>전체 순회가 많으면 <code>vector</code>가 더 나은 경우가 많다. 죽은 객체 제거 같은 문제도 처음부터 <code>list</code>로 바꾸기보다 <code>vector + erase-remove idiom</code>, swap-remove, 활성 플래그, object pool을 먼저 검토한다.</p>
+<h3 id="컨테이너-어댑터">컨테이너 어댑터<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#컨테이너-어댑터" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>어댑터</th><th>규칙</th><th>꺼내는 방식</th></tr></thead><tbody><tr><td><code>std::stack</code></td><td>LIFO</td><td>나중에 넣은 것을 먼저 꺼냄</td></tr><tr><td><code>std::queue</code></td><td>FIFO</td><td>먼저 넣은 것을 먼저 꺼냄</td></tr><tr><td><code>std::priority_queue</code></td><td>우선순위 기준</td><td>우선순위가 높은 것을 먼저 꺼냄</td></tr></tbody></table></div>
+<p>어댑터는 내부 컨테이너를 감싸서 특정 사용 방식만 제공한다. 직접 순회하거나 중간 원소를 지워야 한다면 어댑터보다 기본 컨테이너를 사용한다.</p>
+<hr/>
+<h2 id="자주-헷갈리는-비교">자주 헷갈리는 비교<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#자주-헷갈리는-비교" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>비교</th><th>기준</th></tr></thead><tbody><tr><td><code>vector</code> vs <code>list</code></td><td>순회가 많으면 <code>vector</code>, 위치를 이미 아는 중간 삽입·삭제가 핵심이면 <code>list</code> 검토</td></tr><tr><td><code>map</code> vs <code>unordered_map</code></td><td>순서 필요 없으면 <code>unordered_map</code>, 정렬/범위 검색 필요하면 <code>map</code></td></tr><tr><td><code>set</code> vs <code>unordered_set</code></td><td>순서 필요 없으면 <code>unordered_set</code>, 정렬/범위 검색 필요하면 <code>set</code></td></tr><tr><td><code>vector</code> vs <code>deque</code></td><td>전체 순회 중심이면 <code>vector</code>, 앞뒤 삽입·삭제 중심이면 <code>deque</code></td></tr></tbody></table></div>
+<hr/>
+<h2 id="반복자와-주소-안정성">반복자와 주소 안정성<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#반복자와-주소-안정성" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>컨테이너</th><th>주의할 점</th></tr></thead><tbody><tr><td><code>vector</code></td><td>재할당되면 기존 주소가 바뀔 수 있음</td></tr><tr><td><code>deque</code></td><td>삽입·삭제 위치에 따라 규칙이 복잡함</td></tr><tr><td><code>list</code></td><td>지운 원소 외의 노드는 비교적 안정적</td></tr><tr><td><code>map</code>, <code>set</code></td><td>지운 원소 외의 노드는 비교적 안정적</td></tr><tr><td><code>unordered_map</code>, <code>unordered_set</code></td><td>rehash가 일어나면 반복자 무효화 가능</td></tr></tbody></table></div>
+<p>주소나 반복자를 오래 들고 있어야 한다면 컨테이너별 무효화 규칙을 따로 확인해야 한다. 이 부분은 성능만큼이나 버그와 직결된다.</p>
+<hr/>
+<h2 id="사용-예시">사용 예시<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#사용-예시" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>상황</th><th>선택</th></tr></thead><tbody><tr><td>매 프레임 적 목록 전체 순회</td><td><code>vector</code>, Unreal <code>TArray</code></td></tr><tr><td>ID로 플레이어 찾기</td><td><code>unordered_map</code>, Unreal <code>TMap</code></td></tr><tr><td>방문한 노드 체크</td><td><code>unordered_set</code></td></tr><tr><td>정렬된 랭킹 순회</td><td>정렬된 <code>vector</code>, <code>map</code>, <code>multimap</code></td></tr><tr><td>죽은 객체 제거</td><td><code>vector</code> + erase-remove idiom, object pool 검토</td></tr></tbody></table></div>
+<p>랭킹처럼 점수가 중복될 수 있는 데이터는 <code>map</code> 하나로 표현하기 애매할 수 있다. 점수와 ID를 같이 정렬하거나, 중복 key가 필요하면 <code>multimap</code>, 단순 표시용이면 <code>vector</code>를 정렬하는 방식도 검토한다.</p>
+<hr/>
+<h2 id="선택-요약">선택 요약<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#선택-요약" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>컨테이너</th><th>선택 기준</th></tr></thead><tbody><tr><td><code>vector</code></td><td>많이 담고 순회하거나 인덱스로 접근</td></tr><tr><td><code>unordered_map</code></td><td>순서가 필요 없는 key-value 검색</td></tr><tr><td><code>unordered_set</code></td><td>순서가 필요 없는 존재 여부 확인</td></tr><tr><td><code>map</code></td><td>key 정렬, 범위 검색</td></tr><tr><td><code>set</code></td><td>정렬된 존재 여부 확인</td></tr><tr><td><code>deque</code></td><td>앞과 뒤에서 삽입·삭제</td></tr><tr><td><code>array</code></td><td>크기가 컴파일 타임에 고정</td></tr><tr><td><code>list</code></td><td>위치를 이미 아는 중간 삽입·삭제, 주소 안정성</td></tr></tbody></table></div>
+<p>컨테이너 선택은 결국 이 질문으로 돌아온다.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="text" data-theme="github-light github-dark"><code data-language="text" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>가장 자주 하는 작업이 무엇인가?</span></span>
+<span data-line><span>그 작업이 이 컨테이너의 구조와 잘 맞는가?</span></span></code></pre></figure>
+<hr/>
+<p><a href="../c++/c++-정리-목차" class="internal internal-link alias" data-slug="c++/c++-정리-목차">C++ 정리 목차</a> · <a href="../c++/cache-locality" class="internal internal-link alias" data-slug="c++/cache-locality">Cache Locality</a> · <a href="../c++/erase-remove-idiom" class="internal internal-link alias" data-slug="c++/erase-remove-idiom">erase-remove idiom</a> · <a href="../computer-science/그래프-표현-방법과-컨테이너-선택" class="internal internal-link alias" data-slug="computer-science/그래프-표현-방법과-컨테이너-선택">그래프 표현 방법과 컨테이너 선택</a></p></div></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="toc"><button type="button" class="toc-header" aria-controls="toc-6" aria-expanded="true"><h3>목차</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-0" class="toc-content overflow"><li class="depth-0"><a href="#기본-분류" data-for="기본-분류">기본 분류</a></li><li class="depth-0"><a href="#우선순위" data-for="우선순위">우선순위</a></li><li class="depth-0"><a href="#빠른-선택표" data-for="빠른-선택표">빠른 선택표</a></li><li class="depth-0"><a href="#선택할-때-같이-보는-것" data-for="선택할-때-같이-보는-것">선택할 때 같이 보는 것</a></li><li class="depth-0"><a href="#1순위-stdvector" data-for="1순위-stdvector">1순위: std::vector</a></li><li class="depth-0"><a href="#2순위-검색과-존재-확인" data-for="2순위-검색과-존재-확인">2순위: 검색과 존재 확인</a></li><li class="depth-1"><a href="#stdunordered_map" data-for="stdunordered_map">std::unordered_map</a></li><li class="depth-1"><a href="#stdunordered_set" data-for="stdunordered_set">std::unordered_set</a></li><li class="depth-0"><a href="#3순위-정렬이-필요할-때" data-for="3순위-정렬이-필요할-때">3순위: 정렬이 필요할 때</a></li><li class="depth-1"><a href="#stdmap" data-for="stdmap">std::map</a></li><li class="depth-1"><a href="#stdset" data-for="stdset">std::set</a></li><li class="depth-0"><a href="#4순위-앞뒤-삽입삭제" data-for="4순위-앞뒤-삽입삭제">4순위: 앞뒤 삽입·삭제</a></li><li class="depth-1"><a href="#stddeque" data-for="stddeque">std::deque</a></li><li class="depth-0"><a href="#특수한-경우" data-for="특수한-경우">특수한 경우</a></li><li class="depth-1"><a href="#stdarray" data-for="stdarray">std::array</a></li><li class="depth-1"><a href="#stdlist" data-for="stdlist">std::list</a></li><li class="depth-1"><a href="#컨테이너-어댑터" data-for="컨테이너-어댑터">컨테이너 어댑터</a></li><li class="depth-0"><a href="#자주-헷갈리는-비교" data-for="자주-헷갈리는-비교">자주 헷갈리는 비교</a></li><li class="depth-0"><a href="#반복자와-주소-안정성" data-for="반복자와-주소-안정성">반복자와 주소 안정성</a></li><li class="depth-0"><a href="#사용-예시" data-for="사용-예시">사용 예시</a></li><li class="depth-0"><a href="#선택-요약" data-for="선택-요약">선택 요약</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Created with <a href="https://quartz.jzhao.xyz/">Quartz v5.0.0</a> © 2026</p><ul><li><a href="https://github.com/HyeseonLikesPizza/yeoeunseon/tree/main/yeoeunseon/%EC%9C%A4%EC%97%AC%EB%AF%BC">원본 기록</a></li></ul></footer></div></div></body><script src="../static/resource-after-e13fffa1.js" type="application/javascript" data-persist="true"></script><script src="../static/resource-after-8b336f9a.js" type="application/javascript" data-persist="true"></script><script src="../static/resource-after-baba652b.js" type="application/javascript" data-persist="true"></script><script src="../static/resource-after-5eb75950.js" type="module" data-persist="true"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript" data-persist="true"></script><script src="../postscript-5e06a1c1.js" type="module" data-persist="true"></script></html>

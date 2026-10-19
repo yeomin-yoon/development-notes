@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="ko" dir="ltr"><head><title>Async &amp; ThreadPool | 윤여민</title><meta charset="utf-8"/><link rel="preload" href="../index-ae276ac8.css" as="style"/><link rel="preload" href="../prescript-2bfc6315.js" as="script"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto Sans KR:wght@400;700&amp;family=Noto Sans KR:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="개발 공부 기록"/><meta property="og:title" content="Async &amp; ThreadPool | 윤여민"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="Async &amp; ThreadPool | 윤여민"/><meta name="twitter:description" content="Async와 ThreadPool Summary Unreal Engine에서 비동기 작업을 사용할 때 가장 중요한 원칙은 UObject는 기본적으로 Thread-Safe하지 않다는 점이다."/><meta property="og:description" content="Async와 ThreadPool Summary Unreal Engine에서 비동기 작업을 사용할 때 가장 중요한 원칙은 UObject는 기본적으로 Thread-Safe하지 않다는 점이다."/><meta property="og:image:alt" content="Async와 ThreadPool Summary Unreal Engine에서 비동기 작업을 사용할 때 가장 중요한 원칙은 UObject는 기본적으로 Thread-Safe하지 않다는 점이다."/><meta property="og:image" content="https://yeomin-yoon.github.io/development-notes/static/og-image.png"/><meta property="og:image:url" content="https://yeomin-yoon.github.io/development-notes/static/og-image.png"/><meta name="twitter:image" content="https://yeomin-yoon.github.io/development-notes/static/og-image.png"/><meta property="og:image:type" content="image/.png"/><meta property="twitter:domain" content="yeomin-yoon.github.io/development-notes"/><meta property="og:url" content="https://yeomin-yoon.github.io/development-notes/unreal/async--and--threadpool"/><meta property="twitter:url" content="https://yeomin-yoon.github.io/development-notes/unreal/async--and--threadpool"/><link rel="icon" href="../static/icon.png"/><meta name="description" content="Async와 ThreadPool Summary Unreal Engine에서 비동기 작업을 사용할 때 가장 중요한 원칙은 UObject는 기본적으로 Thread-Safe하지 않다는 점이다."/><meta name="generator" content="Quartz"/><link href="../index-ae276ac8.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../component-735924e0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../component-589c1cea.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../component-bbc3f7c0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../component-2911f5d1.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../component-53b25b2b.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../component-8a06014f.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../component-77d6a441.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../component-6ee21cee.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../component-1ea6ad18.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../component-788c9ca3.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../component-4abc06bd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../component-274a3dfe.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../component-94cb6c84.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../static/resource-style-a5c806d2.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../static/resource-style-6bd36952.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" data-persist="true"/><script src="../prescript-2bfc6315.js" type="application/javascript" data-persist="true"></script><script type="application/javascript" data-persist="true">const fetchData = fetch("../static/contentIndex.json").then(data => data.json())</script></head><body data-slug="unreal/async--and--threadpool" data-basepath="/development-notes"><div id="quartz-root" class="page" data-frame="default"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="..">개발 공부 기록</a></h2><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 0.5rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button" aria-label="검색" aria-expanded="false"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>검색</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="검색어를 입력하세요" placeholder="검색어를 입력하세요"/><div class="search-layout" data-preview="true" data-field-priority="[&quot;title&quot;,&quot;content&quot;,&quot;tags&quot;]"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode" aria-label="다크 모드"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="다크 모드"><title>다크 모드</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="라이트 모드"><title>라이트 모드</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode" aria-label="리더 모드"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="리더 모드"><title>리더 모드</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer nav-files-container" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a2, b2) => {\n    if (!a2.isFolder &amp;&amp; !b2.isFolder || a2.isFolder &amp;&amp; b2.isFolder) {\n      return (a2.displayName || \&quot;\&quot;).localeCompare(b2.displayName || \&quot;\&quot;, void 0, {\n        numeric: true,\n        sensitivity: \&quot;base\&quot;\n      });\n    }\n    if (!a2.isFolder &amp;&amp; b2.isFolder) {\n      return 1;\n    }\n    return -1;\n  }&quot;,&quot;filterFn&quot;:&quot;(node) => node.slugSegment !== \&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;(node) => {\n    return node;\n  }&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-37" aria-label="탐색기"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>목차</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-37" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#" class="nav-file-title tree-item-self"></a></li></template><template id="template-folder"><li><div class="folder-container nav-folder-title tree-item-self"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon nav-folder-collapse-indicator collapse-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content tree-item-children"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../unreal/">Unreal</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>Async &amp; ThreadPool</a></div></nav><h1 class="article-title">Async &amp; ThreadPool</h1><p show-comma="false" class="content-meta"><time datetime="2026-07-07T12:28:05.000Z">2026년 7월 07일</time></p></div></div><article class="popover-hint"><div class="markdown-preview-view markdown-rendered"><h1 id="async와-threadpool">Async와 ThreadPool<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#async와-threadpool" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<blockquote class="callout abstract" data-callout="abstract">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Summary</p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>Unreal Engine에서 비동기 작업을 사용할 때 가장 중요한 원칙은 <strong>UObject는 기본적으로 Thread-Safe하지 않다</strong>는 점이다.<br/>
+무거운 계산이나 파일 I/O는 Worker Thread에서 처리하고, 계산이 끝난 결과만 GameThread로 돌려보내 UObject에 반영해야 한다.</p>
+</div>
+</blockquote>
+<h2 id="기본-흐름">기본 흐름<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#기본-흐름" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="text" data-theme="github-light github-dark"><code data-language="text" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>GameThread</span></span>
+<span data-line><span>→ UObject에서 필요한 값 복사</span></span>
+<span data-line><span>→ Worker Thread에서 순수 계산</span></span>
+<span data-line><span>→ GameThread로 결과 전달</span></span>
+<span data-line><span>→ UObject 유효성 확인 후 반영</span></span></code></pre></figure>
+<blockquote>
+<p><strong>Worker에서는 계산만, UObject 접근은 GameThread에서.</strong></p>
+</blockquote>
+<hr/>
+<h2 id="왜-async와-threadpool이-필요한가">왜 Async와 ThreadPool이 필요한가<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#왜-async와-threadpool이-필요한가" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p><code>GameThread</code>는 Tick, 게임 로직, Actor/Component 처리, UI 갱신처럼 프레임마다 필요한 일을 담당한다.</p>
+<p>여기에 오래 걸리는 계산이나 파일 처리가 끼어들면 프레임이 밀리고 화면이 멈춘 것처럼 보일 수 있다.</p>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;flowchart LR\n    A[GameThread] --> B{무거운 계산}\n    B --> C[프레임 지연]\n    C --> D[입력 반응 저하]\n\n    style C fill:#ffd6d6\n    style D fill:#ffd6d6&quot;">flowchart LR
+    A[GameThread] --> B{무거운 계산}
+    B --> C[프레임 지연]
+    C --> D[입력 반응 저하]
+
+    style C fill:#ffd6d6
+    style D fill:#ffd6d6
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<p>해결 방향은 명확하다.</p>
+<ol>
+<li>오래 걸리는 순수 계산은 Worker Thread에서 처리한다.</li>
+<li>계산 중에는 <code>UObject</code>, <code>AActor</code>, <code>UActorComponent</code>, <code>UWorld</code>를 직접 조작하지 않는다.</li>
+<li>결과 적용은 <code>AsyncTask(ENamedThreads::GameThread, ...)</code>로 GameThread에 넘긴다.</li>
+</ol>
+<hr/>
+<h2 id="1-worker-thread에서-uobject를-조심해야-하는-이유">1. Worker Thread에서 UObject를 조심해야 하는 이유<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#1-worker-thread에서-uobject를-조심해야-하는-이유" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p><code>UObject</code>는 단순한 C++ 객체가 아니다. <a href="../unreal/gc" class="internal internal-link" data-slug="unreal/gc">GC</a>와 <a href="../unreal/reflection" class="internal internal-link" data-slug="unreal/reflection">Reflection</a> 시스템이 생명주기, 프로퍼티, 타입 정보를 추적하는 Unreal 런타임 객체다.</p>
+<p>Worker Thread에서 UObject를 직접 읽거나 수정하면 매번 바로 실패하지는 않더라도, 다음 문제가 발생할 수 있다.</p>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;flowchart TD\n    A[Worker Thread] --> B[\&quot;UObject 접근&lt;br/>(SetActorLocation, SetText 등)\&quot;]\n    B --> C{스레드 경합}\n    C --> D[GC 또는 Destroy 타이밍과 충돌]\n    C --> E[GameThread가 읽는 중 Worker가 수정]\n    C --> F[엔진 내부 상태를 잘못된 스레드에서 변경]\n    D --> G[Dangling Pointer 또는 크래시]\n    E --> G\n    F --> G\n\n    style B fill:#ffd6d6\n    style G fill:#ffd6d6&quot;">flowchart TD
+    A[Worker Thread] --> B[&quot;UObject 접근&lt;br/>(SetActorLocation, SetText 등)&quot;]
+    B --> C{스레드 경합}
+    C --> D[GC 또는 Destroy 타이밍과 충돌]
+    C --> E[GameThread가 읽는 중 Worker가 수정]
+    C --> F[엔진 내부 상태를 잘못된 스레드에서 변경]
+    D --> G[Dangling Pointer 또는 크래시]
+    E --> G
+    F --> G
+
+    style B fill:#ffd6d6
+    style G fill:#ffd6d6
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<blockquote class="callout warning" data-callout="warning">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Caution</p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>Worker Thread 안에서 <code>SpawnActor()</code>, <code>Destroy()</code>, <code>SetActorLocation()</code>, UI 위젯 수정, 컴포넌트 추가/삭제 같은 작업은 피해야 한다. 이런 작업은 GameThread에서 수행하는 것이 Unreal의 기본 규칙이다.</p>
+</div>
+</blockquote>
+<p>Worker Thread에서 안전하게 다루기 좋은 값은 UObject 생명주기와 독립적이고, 다른 스레드와 동시에 수정하지 않는 데이터다.</p>
+<ul>
+<li><code>int32</code>, <code>float</code>, <code>bool</code></li>
+<li><code>FVector</code>, <code>FRotator</code>, <code>FTransform</code></li>
+<li>Worker 전용으로 복사된 <code>TArray</code>, <code>TMap</code>, <code>FString</code></li>
+<li>직접 만든 순수 데이터 구조체</li>
+</ul>
+<p>값 타입이라도 같은 인스턴스를 여러 스레드가 동시에 읽고 쓰면 데이터 레이스가 생길 수 있다. “UObject가 아니다”와 “자동으로 Thread-Safe하다”는 같은 뜻이 아니다.</p>
+<hr/>
+<h2 id="2-기본-패턴-계산은-뒤에서-적용은-앞에서">2. 기본 패턴: 계산은 뒤에서, 적용은 앞에서<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#2-기본-패턴-계산은-뒤에서-적용은-앞에서" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>가장 안전한 구조는 <strong>계산과 적용을 분리</strong>하는 것이다.</p>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;sequenceDiagram\n    participant Worker as Worker Thread\n    participant Game as GameThread\n\n    Note over Worker: Async(EAsyncExecution::ThreadPool)\n    Worker->>Worker: 1. 순수 데이터로 계산\n    Worker->>Game: 2. AsyncTask로 결과 전달\n    Note over Game: AsyncTask(ENamedThreads::GameThread)\n    Game->>Game: 3. UObject 유효성 확인 후 반영&quot;">sequenceDiagram
+    participant Worker as Worker Thread
+    participant Game as GameThread
+
+    Note over Worker: Async(EAsyncExecution::ThreadPool)
+    Worker->>Worker: 1. 순수 데이터로 계산
+    Worker->>Game: 2. AsyncTask로 결과 전달
+    Note over Game: AsyncTask(ENamedThreads::GameThread)
+    Game->>Game: 3. UObject 유효성 확인 후 반영
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<p>잘못된 패턴:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="cpp" data-theme="github-light github-dark"><code data-language="cpp" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">Async</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">EAsyncExecution</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">::ThreadPool, [</span><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;" data-token-type="important">Actor</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">, </span><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;" data-token-type="important">Pos</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">]()</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">{</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">    // Worker Thread에서 UObject를 직접 조작한다.</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal">    Actor-></span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">SetActorLocation</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(Pos);</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">});</span></span></code></pre></figure>
+<p>권장 패턴:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="cpp" data-theme="github-light github-dark"><code data-language="cpp" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">TWeakObjectPtr</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">&lt;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">AActor</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">></span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> WeakActor </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> Actor;</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">const</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> FVector StartLocation </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal"> Actor-></span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">GetActorLocation</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">();</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">Async</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">EAsyncExecution</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">::ThreadPool, [</span><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;" data-token-type="important">WeakActor</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">, </span><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;" data-token-type="important">StartLocation</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">]()</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">{</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">    // Worker Thread: 순수 데이터만 사용해서 계산한다.</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    const</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> FVector Result </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> CalculateHeavyMath</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(StartLocation);</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">    AsyncTask</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">ENamedThreads</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">::GameThread, [</span><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;" data-token-type="important">WeakActor</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">, </span><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;" data-token-type="important">Result</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">]()</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    {</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">        // GameThread: UObject가 아직 유효한지 확인한 뒤 반영한다.</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">        if</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> (</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">!</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal">WeakActor.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">IsValid</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">())</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">        {</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">            return</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">        }</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal">        WeakActor-></span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">SetActorLocation</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(Result);</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    });</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">});</span></span></code></pre></figure>
+<blockquote class="callout tip" data-callout="tip">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Tip</p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>람다에 <code>AActor*</code>를 그대로 캡처하면, 비동기 작업이 끝나기 전에 Actor가 삭제됐을 때 위험하다. <code>TWeakObjectPtr</code>로 캡처하고 GameThread에서 <code>IsValid()</code>를 확인하는 습관이 안전하다.<br/>
+단, <code>TWeakObjectPtr</code>을 쓴다고 해서 Worker Thread에서 UObject를 역참조해도 된다는 뜻은 아니다.</p>
+</div>
+</blockquote>
+<hr/>
+<h2 id="3-threadpool의-역할">3. ThreadPool의 역할<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#3-threadpool의-역할" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p><code>ThreadPool</code>은 작업마다 새 스레드를 만드는 구조가 아니다. 미리 준비된 Worker Thread 묶음을 두고, 작업이 들어오면 비어 있는 스레드가 하나씩 가져가 처리하는 구조다.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>구분</th><th>주된 역할</th><th>UObject 접근</th></tr></thead><tbody><tr><td><strong>GameThread</strong></td><td>Tick, 게임 로직, Actor/Component 생성과 삭제, UI 수정</td><td>가능</td></tr><tr><td><strong>Worker Thread</strong></td><td>무거운 계산, 파일 I/O, 압축/파싱 등 순수 작업</td><td>직접 조작 금지</td></tr></tbody></table></div>
+<p>ThreadPool을 쓰면 스레드 생성 비용을 줄이고 여러 비동기 작업을 효율적으로 나눠 처리할 수 있다.</p>
+<p>다만 작업 수가 너무 많거나 각 작업이 너무 오래 걸리면 ThreadPool 자체가 포화될 수 있다. 작업 단위를 너무 잘게 쪼개거나 무한 대기 작업을 넣는 것은 피해야 한다.</p>
+<p>오래 막히는 파일 I/O나 네트워크 대기를 공용 ThreadPool에 많이 넣으면 계산 작업까지 기다릴 수 있다. 장시간 블로킹 작업은 엔진이 제공하는 비동기 I/O 기능이나 별도 실행 경로가 있는지 확인한다.</p>
+<hr/>
+<h2 id="4-실전-체크리스트">4. 실전 체크리스트<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#4-실전-체크리스트" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>우선순위</th><th>규칙</th><th>이유</th></tr></thead><tbody><tr><td>1</td><td>Worker Thread에서 UObject 조작 금지</td><td>GC, 생명주기, 스레드 경합 문제를 피하기 위해</td></tr><tr><td>2</td><td>필요한 값은 GameThread에서 미리 복사</td><td>Worker Thread가 UObject를 읽지 않도록 하기 위해</td></tr><tr><td>3</td><td>결과 적용은 GameThread로 복귀</td><td>Unreal 객체 시스템은 GameThread 기준으로 동작하기 때문에</td></tr><tr><td>4</td><td>UObject 참조는 <code>TWeakObjectPtr</code> 사용</td><td>비동기 작업 중 객체가 삭제될 수 있기 때문에</td></tr><tr><td>5</td><td>오래 붙잡는 작업은 취소/중단 조건 고려</td><td>레벨 전환, 객체 삭제, 게임 종료 시 안전하게 빠져나오기 위해</td></tr><tr><td>6</td><td>작업 완료 순서에 의존하지 않기</td><td>먼저 시작한 작업이 먼저 끝난다는 보장이 없기 때문에</td></tr></tbody></table></div>
+<blockquote class="callout note" data-callout="note">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Note</p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>결과가 도착한 순서가 중요하다면 요청 ID나 세대 번호를 함께 전달한다. GameThread에서 현재 요청과 일치하는 결과만 적용하면 오래된 작업이 최신 상태를 덮어쓰는 문제를 막을 수 있다.</p>
+</div>
+</blockquote>
+<hr/>
+<h2 id="정리">정리<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#정리" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Async와 ThreadPool을 사용할 때의 핵심은 스레드를 많이 쓰는 것이 아니라, <strong>UObject를 건드리는 시점과 순수 계산을 수행하는 시점을 분리하는 것</strong>이다.</p>
+<ul>
+<li>Worker Thread: 순수 데이터 기반 계산</li>
+<li>GameThread: UObject 검증과 결과 반영</li>
+<li>연결부: <code>AsyncTask(ENamedThreads::GameThread, ...)</code></li>
+</ul>
+<p>이 원칙을 지키면 Unreal 비동기 코드에서 발생하는 대부분의 위험한 크래시를 줄일 수 있다.</p>
+<blockquote class="callout note" data-callout="note">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Note</p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>이 글은 UE5 계열의 일반적인 사용 원칙을 설명한다. 실제 프로젝트에서는 사용하는 엔진 버전의 API와 스레드 안전성 문서를 함께 확인한다.</p>
+</div>
+</blockquote>
+<hr/>
+<p><a href="../unreal/unreal-정리-목차" class="internal internal-link alias" data-slug="unreal/unreal-정리-목차">Unreal 정리 목차</a> · <a href="../unreal/gc" class="internal internal-link" data-slug="unreal/gc">GC</a> · <a href="../unreal/reflection" class="internal internal-link" data-slug="unreal/reflection">Reflection</a> · <a href="../c++/race-condition" class="internal internal-link alias" data-slug="c++/race-condition">Race Condition</a></p></div></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="toc"><button type="button" class="toc-header" aria-controls="toc-37" aria-expanded="true"><h3>목차</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-0" class="toc-content overflow"><li class="depth-0"><a href="#async와-threadpool" data-for="async와-threadpool">Async와 ThreadPool</a></li><li class="depth-1"><a href="#기본-흐름" data-for="기본-흐름">기본 흐름</a></li><li class="depth-1"><a href="#왜-async와-threadpool이-필요한가" data-for="왜-async와-threadpool이-필요한가">왜 Async와 ThreadPool이 필요한가</a></li><li class="depth-1"><a href="#1-worker-thread에서-uobject를-조심해야-하는-이유" data-for="1-worker-thread에서-uobject를-조심해야-하는-이유">1. Worker Thread에서 UObject를 조심해야 하는 이유</a></li><li class="depth-1"><a href="#2-기본-패턴-계산은-뒤에서-적용은-앞에서" data-for="2-기본-패턴-계산은-뒤에서-적용은-앞에서">2. 기본 패턴: 계산은 뒤에서, 적용은 앞에서</a></li><li class="depth-1"><a href="#3-threadpool의-역할" data-for="3-threadpool의-역할">3. ThreadPool의 역할</a></li><li class="depth-1"><a href="#4-실전-체크리스트" data-for="4-실전-체크리스트">4. 실전 체크리스트</a></li><li class="depth-1"><a href="#정리" data-for="정리">정리</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Created with <a href="https://quartz.jzhao.xyz/">Quartz v5.0.0</a> © 2026</p><ul><li><a href="https://github.com/HyeseonLikesPizza/yeoeunseon/tree/main/yeoeunseon/%EC%9C%A4%EC%97%AC%EB%AF%BC">원본 기록</a></li></ul></footer></div></div></body><script src="../static/resource-after-e13fffa1.js" type="application/javascript" data-persist="true"></script><script src="../static/resource-after-8b336f9a.js" type="application/javascript" data-persist="true"></script><script src="../static/resource-after-baba652b.js" type="application/javascript" data-persist="true"></script><script src="../static/resource-after-5eb75950.js" type="module" data-persist="true"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript" data-persist="true"></script><script src="../postscript-5e06a1c1.js" type="module" data-persist="true"></script></html>

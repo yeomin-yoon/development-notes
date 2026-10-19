@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="ko" dir="ltr"><head><title>TMap 조회가 특정 상황에서만 느려진 이유 | 윤여민</title><meta charset="utf-8"/><link rel="preload" href="../index-ae276ac8.css" as="style"/><link rel="preload" href="../prescript-2bfc6315.js" as="script"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto Sans KR:wght@400;700&amp;family=Noto Sans KR:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="개발 공부 기록"/><meta property="og:title" content="TMap 조회가 특정 상황에서만 느려진 이유 | 윤여민"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="TMap 조회가 특정 상황에서만 느려진 이유 | 윤여민"/><meta name="twitter:description" content="문제 상황 네가 Unreal 게임의 AI 시스템을 맡고 있다. 적을 빠르게 찾기 위해 다음 자료구조를 사용했다."/><meta property="og:description" content="문제 상황 네가 Unreal 게임의 AI 시스템을 맡고 있다. 적을 빠르게 찾기 위해 다음 자료구조를 사용했다."/><meta property="og:image:alt" content="문제 상황 네가 Unreal 게임의 AI 시스템을 맡고 있다. 적을 빠르게 찾기 위해 다음 자료구조를 사용했다."/><meta property="og:image" content="https://yeomin-yoon.github.io/development-notes/static/og-image.png"/><meta property="og:image:url" content="https://yeomin-yoon.github.io/development-notes/static/og-image.png"/><meta name="twitter:image" content="https://yeomin-yoon.github.io/development-notes/static/og-image.png"/><meta property="og:image:type" content="image/.png"/><meta property="twitter:domain" content="yeomin-yoon.github.io/development-notes"/><meta property="og:url" content="https://yeomin-yoon.github.io/development-notes/problem-solvings/tmap-조회가-특정-상황에서만-느려진-이유"/><meta property="twitter:url" content="https://yeomin-yoon.github.io/development-notes/problem-solvings/tmap-조회가-특정-상황에서만-느려진-이유"/><link rel="icon" href="../static/icon.png"/><meta name="description" content="문제 상황 네가 Unreal 게임의 AI 시스템을 맡고 있다. 적을 빠르게 찾기 위해 다음 자료구조를 사용했다."/><meta name="generator" content="Quartz"/><link href="../index-ae276ac8.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../component-735924e0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../component-589c1cea.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../component-bbc3f7c0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../component-2911f5d1.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../component-53b25b2b.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../component-8a06014f.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../component-77d6a441.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../component-6ee21cee.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../component-1ea6ad18.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../component-788c9ca3.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../component-4abc06bd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../component-274a3dfe.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../component-94cb6c84.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../static/resource-style-a5c806d2.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../static/resource-style-6bd36952.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" data-persist="true"/><script src="../prescript-2bfc6315.js" type="application/javascript" data-persist="true"></script><script type="application/javascript" data-persist="true">const fetchData = fetch("../static/contentIndex.json").then(data => data.json())</script></head><body data-slug="problem-solvings/tmap-조회가-특정-상황에서만-느려진-이유" data-basepath="/development-notes"><div id="quartz-root" class="page" data-frame="default"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="..">개발 공부 기록</a></h2><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 0.5rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button" aria-label="검색" aria-expanded="false"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>검색</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="검색어를 입력하세요" placeholder="검색어를 입력하세요"/><div class="search-layout" data-preview="true" data-field-priority="[&quot;title&quot;,&quot;content&quot;,&quot;tags&quot;]"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode" aria-label="다크 모드"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="다크 모드"><title>다크 모드</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="라이트 모드"><title>라이트 모드</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode" aria-label="리더 모드"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="리더 모드"><title>리더 모드</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer nav-files-container" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a2, b2) => {\n    if (!a2.isFolder &amp;&amp; !b2.isFolder || a2.isFolder &amp;&amp; b2.isFolder) {\n      return (a2.displayName || \&quot;\&quot;).localeCompare(b2.displayName || \&quot;\&quot;, void 0, {\n        numeric: true,\n        sensitivity: \&quot;base\&quot;\n      });\n    }\n    if (!a2.isFolder &amp;&amp; b2.isFolder) {\n      return 1;\n    }\n    return -1;\n  }&quot;,&quot;filterFn&quot;:&quot;(node) => node.slugSegment !== \&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;(node) => {\n    return node;\n  }&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-20" aria-label="탐색기"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>목차</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-20" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#" class="nav-file-title tree-item-self"></a></li></template><template id="template-folder"><li><div class="folder-container nav-folder-title tree-item-self"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon nav-folder-collapse-indicator collapse-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content tree-item-children"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../problem-solvings/">Problem Solvings</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>TMap 조회가 특정 상황에서만 느려진 이유</a></div></nav><h1 class="article-title">TMap 조회가 특정 상황에서만 느려진 이유</h1><p show-comma="false" class="content-meta"><time datetime="2026-10-15T03:11:32.000Z">2026년 10월 15일</time></p></div></div><article class="popover-hint"><div class="markdown-preview-view markdown-rendered"><h2 id="문제-상황">문제 상황<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#문제-상황" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>네가 Unreal 게임의 AI 시스템을 맡고 있다.</p>
+<p>적을 빠르게 찾기 위해 다음 자료구조를 사용했다.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="cpp" data-theme="github-light github-dark"><code data-language="cpp" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">struct</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="property"> FEnemyKey</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">{</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    int32 ZoneId;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    int32 EnemyId;</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    bool</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword"> operator</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">==</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">const</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="property"> FEnemyKey</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">&amp;</span><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;" data-token-type="important"> Other</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">) </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">const</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    {</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">        return</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> ZoneId </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">==</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal"> Other.ZoneId</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">            &amp;&amp;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> EnemyId </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">==</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal"> Other.EnemyId;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    }</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">};</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">FORCEINLINE uint32 </span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">GetTypeHash</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">const</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> FEnemyKey</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">&amp;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> Key)</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">{</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    return</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> GetTypeHash</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(Key.ZoneId);</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">}</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">TMap</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">&lt;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">FEnemyKey, FEnemyData</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">></span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> EnemyMap;</span></span></code></pre></figure>
+<p>QA에서 이상한 현상이 보고됐다.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="text" data-theme="github-light github-dark"><code data-language="text" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>초반 지역       적 2,000마리  → 문제 없음</span></span>
+<span data-line><span>필드 지역       적 10,000마리 → 문제 없음</span></span>
+<span data-line><span>대규모 전투     적 10,000마리 → 심한 CPU 스파이크</span></span></code></pre></figure>
+<p>프로파일링에서 비용이 크게 잡힌 곳은 다음 조회였다.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="cpp" data-theme="github-light github-dark"><code data-language="cpp" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal">EnemyMap.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">Find</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(Key);</span></span></code></pre></figure>
+<p>팀원이 말한다.</p>
+<blockquote>
+<p>“<code>TMap</code> 조회는 평균 <code>O(1)</code>인데, 적이 10,000마리라는 이유만으로 <code>Find()</code>가 갑자기 느려질 수 있나요?”</p>
+</blockquote>
+<p>느린 대규모 전투의 Key는 대략 이렇다.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="text" data-theme="github-light github-dark"><code data-language="text" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>{ ZoneId=50, EnemyId=1 }</span></span>
+<span data-line><span>{ ZoneId=50, EnemyId=2 }</span></span>
+<span data-line><span>{ ZoneId=50, EnemyId=3 }</span></span>
+<span data-line><span>...</span></span>
+<span data-line><span>{ ZoneId=50, EnemyId=10000 }</span></span></code></pre></figure>
+<p>반면 정상적인 테스트 데이터는 <code>ZoneId</code>도 다양했다.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="text" data-theme="github-light github-dark"><code data-language="text" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>{ ZoneId=1, EnemyId=1 }</span></span>
+<span data-line><span>{ ZoneId=2, EnemyId=2 }</span></span>
+<span data-line><span>{ ZoneId=3, EnemyId=3 }</span></span>
+<span data-line><span>...</span></span></code></pre></figure>
+<hr/>
+<h2 id="풀이--생각을-마친-뒤-열기">풀이 — 생각을 마친 뒤 열기<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#풀이--생각을-마친-뒤-열기" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<blockquote class="callout question is-collapsible is-collapsed" data-callout="question" data-callout-fold>
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>1부 — 무엇이 다른가 </p></div>
+                  <div class="fold-callout-icon callout-fold"></div>
+                </div>
+<div class="callout-content">
+<h3 id="step-1--적이-많아서-느린-걸까">STEP 1 — 적이 많아서 느린 걸까?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#step-1--적이-많아서-느린-걸까" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>두 상황 모두 10,000명이다. 개수만으로는 한쪽에서만 생긴 비용을 설명할 수 없다.</strong></p>
+<p>같은 <code>TMap::Find()</code>를 호출하는데 결과가 다르다면 먼저 입력의 차이를 찾는다.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="text" data-theme="github-light github-dark"><code data-language="text" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>필드 전투      → ZoneId가 다양함</span></span>
+<span data-line><span>대규모 전투    → ZoneId가 모두 50</span></span>
+<span data-line><span>현재 Hash      → ZoneId만 사용</span></span></code></pre></figure>
+<p>느린 전투에서는 서로 다른 Enemy 10,000명이 모두 같은 Hash에서 출발한다.</p>
+<p>평균 <code>O(1)</code>은 모든 입력에서 조회 횟수가 항상 한 번이라는 뜻이 아니다. 실제 Key가 적절히 분산되고 테이블 상태도 적절할 때 기대할 수 있는 평균적인 특성이다.</p>
+<hr/>
+<h3 id="step-2--같은-hash인데-왜-결과는-맞을까">STEP 2 — 같은 Hash인데 왜 결과는 맞을까?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#step-2--같은-hash인데-왜-결과는-맞을까" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Hash는 후보를 좁히고, <code>operator==</code>는 후보 중 실제 Key를 판정한다.</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="text" data-theme="github-light github-dark"><code data-language="text" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>Hash 계산</span></span>
+<span data-line><span>→ 확인할 후보를 찾음</span></span>
+<span data-line><span>→ operator==로 ZoneId와 EnemyId 비교</span></span>
+<span data-line><span>→ 일치하는 Enemy 확정</span></span></code></pre></figure>
+<p><code>{50,1}</code>과 <code>{50,3}</code>의 Hash가 같아도 <code>operator==</code>는 두 필드를 모두 비교한다. 따라서 Collision이 곧바로 오답을 만드는 것은 아니다. 대신 같은 후보에 몰린 Key를 더 많이 비교하게 된다.</p>
+<p>Hash와 equality가 지켜야 할 계약은 한 방향이다.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="text" data-theme="github-light github-dark"><code data-language="text" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>A == B</span></span>
+<span data-line><span>→ Hash(A) == Hash(B)</span></span>
+<span data-line> </span>
+<span data-line><span>Hash(A) == Hash(B)</span></span>
+<span data-line><span>↛ A == B</span></span></code></pre></figure>
+<p>기존 Hash도 이 계약은 지킨다. 문제는 계약 위반이 아니라 이 데이터에서의 나쁜 분포다.</p>
+</div>
+</blockquote>
+<blockquote class="callout question is-collapsible is-collapsed" data-callout="question" data-callout-fold>
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>2부 — 원인을 바꾸고 다시 확인하기 </p></div>
+                  <div class="fold-callout-icon callout-fold"></div>
+                </div>
+<div class="callout-content">
+<h3 id="step-3--무엇만-바꿔볼까">STEP 3 — 무엇만 바꿔볼까?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#step-3--무엇만-바꿔볼까" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Enemy 수와 Key는 그대로 두고 Hash 입력만 바꾼다.</strong></p>
+<p>이 Key의 동일성은 <code>ZoneId + EnemyId</code>로 결정된다. 현재 데이터에서는 <code>EnemyId</code>를 Hash에 반영해야 같은 Zone의 적도 더 잘 분산된다.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="cpp" data-theme="github-light github-dark"><code data-language="cpp" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">FORCEINLINE uint32 </span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">GetTypeHash</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">const</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> FEnemyKey</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">&amp;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> Key)</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">{</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    return</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> HashCombineFast</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">        ::</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">GetTypeHash</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(Key.ZoneId),</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">        ::</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">GetTypeHash</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(Key.EnemyId));</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">}</span></span></code></pre></figure>
+<p><code>HashCombineFast()</code>가 Collision을 없애주는 것은 아니다. 유한한 Hash와 Bucket을 사용하는 이상 서로 다른 Key가 겹칠 수 있다. 여기서는 실제 입력이 하나의 Hash에 대량으로 몰리는 현상을 줄이는 것이 목적이다.</p>
+<p>수정 전후를 같은 데이터로 조회해 equality 횟수가 함께 줄어드는지 확인한다.</p>
+<hr/>
+<h3 id="step-4--probing을-쓰면-해결될까">STEP 4 — Probing을 쓰면 해결될까?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#step-4--probing을-쓰면-해결될까" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Chaining과 Probing은 Collision이 생긴 뒤 처리하는 방식이다. 나쁜 Hash 분포 자체를 고치지는 않는다.</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="text" data-theme="github-light github-dark"><code data-language="text" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>Chaining</span></span>
+<span data-line><span>→ 같은 후보 연결을 더 오래 따라감</span></span>
+<span data-line> </span>
+<span data-line><span>Open Addressing / Probing</span></span>
+<span data-line><span>→ 같은 시작점에서 더 멀리 탐색함</span></span></code></pre></figure>
+<p>둘의 저장 방식과 메모리 접근 특성은 다르다. 하지만 같은 Hash에 대량으로 몰리는 원인을 그대로 두면 긴 Chain이나 긴 Probe로 비용이 나타난다.</p>
+<p>이번 테스트의 Probing 코드는 이 원리만 확인한 단순 모델이다. Unreal <code>TMap</code>의 실제 구현과 Chaining·Probing의 전체 성능을 비교한 실험은 아니다.</p>
+</div>
+</blockquote>
+<h2 id="테스트--hash-분포와-조회-비용">테스트 — Hash 분포와 조회 비용<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#테스트--hash-분포와-조회-비용" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<blockquote class="callout example is-collapsible is-collapsed" data-callout="example" data-callout-fold>
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>테스트 전체 보기 </p></div>
+                  <div class="fold-callout-icon callout-fold"></div>
+                </div>
+<div class="callout-content">
+<p>테스트 코드는 <code>TMapSlowFindTest.cpp</code>, Automation 경로는 <code>TestProject.ProblemSolving.TMapSlowFind</code>다.</p>
+<p>아래 수치는 <code>TestProject-backup-2026.09.01-13.10.23.log</code>의 <code>Success</code> 실행에서 가져왔다.</p>
+<h3 id="1-같은-hash와-입력-분포">1. 같은 Hash와 입력 분포<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#1-같은-hash와-입력-분포" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>서로 다른 두 Key가 실제로 같은 Hash를 만들었다.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="text" data-theme="github-light github-dark"><code data-language="text" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>BadHash {50,1}=50</span></span>
+<span data-line><span>BadHash {50,2}=50</span></span></code></pre></figure>
+<p>다음 두 실험은 Enemy 10,000명, 조회 횟수, Bad Hash를 같게 두고 <code>ZoneId</code> 분포만 바꿨다.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="text" data-theme="github-light github-dark"><code data-language="text" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>Zone 다양함 :   0.011 ms / equality=11,808</span></span>
+<span data-line><span>Zone 전부 50: 100.162 ms / equality=50,005,000</span></span>
+<span data-line> </span>
+<span data-line><span>조회 1회당 평균 equality</span></span>
+<span data-line><span>Zone 다양함 : 약 1.18회</span></span>
+<span data-line><span>Zone 전부 50: 약 5,000.5회</span></span></code></pre></figure>
+<p>개수는 같았지만 같은 Hash에 몰린 입력에서 equality가 급증했다. 시간은 실행 환경과 equality 계측 비용에 따라 흔들리므로, 이 실험에서는 비교 횟수가 더 직접적인 증거다.</p>
+<hr/>
+<h3 id="2-정확성과-hash-수정">2. 정확성과 Hash 수정<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#2-정확성과-hash-수정" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>같은 Hash를 갖는 <code>{50,1}</code>부터 <code>{50,4}</code>까지 넣은 뒤 <code>{50,3}</code>을 찾았다.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="text" data-theme="github-light github-dark"><code data-language="text" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>Find({50,3}) → &quot;Enemy 3&quot;</span></span>
+<span data-line><span>equality 비교=2</span></span></code></pre></figure>
+<p>후보 비교가 생겨도 <code>operator==</code>가 정확한 Enemy를 골랐다.</p>
+<p>모든 <code>ZoneId</code>가 50인 데이터를 유지한 채 <code>EnemyId</code>까지 Hash에 반영했다.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="text" data-theme="github-light github-dark"><code data-language="text" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>Bad Hash  : 100.162 ms / equality=50,005,000</span></span>
+<span data-line><span>Good Hash :   0.012 ms / equality=11,808</span></span>
+<span data-line> </span>
+<span data-line><span>GoodHash {50,1}=2,654,439,028</span></span>
+<span data-line><span>GoodHash {50,2}=2,654,439,029</span></span></code></pre></figure>
+<p>적의 수와 조회할 Key는 같았다. Hash 입력만 바꾸자 equality가 약 4,235분의 1로 줄었고 checksum은 같았다.</p>
+<p>Good Hash의 equality가 정확히 10,000회는 아니다. 서로 다른 Hash도 제한된 Bucket 수에서는 같은 후보 영역에 들어갈 수 있다.</p>
+<hr/>
+<h3 id="3-실행-스레드와-probing-개념-실험">3. 실행 스레드와 Probing 개념 실험<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#3-실행-스레드와-probing-개념-실험" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Automation은 Game Thread에서 실행됐다.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="text" data-theme="github-light github-dark"><code data-language="text" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>Game Thread에서 실행 중=YES</span></span></code></pre></figure>
+<p>이 실행에서 <code>GetTypeHash()</code>, <code>TMap::Find()</code>, <code>operator==</code>의 비용은 Game Thread CPU 시간에 포함된다. 다른 스레드에서 호출하면 그 스레드의 비용이 된다.</p>
+<p>별도의 단순 Linear Probing 실험에서는 시작 Slot만 다르게 했다.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="text" data-theme="github-light github-dark"><code data-language="text" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>같은 시작 Slot : total probes=36 / max probe=8</span></span>
+<span data-line><span>분산된 시작 Slot: total probes=8  / max probe=1</span></span></code></pre></figure>
+<p>이 결과는 같은 시작점에 몰리면 Probing도 길어진다는 것만 보여준다. 실제 <code>TMap</code>의 구현이나 Chaining과 Probing 중 어느 쪽이 더 빠른지는 이 수치로 판단할 수 없다.</p>
+</div>
+</blockquote>
+<h2 id="결론">결론<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#결론" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<blockquote class="callout success" data-callout="success">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>이 문제에서 가져갈 것 </p></div>
+                  
+                </div>
+<div class="callout-content">
+<p><strong>같은 코드가 특정 입력에서만 느리다면 데이터의 개수뿐 아니라 분포를 비교한다. 평균 복잡도가 성립하는 조건도 실제 입력에서 다시 확인한다.</strong></p>
+</div>
+</blockquote>
+<h3 id="이번-문제의-흐름">이번 문제의 흐름<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#이번-문제의-흐름" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="text" data-theme="github-light github-dark"><code data-language="text" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>같은 10,000명인데 한쪽만 느림</span></span>
+<span data-line><span>→ 개수 외의 차이를 찾음</span></span>
+<span data-line><span>→ 느린 전투는 ZoneId가 모두 50</span></span>
+<span data-line><span>→ Hash는 ZoneId만 사용</span></span>
+<span data-line><span>→ 서로 다른 Enemy가 같은 Hash에 집중</span></span>
+<span data-line><span>→ equality 비교 폭증</span></span>
+<span data-line><span>→ ZoneId + EnemyId를 Hash</span></span>
+<span data-line><span>→ 같은 데이터에서 equality 감소</span></span>
+<span data-line> </span>
+<span data-line><span>결과는 왜 정확했나?</span></span>
+<span data-line><span>→ Hash는 후보 선택</span></span>
+<span data-line><span>→ operator==는 최종 Key 판정</span></span>
+<span data-line> </span>
+<span data-line><span>Probing으로 바꾸면?</span></span>
+<span data-line><span>→ Collision 처리 방식만 달라짐</span></span>
+<span data-line><span>→ Bad Hash 문제는 남음</span></span></code></pre></figure>
+<h3 id="확인한-것">확인한 것<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#확인한-것" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Bad Hash에서는 <code>{50,1}</code>과 <code>{50,2}</code>가 모두 Hash 50을 만들었다.</li>
+<li>Enemy 수를 고정하고 <code>ZoneId</code> 분포만 바꾸자 equality가 <code>11,808 → 50,005,000</code>으로 늘었다.</li>
+<li>Collision이 있어도 <code>operator==</code>가 정확한 Enemy를 찾았다.</li>
+<li>같은 Key에서 <code>EnemyId</code>까지 Hash하자 equality가 다시 11,808회로 줄었고 checksum은 같았다.</li>
+<li>단순 Probing 모델도 같은 시작 Slot에 몰릴 때 Probe가 길어졌다.</li>
+</ul>
+<p>이번 결과는 <code>HashCombineFast()</code>가 항상 정답이거나 Collision을 없앤다는 뜻이 아니다. Key의 실제 분포를 보고 Hash 함수를 설계해야 한다는 뜻이다. 필수 계약은 <code>A == B</code>이면 같은 Hash를 반환하는 것이며, equality에 쓰는 모든 필드를 반드시 Hash에 넣어야 한다는 규칙은 없다.</p>
+<h3 id="현재-코드에서-고칠-것">현재 코드에서 고칠 것<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#현재-코드에서-고칠-것" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="cpp" data-theme="github-light github-dark"><code data-language="cpp" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">FORCEINLINE uint32 </span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">GetTypeHash</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">const</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> FEnemyKey</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">&amp;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> Key)</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">{</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    return</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> HashCombineFast</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">        ::</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">GetTypeHash</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(Key.ZoneId),</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">        ::</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">GetTypeHash</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(Key.EnemyId));</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">}</span></span></code></pre></figure>
+<p>수정 뒤에는 실제 게임과 가까운 Key 분포로 다시 측정한다. 여전히 비용이 크다면 그때 Load Factor, 메모리 접근, 조회 횟수와 호출 위치를 차례로 확인한다.</p>
+<blockquote class="callout note is-collapsible is-collapsed" data-callout="note" data-callout-fold>
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>부록 — 이 문제에서 나온 개념 </p></div>
+                  <div class="fold-callout-icon callout-fold"></div>
+                </div>
+<div class="callout-content">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>개념</th><th>이 문제에서의 의미</th></tr></thead><tbody><tr><td>Hash / Equality Contract</td><td><code>A == B</code>라면 같은 Hash를 반환해야 한다. 반대는 성립하지 않는다.</td></tr><tr><td>Hash Distribution</td><td>실제 Key가 일부 Hash나 후보 영역에 과도하게 몰리지 않는지 본다.</td></tr><tr><td>Collision</td><td>서로 다른 Key가 같은 Hash나 후보 영역에 겹치는 현상이다. 과도하면 비교 비용이 늘어난다.</td></tr><tr><td>Average-case Complexity</td><td>평균 <code>O(1)</code>은 좋은 분포와 적절한 테이블 상태 등을 전제로 한다.</td></tr><tr><td>Key Identity</td><td><code>operator==</code>가 어떤 필드로 같은 Key를 판정하는지 정의한다.</td></tr><tr><td>Collision Resolution</td><td>Chaining과 Probing은 Collision 이후 후보를 처리하는 방식이다.</td></tr><tr><td>Controlled Experiment</td><td>Enemy 수와 Hash는 고정하고 <code>ZoneId</code> 분포만 바꾸어 원인을 분리했다.</td></tr></tbody></table></div>
+</div>
+</blockquote></div></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="toc"><button type="button" class="toc-header" aria-controls="toc-20" aria-expanded="true"><h3>목차</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-0" class="toc-content overflow"><li class="depth-0"><a href="#문제-상황" data-for="문제-상황">문제 상황</a></li><li class="depth-0"><a href="#풀이--생각을-마친-뒤-열기" data-for="풀이--생각을-마친-뒤-열기">풀이 — 생각을 마친 뒤 열기</a></li><li class="depth-1"><a href="#step-1--적이-많아서-느린-걸까" data-for="step-1--적이-많아서-느린-걸까">STEP 1 — 적이 많아서 느린 걸까?</a></li><li class="depth-1"><a href="#step-2--같은-hash인데-왜-결과는-맞을까" data-for="step-2--같은-hash인데-왜-결과는-맞을까">STEP 2 — 같은 Hash인데 왜 결과는 맞을까?</a></li><li class="depth-1"><a href="#step-3--무엇만-바꿔볼까" data-for="step-3--무엇만-바꿔볼까">STEP 3 — 무엇만 바꿔볼까?</a></li><li class="depth-1"><a href="#step-4--probing을-쓰면-해결될까" data-for="step-4--probing을-쓰면-해결될까">STEP 4 — Probing을 쓰면 해결될까?</a></li><li class="depth-0"><a href="#테스트--hash-분포와-조회-비용" data-for="테스트--hash-분포와-조회-비용">테스트 — Hash 분포와 조회 비용</a></li><li class="depth-1"><a href="#1-같은-hash와-입력-분포" data-for="1-같은-hash와-입력-분포">1. 같은 Hash와 입력 분포</a></li><li class="depth-1"><a href="#2-정확성과-hash-수정" data-for="2-정확성과-hash-수정">2. 정확성과 Hash 수정</a></li><li class="depth-1"><a href="#3-실행-스레드와-probing-개념-실험" data-for="3-실행-스레드와-probing-개념-실험">3. 실행 스레드와 Probing 개념 실험</a></li><li class="depth-0"><a href="#결론" data-for="결론">결론</a></li><li class="depth-1"><a href="#이번-문제의-흐름" data-for="이번-문제의-흐름">이번 문제의 흐름</a></li><li class="depth-1"><a href="#확인한-것" data-for="확인한-것">확인한 것</a></li><li class="depth-1"><a href="#현재-코드에서-고칠-것" data-for="현재-코드에서-고칠-것">현재 코드에서 고칠 것</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Created with <a href="https://quartz.jzhao.xyz/">Quartz v5.0.0</a> © 2026</p><ul><li><a href="https://github.com/HyeseonLikesPizza/yeoeunseon/tree/main/yeoeunseon/%EC%9C%A4%EC%97%AC%EB%AF%BC">원본 기록</a></li></ul></footer></div></div></body><script src="../static/resource-after-e13fffa1.js" type="application/javascript" data-persist="true"></script><script src="../static/resource-after-8b336f9a.js" type="application/javascript" data-persist="true"></script><script src="../static/resource-after-baba652b.js" type="application/javascript" data-persist="true"></script><script src="../static/resource-after-5eb75950.js" type="module" data-persist="true"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript" data-persist="true"></script><script src="../postscript-5e06a1c1.js" type="module" data-persist="true"></script></html>

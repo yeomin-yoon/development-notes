@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="ko" dir="ltr"><head><title>vector와 unordered_map 조회 비용 비교 | 윤여민</title><meta charset="utf-8"/><link rel="preload" href="../../index-ae276ac8.css" as="style"/><link rel="preload" href="../../prescript-2bfc6315.js" as="script"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto Sans KR:wght@400;700&amp;family=Noto Sans KR:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="개발 공부 기록"/><meta property="og:title" content="vector와 unordered_map 조회 비용 비교 | 윤여민"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="vector와 unordered_map 조회 비용 비교 | 윤여민"/><meta name="twitter:description" content="문제 상황 적 정보를 ID로 자주 찾는다. 지금은 vector를 앞에서부터 검색한다."/><meta property="og:description" content="문제 상황 적 정보를 ID로 자주 찾는다. 지금은 vector를 앞에서부터 검색한다."/><meta property="og:image:alt" content="문제 상황 적 정보를 ID로 자주 찾는다. 지금은 vector를 앞에서부터 검색한다."/><meta property="og:image" content="https://yeomin-yoon.github.io/development-notes/static/og-image.png"/><meta property="og:image:url" content="https://yeomin-yoon.github.io/development-notes/static/og-image.png"/><meta name="twitter:image" content="https://yeomin-yoon.github.io/development-notes/static/og-image.png"/><meta property="og:image:type" content="image/.png"/><meta property="twitter:domain" content="yeomin-yoon.github.io/development-notes"/><meta property="og:url" content="https://yeomin-yoon.github.io/development-notes/problem-solvings/vector와-unordered_map-비교/vector와-unordered_map-조회-비용-비교"/><meta property="twitter:url" content="https://yeomin-yoon.github.io/development-notes/problem-solvings/vector와-unordered_map-비교/vector와-unordered_map-조회-비용-비교"/><link rel="icon" href="../../static/icon.png"/><meta name="description" content="문제 상황 적 정보를 ID로 자주 찾는다. 지금은 vector를 앞에서부터 검색한다."/><meta name="generator" content="Quartz"/><link href="../../index-ae276ac8.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../component-735924e0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../component-589c1cea.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../component-bbc3f7c0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../component-2911f5d1.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../component-53b25b2b.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../component-8a06014f.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../component-77d6a441.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../component-6ee21cee.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../component-1ea6ad18.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../component-788c9ca3.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../component-4abc06bd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../component-274a3dfe.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../component-94cb6c84.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../static/resource-style-a5c806d2.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../static/resource-style-6bd36952.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" data-persist="true"/><script src="../../prescript-2bfc6315.js" type="application/javascript" data-persist="true"></script><script type="application/javascript" data-persist="true">const fetchData = fetch("../../static/contentIndex.json").then(data => data.json())</script></head><body data-slug="problem-solvings/vector와-unordered_map-비교/vector와-unordered_map-조회-비용-비교" data-basepath="/development-notes"><div id="quartz-root" class="page" data-frame="default"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="../..">개발 공부 기록</a></h2><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 0.5rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button" aria-label="검색" aria-expanded="false"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>검색</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="검색어를 입력하세요" placeholder="검색어를 입력하세요"/><div class="search-layout" data-preview="true" data-field-priority="[&quot;title&quot;,&quot;content&quot;,&quot;tags&quot;]"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode" aria-label="다크 모드"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="다크 모드"><title>다크 모드</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="라이트 모드"><title>라이트 모드</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode" aria-label="리더 모드"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="리더 모드"><title>리더 모드</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer nav-files-container" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a2, b2) => {\n    if (!a2.isFolder &amp;&amp; !b2.isFolder || a2.isFolder &amp;&amp; b2.isFolder) {\n      return (a2.displayName || \&quot;\&quot;).localeCompare(b2.displayName || \&quot;\&quot;, void 0, {\n        numeric: true,\n        sensitivity: \&quot;base\&quot;\n      });\n    }\n    if (!a2.isFolder &amp;&amp; b2.isFolder) {\n      return 1;\n    }\n    return -1;\n  }&quot;,&quot;filterFn&quot;:&quot;(node) => node.slugSegment !== \&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;(node) => {\n    return node;\n  }&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-22" aria-label="탐색기"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>목차</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-22" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#" class="nav-file-title tree-item-self"></a></li></template><template id="template-folder"><li><div class="folder-container nav-folder-title tree-item-self"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon nav-folder-collapse-indicator collapse-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content tree-item-children"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../problem-solvings/">Problem Solvings</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../problem-solvings/vector와-unordered_map-비교/">vector와 unordered_map 비교</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>vector와 unordered_map 조회 비용 비교</a></div></nav><h1 class="article-title">vector와 unordered_map 조회 비용 비교</h1><p show-comma="false" class="content-meta"><time datetime="2026-10-15T03:11:34.000Z">2026년 10월 15일</time></p></div></div><article class="popover-hint"><div class="markdown-preview-view markdown-rendered"><h2 id="문제-상황">문제 상황<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#문제-상황" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>적 정보를 ID로 자주 찾는다. 지금은 vector를 앞에서부터 검색한다.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="cpp" data-theme="github-light github-dark"><code data-language="cpp" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">struct</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="property"> Enemy</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">{</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    int</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> Id;</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    int</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> HP;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">};</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="property">Enemy</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">*</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> FindEnemy</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">std</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">::</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="property">vector</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">&lt;</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="property">Enemy</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">></span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">&amp;</span><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;" data-token-type="important"> Enemies</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">, </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">int</span><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;" data-token-type="important"> TargetId</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">)</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">{</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    for</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> (Enemy</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">&amp;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> E : Enemies)</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    {</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">        if</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> (E.Id </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">==</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> TargetId)</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">            return</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator"> &amp;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">E;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    }</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    return</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> nullptr</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">}</span></span></code></pre></figure>
+<p>선형 검색은 O(n), unordered_map의 find는 평균 O(1)이다. 그렇다면 ID 검색이 있다는 이유만으로 hash map으로 바꿔야 할까?</p>
+<ul>
+<li>vector의 선형 검색이 더 빠를 수 있는 조건을 CPU 캐시와 연결해 설명해라.</li>
+<li>자료구조를 선택할 때 탐색 복잡도 외에 무엇을 확인해야 할까?</li>
+</ul>
+<hr/>
+<h2 id="비교하며-풀어간-과정">비교하며 풀어간 과정<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#비교하며-풀어간-과정" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>여기서는 <strong>비교 실험 자체가 풀이</strong>다. 조건을 바꿔 결과를 보고, 그 결과 때문에 다음 비교로 넘어갔다.</p>
+<blockquote class="callout question is-collapsible is-collapsed" data-callout="question" data-callout-fold>
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>1부 — 같은 개수인데도 비용이 달라지는 이유 </p></div>
+                  <div class="fold-callout-icon callout-fold"></div>
+                </div>
+<div class="callout-content">
+<h3 id="1-적이-적으면-vector가-무조건-빠를까">1. 적이 적으면 vector가 무조건 빠를까?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#1-적이-적으면-vector가-무조건-빠를까" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>처음에는 작은 vector가 유리할 것이라고 생각했다. 그런데 측정 조건을 바꾸자 map이 이기는 경우도 나왔다.</p>
+<p><strong>원소 수만으로 승자를 정할 수 없었다.</strong> 그래서 적 8개와 조회 목록을 유지하고, 목록의 순서만 바꿨다.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>같은 8개 · 같은 성공/실패 혼합 조회</th><th style="text-align:right;">vector</th><th style="text-align:right;">map</th></tr></thead><tbody><tr><td>일정한 패턴 반복</td><td style="text-align:right;">2.20ns</td><td style="text-align:right;"><strong>1.27ns</strong></td></tr><tr><td>같은 목록을 섞음</td><td style="text-align:right;"><strong>5.37ns</strong></td><td style="text-align:right;">6.44ns</td></tr></tbody></table></div>
+<p>위 값은 후속 VTune 1차 수집이다. 2차에서도 승자가 같았다. 두 조건의 조회 목록은 각각 65,536개이며, 찾는 키별 횟수·성공률·비교 횟수도 같았다.</p>
+<p><strong>비교를 더 한 것도 아닌데 왜 느려졌을까?</strong></p>
+<p>VTune에서 명령 수는 거의 같았지만, 섞은 순서에서는 분기 실패와 CPI가 늘었다.</p>
+<p>CPU는 조건문의 다음 실행 경로를 예측한다. 예측이 틀리면 잘못 진행한 일을 취소하는 비용이 생긴다. 이번에는 순서를 바꾸면서 그 비용이 커지는 지표가 관찰됐다.</p>
+<p>→ 작은 입력의 차이를 전부 캐시 때문이라고 설명하면 안 된다. <strong>조회 순서와 분기 예측도 실제 비용에 영향을 줬다.</strong> 시간 차이 중 정확히 몇 %가 분기 때문인지는 분리하지 않았다.</p>
+<p><a href="../../problem-solvings/vector와-unordered_map-비교/실험/vectorvshash_vtune-조회-순서-실험" class="internal internal-link alias" data-slug="problem-solvings/vector와-unordered_map-비교/실험/vectorvshash_vtune-조회-순서-실험">조회 목록과 분기 지표</a></p>
+<hr/>
+<h3 id="2-같은-vector도-어디에서-찾느냐에-따라-다를까">2. 같은 vector도 어디에서 찾느냐에 따라 다를까?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#2-같은-vector도-어디에서-찾느냐에-따라-다를까" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>앞에서부터 찾는다면, 첫 원소에서 끝나는 조회와 마지막까지 가는 조회는 하는 일부터 다르다.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>4,096개 · 반복 조회</th><th style="text-align:right;">vector 비교 수</th><th style="text-align:right;">vector 시간</th><th style="text-align:right;">map 시간</th></tr></thead><tbody><tr><td>첫 원소 찾기</td><td style="text-align:right;">1회</td><td style="text-align:right;">0.31ns</td><td style="text-align:right;">1.09ns</td></tr><tr><td>마지막 원소 찾기</td><td style="text-align:right;">4,096회</td><td style="text-align:right;">약 782ns</td><td style="text-align:right;">약 1.32ns</td></tr></tbody></table></div>
+<p><strong>첫 원소를 반복해서 찾는 조건에서는 vector가 빨랐다.</strong></p>
+<p>→ O(n)은 매번 n개를 비교한다는 뜻이 아니다. 실제 성공률과 발견 위치를 봐야 한다. 이 극단적으로 유리한 입력을 일반 무작위 조회로 간주하지 않는다.</p>
+<p>여기까지는 “얼마나 비교했는가”의 차이다. 그렇다면 <strong>비교 수가 같아도 읽는 방식 때문에 비용이 달라질까?</strong></p>
+<p><a href="../../problem-solvings/vector와-unordered_map-비교/실험/vectorvshashfactors_실험-기록" class="internal internal-link alias" data-slug="problem-solvings/vector와-unordered_map-비교/실험/vectorvshashfactors_실험-기록">발견 위치 비교 기록</a></p>
+<hr/>
+<h3 id="3-vector는-연속-메모리인데-배치를-바꿀-이유가-있을까">3. vector는 연속 메모리인데, 배치를 바꿀 이유가 있을까?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#3-vector는-연속-메모리인데-배치를-바꿀-이유가-있을까" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>같은 50,000개, 같은 ID·저장 순서·조회 목록을 사용하고 원소 크기만 8B → 256B로 키웠다.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="text" data-theme="github-light github-dark"><code data-language="text" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>8B 원소      ID ─8B─ ID ─8B─ ID</span></span>
+<span data-line><span>256B 원소    ID ─────────256B───────── ID</span></span></code></pre></figure>
+<p>vector 전체는 연속이다. 하지만 찾는 데 필요한 ID 사이의 간격은 다르다. 이 간격이 stride다.</p>
+<p><strong>비교 수는 같은데, 큰 원소의 vector는 약 12~13배 느려졌다.</strong> VTune에서는 L1 miss·L3 접근·메모리 대기도 늘었다.</p>
+<p>CPU는 메모리에서 cache line 단위로 데이터를 가져온다. 작은 원소라면 한 번 가져온 구간에 다음 ID도 들어올 수 있다. 원소가 크면 같은 수의 ID를 비교해도 훨씬 넓은 주소 범위를 지나간다.</p>
+<p>→ <strong>연속 저장과 필요한 값이 촘촘한 것은 다르다.</strong> 이번에는 배치 변화와 캐시 지표·시간 변화가 함께 관찰됐다.</p>
+<p><strong>그럼 ID만 따로 모으면 비용이 다시 줄까?</strong></p>
+<p>별도 A/B 수집에서 256B Enemy 배열 검색과 4B ID 배열 검색을 비교했다. 찾은 뒤 같은 HP를 읽도록 해 기능도 유지했다.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="text" data-theme="github-light github-dark"><code data-language="text" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>256B Enemy에서 ID 검색    약 99μs / 조회</span></span>
+<span data-line><span>4B ID 배열에서 검색       약 7.9μs / 조회</span></span>
+<span data-line> </span>
+<span data-line><span>비교 횟수 · 조회 결과     같음</span></span>
+<span data-line><span>실행 명령 수             오히려 증가</span></span>
+<span data-line><span>cache miss · 대기         감소</span></span></code></pre></figure>
+<p><strong>덜 비교해서가 아니라, 같은 비교를 더 싸게 수행했다.</strong> Assembly의 두 검색 루프도 scalar 비교였다. ID 분리만 SIMD가 된 결과가 아니었다.</p>
+<p>원소 크기 비교와 ID 분리는 별도 수집이다. 배수를 합치지 않는다. ID/HP 배열 생성·유지 비용은 검색 시간에 포함하지 않았으므로 전체 시스템 적용은 따로 판단해야 한다.</p>
+<p><a href="../../problem-solvings/vector와-unordered_map-비교/실험/vectorvshash_vtune-큰-원소-실험" class="internal internal-link alias" data-slug="problem-solvings/vector와-unordered_map-비교/실험/vectorvshash_vtune-큰-원소-실험">원소 크기 비교</a> · <a href="../../problem-solvings/vector와-unordered_map-비교/실험/vectorvshash_vtune-id-분리-실험" class="internal internal-link alias" data-slug="problem-solvings/vector와-unordered_map-비교/실험/vectorvshash_vtune-id-분리-실험">ID 분리 후 지표</a></p>
+<hr/>
+<h3 id="4-후보를-조금만-보는-map도-캐시-영향을-받을까">4. 후보를 조금만 보는 map도 캐시 영향을 받을까?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#4-후보를-조금만-보는-map도-캐시-영향을-받을까" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>큰 원소 실험의 map은 같은 512개 조회 목록을 반복했다. 그 조건에서 빠른 것을 보고 “map에는 캐시 비용이 없다”고 결론 낼 수는 없었다.</p>
+<p>이번에는 같은 map에 50,000개를 넣고, 조회 목록 길이와 성공률을 고정한 뒤 <strong>찾는 키의 범위</strong>를 넓혔다.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>실제로 찾은 서로 다른 키</th><th style="text-align:right;">조회당 equality</th><th style="text-align:right;">조회 시간</th></tr></thead><tbody><tr><td>512개</td><td style="text-align:right;">약 1.12회</td><td style="text-align:right;">3.27~3.32ns</td></tr><tr><td>36,587개</td><td style="text-align:right;">약 1.12회</td><td style="text-align:right;">4.49~4.55ns</td></tr></tbody></table></div>
+<p><strong>후보 비교와 명령 수는 비슷했지만 약 1.37배 느려졌다.</strong> L1 miss·L3 hit·메모리 대기도 늘었다.</p>
+<p>L1 miss는 가까운 L1에서 못 찾았다는 뜻이다. L3 hit는 못 찾았다는 뜻이 아니라, <strong>더 아래의 L3까지 가서 찾았다</strong>는 뜻이다.</p>
+<p>같은 후보를 자주 다시 읽는 것과 더 많은 bucket·노드로 접근이 퍼지는 것은 다르다.</p>
+<p>→ map은 비교 수를 줄이지만, <strong>그 후보를 가져오는 비용까지 없애지는 않는다.</strong> 평균 O(1)이 조회당 고정 시간을 뜻하지는 않는다.</p>
+<p>넓은 키 목록도 반복한 warm 실험이다. 모든 키를 한 번씩 찾거나 cold cache를 강제한 것이 아니다. 앞선 혼합 조회와 입력도 달라 그 시간 차이 전체를 이번 배수로 설명하지 않는다.</p>
+<p><a href="../../problem-solvings/vector와-unordered_map-비교/실험/vectorvshash_vtune-조회-키-범위-실험" class="internal internal-link alias" data-slug="problem-solvings/vector와-unordered_map-비교/실험/vectorvshash_vtune-조회-키-범위-실험">고정 조건과 캐시 지표</a></p>
+</div>
+</blockquote>
+<blockquote class="callout question is-collapsible is-collapsed" data-callout="question" data-callout-fold>
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>2부 — 어떤 경우에 vector가 이기고, 무엇까지 비교해야 할까? </p></div>
+                  <div class="fold-callout-icon callout-fold"></div>
+                </div>
+<div class="callout-content">
+<h3 id="5-map의-충돌이-심하면-어떻게-될까">5. map의 충돌이 심하면 어떻게 될까?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#5-map의-충돌이-심하면-어떻게-될까" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>같은 4,096개에서 해시만 바꿨다. 정상 해시와 모든 키가 같은 해시를 만드는 경우를 비교했다.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>조건</th><th style="text-align:right;">map equality/조회</th><th style="text-align:right;">map 시간</th></tr></thead><tbody><tr><td>정상 해시</td><td style="text-align:right;">약 1.28회</td><td style="text-align:right;">약 1.8ns</td></tr><tr><td>모두 같은 해시</td><td style="text-align:right;">약 3,070회</td><td style="text-align:right;">약 6,957ns</td></tr></tbody></table></div>
+<p>같은 조회의 vector는 약 3,070회 비교하며 약 589ns였다. <strong>충돌 조건에서는 비교 수가 같아도 vector가 훨씬 빨랐다.</strong></p>
+<p>생성된 코드에서 vector는 일정 간격으로 전진했고, 이번 MSVC map은 후보 노드의 링크를 따라갔다.</p>
+<p>→ 여기서는 충돌로 map의 작업량이 늘었다. 또 같은 비교 수라고 접근 방식까지 같은 것은 아니었다. 노드 접근 때문에 발생한 stall의 기여율까지 측정한 것은 아니다.</p>
+<p>Load factor를 1 → 4로 높인 별도 비교에서도 equality는 약 1.28 → 3.51회로 늘고 시간이 증가했다. 낮출수록 항상 빨라진다는 규칙으로 일반화하지 않는다.</p>
+<p><a href="../../problem-solvings/vector와-unordered_map-비교/실험/vectorvshashfactors_실험-기록" class="internal internal-link alias" data-slug="problem-solvings/vector와-unordered_map-비교/실험/vectorvshashfactors_실험-기록">충돌·load factor 비교</a> · <a href="../../problem-solvings/vector와-unordered_map-비교/실험/vectorvshashfactors_assembly" class="internal internal-link alias" data-slug="problem-solvings/vector와-unordered_map-비교/실험/vectorvshashfactors_assembly">실제 탐색 루프</a></p>
+<hr/>
+<h3 id="6-정수-id-대신-긴-문자열을-찾으면">6. 정수 ID 대신 긴 문자열을 찾으면?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#6-정수-id-대신-긴-문자열을-찾으면" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>이번에는 16개 문자열 키를 성공 조회했다.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>키 길이</th><th style="text-align:right;">vector</th><th style="text-align:right;">map</th></tr></thead><tbody><tr><td>8자</td><td style="text-align:right;">24.63ns</td><td style="text-align:right;"><strong>11.70ns</strong></td></tr><tr><td>공통 접두사를 가진 128자</td><td style="text-align:right;"><strong>36.61ns</strong></td><td style="text-align:right;">94.26ns</td></tr></tbody></table></div>
+<p><strong>원소 수가 같아도 키가 달라지자 승자가 바뀌었다.</strong></p>
+<p>문자열을 해시하거나 같은지 비교하는 데도 비용이 든다. 길이를 바꾸면 문자열 저장 방식도 함께 달라지므로 순수 해시 비용 하나로 설명하지 않는다.</p>
+<p>→ “몇 개를 저장했나?”뿐 아니라 **무엇을 키로 찾나?**도 선택 조건이다.</p>
+<p><a href="../../problem-solvings/vector와-unordered_map-비교/실험/vectorvshashfactors_실험-기록" class="internal internal-link alias" data-slug="problem-solvings/vector와-unordered_map-비교/실험/vectorvshashfactors_실험-기록">문자열 키 비교</a></p>
+<hr/>
+<h3 id="7-조회가-빨라졌으면-교체해도-될까">7. 조회가 빨라졌으면 교체해도 될까?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#7-조회가-빨라졌으면-교체해도-될까" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>같은 4,096개·8B Enemy로 조회 외의 작업도 비교했다.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>연산</th><th style="text-align:right;">vector</th><th style="text-align:right;">map</th></tr></thead><tbody><tr><td>혼합 ID 조회 · 조회당</td><td style="text-align:right;">약 588ns</td><td style="text-align:right;"><strong>약 1.8ns</strong></td></tr><tr><td>모든 HP 합산 · 원소당</td><td style="text-align:right;"><strong>0.19ns</strong></td><td style="text-align:right;">2.71ns</td></tr><tr><td>reserve 후 생성 사이클 · 입력당</td><td style="text-align:right;"><strong>0.74ns</strong></td><td style="text-align:right;">36.44ns</td></tr><tr><td>ID로 절반 삭제 · 삭제당</td><td style="text-align:right;">3,145ns</td><td style="text-align:right;"><strong>17.16ns</strong></td></tr></tbody></table></div>
+<p><strong>조회의 승자와 순회·생성의 승자는 달랐다.</strong></p>
+<p>적을 자주 ID로 찾는다면 map의 조회 이득이 중요하다. 반대로 전체를 갱신하는 일이 대부분이라면 순회 비용도 중요하다.</p>
+<p>→ 선택 기준은 <strong>각 연산의 비용 × 실제 호출 빈도</strong>다. 검색 하나의 배수로 전체 시스템의 성능을 정하지 않는다.</p>
+<p>생성 사이클은 할당·추가·합산·소멸 전체다. 삭제는 vector에서 검색 후 순서를 유지하며 erase했고, map에서는 키로 erase했다. map은 vector의 순서 요구사항을 대신 보장하지 않는다. HP 합산 역시 실제 게임의 전체 갱신은 아니다.</p>
+<p><a href="../../problem-solvings/vector와-unordered_map-비교/실험/vectorvshashfactors_실험-기록" class="internal internal-link alias" data-slug="problem-solvings/vector와-unordered_map-비교/실험/vectorvshashfactors_실험-기록">생성·순회·삭제의 조건</a></p>
+</div>
+</blockquote>
+<hr/>
+<h2 id="결론">결론<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#결론" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<blockquote class="callout success" data-callout="success">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>적게 비교하는 것과 싸게 읽는 것은 다르다 </p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>vector는 여러 번 비교해도 데이터를 싸게 읽으면 이길 수 있다.<br/>
+map은 검색 범위를 줄이지만 해시·후보 접근 비용은 남는다.</p>
+</div>
+</blockquote>
+<p>이번에는 앞 원소 반복 조회, 일부 작은 입력, 심한 해시 충돌, 일부 긴 문자열 조건에서 vector가 이겼다. <strong>작은 입력에서도 map이 이겼고, 정상 해시의 큰 무작위 조회에서는 map이 빨랐다.</strong></p>
+<p>따라서 “몇 개 이하면 vector”를 외우는 대신 다음을 구분한다.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>확인할 것</th><th>이번 실험에서 연결한 것</th></tr></thead><tbody><tr><td>얼마나 비교하나?</td><td>발견 위치 · hash collision</td></tr><tr><td>같은 비교가 왜 더 비싸지?</td><td>ID 간격 · cache miss · 메모리 대기</td></tr><tr><td>캐시 외의 이유는 없나?</td><td>조회 순서 · 분기 실패</td></tr><tr><td>개선이 정말 작동하나?</td><td>ID 분리 뒤 같은 결과, miss·시간 감소</td></tr><tr><td>실제 시스템에도 유리한가?</td><td>조회 + 순회 + 생성·삭제 + 유지 비용</td></tr></tbody></table></div>
+<p><strong>측정한 것은 시간과 지표가 함께 변했다는 사실이다.</strong> cache/TLB별 기여율, DRAM bandwidth 포화까지 증명한 것은 아니다. 주소 배치만 보고 모든 차이를 캐시 탓으로 묶지 않는다.</p>
+<h3 id="이름만-보고-떠올릴-것">이름만 보고 떠올릴 것<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#이름만-보고-떠올릴-것" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="text" data-theme="github-light github-dark"><code data-language="text" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>Equality      → 실제 후보 비교 수</span></span>
+<span data-line><span>Stride        → 다음 필요한 값까지의 주소 간격</span></span>
+<span data-line><span>Locality      → 가까운 데이터 / 방금 쓴 데이터 재사용</span></span>
+<span data-line><span>Cache miss    → 가까운 캐시에 없음</span></span>
+<span data-line><span>L3 hit        → 더 아래의 L3에서 찾음</span></span>
+<span data-line><span>Instructions  → 실행한 명령 수</span></span>
+<span data-line><span>CPI           → 명령당 cycle</span></span>
+<span data-line><span>Branch miss   → 실행 경로 예측 실패</span></span></code></pre></figure>
+<hr/>
+<blockquote class="callout note is-collapsible is-collapsed" data-callout="note" data-callout-fold>
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>상세 조건·코드·원본 기록 </p></div>
+                  <div class="fold-callout-icon callout-fold"></div>
+                </div>
+<div class="callout-content">
+<p>Windows MSVC 최적화 빌드의 std::vector / std::unordered_map 비교다. Unreal TArray/TMap이나 실제 게임 프레임 측정은 아니다. 내부 링크 탐색 설명은 확인한 MSVC 구현에 한정한다.</p>
+<p>기본 비교는 각각 134조건 × 7 samples로 두 번 실행했고, 중간 확인 실행도 추가했다. 조회 규모 비교에는 3개 seed를 사용했다. 본문의 기본 비교 수치는 최종 Run 1 중앙값의 대표 예다.</p>
+<p>이후 조회 목록 8조건, 순서·키 범위 41조건, 고정 기준 대조 12조건도 각각 두 번 실행했다. 검사한 checksum·완료 후 크기 불일치는 0이었다.</p>
+<p>후속 VTune 수집은 조회 순서 8회, 원소 크기 8회, ID 분리 4회, map 키 범위 4회다. 해당 단계에는 이 수집의 대표값을 사용했다. 입력·빌드·코어 고정 조건이 다른 실험의 절대 시간과 배수를 합치지 않는다. hardware event는 sampling 추정치이며, 지표의 0이 실제 발생 0을 보장하지 않는다.</p>
+<p>초기에는 조회 목록 길이와 짧은 측정 구간에 따라 승자가 달라졌다. 확장 코드에서는 구현별로 약 2ms/sample을 목표로 반복 수를 조정했다. 이후 목록 길이·순서·키 범위를 나눠 확인했다.</p>
+<p>같은 기준 작업까지 시간이 변한 구간은 특정 조건의 효과로 확정하지 않고 대조 기록에 남겼다. 처음의 권한 오류는 해결한 뒤 하드웨어 지표를 수집했다.</p>
+<ul>
+<li><a href="../../problem-solvings/vector와-unordered_map-비교/실험/vectorvshashfactors.cpp" class="internal internal-link alias" data-slug="problem-solvings/vector와-unordered_map-비교/실험/vectorvshashfactors.cpp">테스트 코드</a> · <a href="../../problem-solvings/vector와-unordered_map-비교/실험/vectorvshashfactors_실험-기록" class="internal internal-link alias" data-slug="problem-solvings/vector와-unordered_map-비교/실험/vectorvshashfactors_실험-기록">조건과 재현법</a></li>
+<li><a href="../../problem-solvings/vector와-unordered_map-비교/실험/vectorvshashfactors_run1.txt" class="internal internal-link alias" data-slug="problem-solvings/vector와-unordered_map-비교/실험/vectorvshashfactors_run1.txt">기본 Run 1</a> · <a href="../../problem-solvings/vector와-unordered_map-비교/실험/vectorvshashfactors_run2.txt" class="internal internal-link alias" data-slug="problem-solvings/vector와-unordered_map-비교/실험/vectorvshashfactors_run2.txt">Run 2</a></li>
+<li><a href="../../problem-solvings/vector와-unordered_map-비교/실험/vectorvshashcoverage_run1.txt" class="internal internal-link alias" data-slug="problem-solvings/vector와-unordered_map-비교/실험/vectorvshashcoverage_run1.txt">조회 목록 후속 Run 1</a> · <a href="../../problem-solvings/vector와-unordered_map-비교/실험/vectorvshashcoverage_run2.txt" class="internal internal-link alias" data-slug="problem-solvings/vector와-unordered_map-비교/실험/vectorvshashcoverage_run2.txt">Run 2</a></li>
+<li><a href="../../problem-solvings/vector와-unordered_map-비교/실험/vectorvshashpatterns_실험-기록" class="internal internal-link alias" data-slug="problem-solvings/vector와-unordered_map-비교/실험/vectorvshashpatterns_실험-기록">조회 순서·키 범위·기준 대조</a></li>
+<li><a href="../../problem-solvings/vector와-unordered_map-비교/실험/vectorvshashfactors_assembly" class="internal internal-link alias" data-slug="problem-solvings/vector와-unordered_map-비교/실험/vectorvshashfactors_assembly">Assembly</a> · <a href="../../problem-solvings/vector와-unordered_map-비교/실험/vtune-하드웨어-수집-권한-문제-해결" class="internal internal-link alias" data-slug="problem-solvings/vector와-unordered_map-비교/실험/vtune-하드웨어-수집-권한-문제-해결">수집 권한 해결</a></li>
+<li><a href="../../problem-solvings/vector와-unordered_map-비교/실험/vectorvshashlookup.cpp" class="internal internal-link alias" data-slug="problem-solvings/vector와-unordered_map-비교/실험/vectorvshashlookup.cpp">첫 코드</a> · <a href="../../problem-solvings/vector와-unordered_map-비교/실험/vectorvshashlookup_run1.csv" class="internal internal-link alias" data-slug="problem-solvings/vector와-unordered_map-비교/실험/vectorvshashlookup_run1.csv">첫 Run 1</a> · <a href="../../problem-solvings/vector와-unordered_map-비교/실험/vectorvshashlookup_run2.csv" class="internal internal-link alias" data-slug="problem-solvings/vector와-unordered_map-비교/실험/vectorvshashlookup_run2.csv">Run 2</a></li>
+</ul>
+</div>
+</blockquote>
+<p><a href="../../problem-solvings/enemymanager-검색-최적화와-생성-순서-유지" class="internal internal-link alias" data-slug="problem-solvings/enemymanager-검색-최적화와-생성-순서-유지">EnemyManager 검색 최적화와 생성 순서 유지</a>는 순서·삭제·참조 수명까지 함께 설계한 문제다. 이번 문제는 검색과 전체 연산의 실제 비용을 비교했다. 실제 교체에서는 순서와 포인터·참조 무효화 규칙도 함께 확인한다.</p>
+<p>참고: <a href="https://eel.is/c++draft/vector.overview" class="external external-link">C++ 초안 — vector의 연속 저장<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a>, <a href="https://eel.is/c++draft/unord.req" class="external external-link">unordered container의 bucket·해시 계약·복잡도<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a>.</p></div></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="toc"><button type="button" class="toc-header" aria-controls="toc-22" aria-expanded="true"><h3>목차</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-0" class="toc-content overflow"><li class="depth-0"><a href="#문제-상황" data-for="문제-상황">문제 상황</a></li><li class="depth-0"><a href="#비교하며-풀어간-과정" data-for="비교하며-풀어간-과정">비교하며 풀어간 과정</a></li><li class="depth-1"><a href="#1-적이-적으면-vector가-무조건-빠를까" data-for="1-적이-적으면-vector가-무조건-빠를까">1. 적이 적으면 vector가 무조건 빠를까?</a></li><li class="depth-1"><a href="#2-같은-vector도-어디에서-찾느냐에-따라-다를까" data-for="2-같은-vector도-어디에서-찾느냐에-따라-다를까">2. 같은 vector도 어디에서 찾느냐에 따라 다를까?</a></li><li class="depth-1"><a href="#3-vector는-연속-메모리인데-배치를-바꿀-이유가-있을까" data-for="3-vector는-연속-메모리인데-배치를-바꿀-이유가-있을까">3. vector는 연속 메모리인데, 배치를 바꿀 이유가 있을까?</a></li><li class="depth-1"><a href="#4-후보를-조금만-보는-map도-캐시-영향을-받을까" data-for="4-후보를-조금만-보는-map도-캐시-영향을-받을까">4. 후보를 조금만 보는 map도 캐시 영향을 받을까?</a></li><li class="depth-1"><a href="#5-map의-충돌이-심하면-어떻게-될까" data-for="5-map의-충돌이-심하면-어떻게-될까">5. map의 충돌이 심하면 어떻게 될까?</a></li><li class="depth-1"><a href="#6-정수-id-대신-긴-문자열을-찾으면" data-for="6-정수-id-대신-긴-문자열을-찾으면">6. 정수 ID 대신 긴 문자열을 찾으면?</a></li><li class="depth-1"><a href="#7-조회가-빨라졌으면-교체해도-될까" data-for="7-조회가-빨라졌으면-교체해도-될까">7. 조회가 빨라졌으면 교체해도 될까?</a></li><li class="depth-0"><a href="#결론" data-for="결론">결론</a></li><li class="depth-1"><a href="#이름만-보고-떠올릴-것" data-for="이름만-보고-떠올릴-것">이름만 보고 떠올릴 것</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Created with <a href="https://quartz.jzhao.xyz/">Quartz v5.0.0</a> © 2026</p><ul><li><a href="https://github.com/HyeseonLikesPizza/yeoeunseon/tree/main/yeoeunseon/%EC%9C%A4%EC%97%AC%EB%AF%BC">원본 기록</a></li></ul></footer></div></div></body><script src="../../static/resource-after-e13fffa1.js" type="application/javascript" data-persist="true"></script><script src="../../static/resource-after-8b336f9a.js" type="application/javascript" data-persist="true"></script><script src="../../static/resource-after-baba652b.js" type="application/javascript" data-persist="true"></script><script src="../../static/resource-after-5eb75950.js" type="module" data-persist="true"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript" data-persist="true"></script><script src="../../postscript-5e06a1c1.js" type="module" data-persist="true"></script></html>

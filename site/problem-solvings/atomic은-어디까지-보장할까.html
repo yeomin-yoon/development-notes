@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="ko" dir="ltr"><head><title>Atomic은 어디까지 보장할까 | 윤여민</title><meta charset="utf-8"/><link rel="preload" href="../index-ae276ac8.css" as="style"/><link rel="preload" href="../prescript-2bfc6315.js" as="script"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto Sans KR:wght@400;700&amp;family=Noto Sans KR:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="개발 공부 기록"/><meta property="og:title" content="Atomic은 어디까지 보장할까 | 윤여민"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="Atomic은 어디까지 보장할까 | 윤여민"/><meta name="twitter:description" content="Atomic인데 왜 틀릴 수 있지? Atomic은 개별 연산을 보장한다. 여러 줄의 처리 전체나 주변 데이터까지 자동으로 보호하지는 않는다."/><meta property="og:description" content="Atomic인데 왜 틀릴 수 있지? Atomic은 개별 연산을 보장한다. 여러 줄의 처리 전체나 주변 데이터까지 자동으로 보호하지는 않는다."/><meta property="og:image:alt" content="Atomic인데 왜 틀릴 수 있지? Atomic은 개별 연산을 보장한다. 여러 줄의 처리 전체나 주변 데이터까지 자동으로 보호하지는 않는다."/><meta property="og:image" content="https://yeomin-yoon.github.io/development-notes/static/og-image.png"/><meta property="og:image:url" content="https://yeomin-yoon.github.io/development-notes/static/og-image.png"/><meta name="twitter:image" content="https://yeomin-yoon.github.io/development-notes/static/og-image.png"/><meta property="og:image:type" content="image/.png"/><meta property="twitter:domain" content="yeomin-yoon.github.io/development-notes"/><meta property="og:url" content="https://yeomin-yoon.github.io/development-notes/problem-solvings/atomic은-어디까지-보장할까"/><meta property="twitter:url" content="https://yeomin-yoon.github.io/development-notes/problem-solvings/atomic은-어디까지-보장할까"/><link rel="icon" href="../static/icon.png"/><meta name="description" content="Atomic인데 왜 틀릴 수 있지? Atomic은 개별 연산을 보장한다. 여러 줄의 처리 전체나 주변 데이터까지 자동으로 보호하지는 않는다."/><meta name="generator" content="Quartz"/><link href="../index-ae276ac8.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../component-735924e0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../component-589c1cea.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../component-bbc3f7c0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../component-2911f5d1.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../component-53b25b2b.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../component-8a06014f.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../component-77d6a441.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../component-6ee21cee.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../component-1ea6ad18.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../component-788c9ca3.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../component-4abc06bd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../component-274a3dfe.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../component-94cb6c84.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../static/resource-style-a5c806d2.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../static/resource-style-6bd36952.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" data-persist="true"/><script src="../prescript-2bfc6315.js" type="application/javascript" data-persist="true"></script><script type="application/javascript" data-persist="true">const fetchData = fetch("../static/contentIndex.json").then(data => data.json())</script></head><body data-slug="problem-solvings/atomic은-어디까지-보장할까" data-basepath="/development-notes"><div id="quartz-root" class="page" data-frame="default"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="..">개발 공부 기록</a></h2><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 0.5rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button" aria-label="검색" aria-expanded="false"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>검색</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="검색어를 입력하세요" placeholder="검색어를 입력하세요"/><div class="search-layout" data-preview="true" data-field-priority="[&quot;title&quot;,&quot;content&quot;,&quot;tags&quot;]"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode" aria-label="다크 모드"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="다크 모드"><title>다크 모드</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="라이트 모드"><title>라이트 모드</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode" aria-label="리더 모드"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="리더 모드"><title>리더 모드</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer nav-files-container" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a2, b2) => {\n    if (!a2.isFolder &amp;&amp; !b2.isFolder || a2.isFolder &amp;&amp; b2.isFolder) {\n      return (a2.displayName || \&quot;\&quot;).localeCompare(b2.displayName || \&quot;\&quot;, void 0, {\n        numeric: true,\n        sensitivity: \&quot;base\&quot;\n      });\n    }\n    if (!a2.isFolder &amp;&amp; b2.isFolder) {\n      return 1;\n    }\n    return -1;\n  }&quot;,&quot;filterFn&quot;:&quot;(node) => node.slugSegment !== \&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;(node) => {\n    return node;\n  }&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-18" aria-label="탐색기"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>목차</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-18" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#" class="nav-file-title tree-item-self"></a></li></template><template id="template-folder"><li><div class="folder-container nav-folder-title tree-item-self"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon nav-folder-collapse-indicator collapse-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content tree-item-children"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../problem-solvings/">Problem Solvings</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>Atomic은 어디까지 보장할까</a></div></nav><h1 class="article-title">Atomic은 어디까지 보장할까</h1><p show-comma="false" class="content-meta"><time datetime="2026-09-17T11:52:06.000Z">2026년 9월 17일</time></p></div></div><article class="popover-hint"><div class="markdown-preview-view markdown-rendered"><h2 id="atomic인데-왜-틀릴-수-있지">Atomic인데 왜 틀릴 수 있지?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#atomic인데-왜-틀릴-수-있지" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p><strong>Atomic은 개별 연산을 보장한다. 여러 줄의 처리 전체나 주변 데이터까지 자동으로 보호하지는 않는다.</strong></p>
+<ul>
+<li>숫자를 바꾸는 코드가 헷갈리면 → <a href="#%EA%B0%92-%ED%95%98%EB%82%98%EB%A5%BC-%EB%B0%94%EA%BF%80-%EB%95%8C" class="internal internal-link alias">값 하나를 바꿀 때</a></li>
+<li>Ready를 보고 다른 변수를 읽어도 되는지 궁금하면 → <a href="#%EB%8B%A4%EB%A5%B8-%EB%8D%B0%EC%9D%B4%ED%84%B0%EB%A5%BC-%EC%A0%84%EB%8B%AC%ED%95%A0-%EB%95%8C" class="internal internal-link alias">다른 데이터를 전달할 때</a></li>
+<li>seq_cst와 relaxed가 헷갈리면 → <a href="#memory-order%EA%B0%80-%EB%8B%AC%EB%9D%BC%EC%A7%80%EB%A9%B4" class="internal internal-link alias">Memory order가 달라지면</a></li>
+<li>배운 것을 직접 적용하려면 → <a href="#%EC%A7%81%EC%A0%91-%ED%8C%90%EB%8B%A8%ED%95%98%EA%B8%B0--%EC%9E%91%EC%97%85%EC%9D%80-%ED%95%9C-%EB%B2%88%EB%A7%8C-%EC%8B%A4%ED%96%89%ED%96%88%EB%8A%94%EB%8D%B0" class="internal internal-link alias">직접 판단하기 — 작업은 한 번만 실행했는데</a></li>
+</ul>
+<p>예시는 C++ 학습용이다. 공유 객체는 Thread 시작 전에 초기화하며, 각 예시에서 명시한 접근 외에는 다른 변경이 없다고 가정한다.</p>
+<hr/>
+<h2 id="값-하나를-바꿀-때">값 하나를 바꿀 때<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#값-하나를-바꿀-때" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="두-thread가-증가시키면-번갈아-실행될까">두 Thread가 증가시키면 번갈아 실행될까?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#두-thread가-증가시키면-번갈아-실행될까" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>번갈아 실행된다는 보장은 없다. 그래도 원자적으로 1,000번씩 증가시키고 모두 끝났다면 2,000이다.</strong></p>
+<blockquote class="callout note is-collapsible is-collapsed" data-callout="note" data-callout-fold>
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Thread를 만드는 코드부터 보기 </p></div>
+                  <div class="fold-callout-icon callout-fold"></div>
+                </div>
+<div class="callout-content">
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="cpp" data-theme="github-light github-dark"><code data-language="cpp" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="punctuation">#include</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> &lt;atomic></span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="punctuation">#include</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> &lt;iostream></span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="punctuation">#include</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> &lt;thread></span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">int</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> main</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">()</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">{</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">    std</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">::atomic</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">&lt;int></span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> Count{</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">0</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">};</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">    std</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">::thread </span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">Worker</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">([</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">&amp;</span><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;" data-token-type="important">Count</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">]()</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    {</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">        for</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> (</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">int</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> i </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> 0</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">; i </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">&lt;</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> 1000</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">; </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">++</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">i)</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal">            Count.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">fetch_add</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">1</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">);</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    });</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    for</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> (</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">int</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> i </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> 0</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">; i </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">&lt;</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> 1000</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">; </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">++</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">i)</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal">        Count.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">fetch_add</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">1</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">);</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal">    Worker.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">join</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">();</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">    std</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">::cout </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">&lt;&lt;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal"> Count.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">load</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">();</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"> // 2000</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">}</span></span></code></pre></figure>
+<p>Main이 Worker를 만들지만 람다 본문은 별도 Thread에서 실행된다. Main의 반복문과 실행 순서가 섞일 수 있다. 하드웨어 상황에 따라 실제로 동시에 실행될 수도 있다.</p>
+<p><code>[&amp;Count]</code>는 같은 Count를 참조한다는 뜻이다. <code>join()</code>은 Worker의 완료를 기다린다. 출력 시점에는 양쪽 반복문이 모두 끝났다.</p>
+</div>
+</blockquote>
+<h3 id="load하고-1을-더해-store하면-같은-증가-아닌가">load하고 1을 더해 store하면 같은 증가 아닌가?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#load하고-1을-더해-store하면-같은-증가-아닌가" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>아니다. 두 Thread가 모두 0을 읽고 1을 저장하면 최종값은 1이다.</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="cpp" data-theme="github-light github-dark"><code data-language="cpp" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">int</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> Value </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal"> Count.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">load</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">();</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal">Count.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">store</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(Value </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">+</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> 1</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">);</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"> // 읽기와 저장이 별개</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal">Count.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">fetch_add</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">1</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">);</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">    // 읽기·증가·저장이 하나의 원자적 연산</span></span></code></pre></figure>
+<blockquote class="callout note is-collapsible is-collapsed" data-callout="note" data-callout-fold>
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>각각 안전한데 왜 증가가 사라질까? </p></div>
+                  <div class="fold-callout-icon callout-fold"></div>
+                </div>
+<div class="callout-content">
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="text" data-theme="github-light github-dark"><code data-language="text" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>A: 0 읽기 ──────────→ 1 저장</span></span>
+<span data-line><span>B:        0 읽기 ──────────→ 1 저장</span></span></code></pre></figure>
+<p>Count 접근 자체에는 Data Race가 없지만 증가 전체의 논리적 경쟁은 남는다.</p>
+<p><code>Count.store(Count.load() + 1)</code>처럼 한 줄로 써도 두 연산이다. 기본 seq_cst도 이를 하나로 합치지 않는다.</p>
+<p>반대로 두 Thread가 <code>fetch_add(1)</code>을 한 번씩 실행하면, 0에서 시작한 Count는 둘 다 완료한 뒤 2다. relaxed로 지정해도 증가가 유실되지는 않는다.</p>
+</div>
+</blockquote>
+<h3 id="exchange-fetch_add-는-뭐가-다를까">exchange, fetch_add, ++는 뭐가 다를까?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#exchange-fetch_add-는-뭐가-다를까" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>exchange는 교체, fetch_add는 현재 값에 더하기다.</strong> 각각 10에서 시작한다면:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>연산</th><th style="text-align:right;">변경 후 값</th><th style="text-align:right;">반환값</th></tr></thead><tbody><tr><td><code>Count.exchange(2)</code></td><td style="text-align:right;">2</td><td style="text-align:right;">10</td></tr><tr><td><code>Count.fetch_add(2)</code></td><td style="text-align:right;">12</td><td style="text-align:right;">10</td></tr><tr><td><code>Count++</code></td><td style="text-align:right;">11</td><td style="text-align:right;">10</td></tr><tr><td><code>++Count</code></td><td style="text-align:right;">11</td><td style="text-align:right;">11</td></tr></tbody></table></div>
+<p><code>std::atomic&lt;int></code>의 증가·감소는 원자적이다. 일반 <code>int</code>에 같은 문법을 쓴다고 그 보장이 생기지는 않는다.</p>
+<blockquote class="callout note is-collapsible is-collapsed" data-callout="note" data-callout-fold>
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Atomic은 int만 돼? </p></div>
+                  <div class="fold-callout-icon callout-fold"></div>
+                </div>
+<div class="callout-content">
+<p>bool, 포인터, 조건을 만족하는 구조체 등에도 사용할 수 있다. 타입에 따라 지원하는 연산은 다르다.</p>
+<p>atomic 포인터가 가리키는 객체까지 보호하지는 않는다. 구현이 항상 lock-free인 것도 아니다.</p>
+<p><a href="https://eel.is/c++draft/atomics.types.operations" class="external external-link">C++ atomic 연산 규정<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></p>
+</div>
+</blockquote>
+<h3 id="함수나-변수를-인자로-넣으면-그것도-보호할까">함수나 변수를 인자로 넣으면 그것도 보호할까?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#함수나-변수를-인자로-넣으면-그것도-보호할까" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>인자를 계산하는 과정은 atomic 연산 밖이다.</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="cpp" data-theme="github-light github-dark"><code data-language="cpp" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal">Count.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">fetch_add</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">CalculateAmount</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">());</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">// 계산과 증가를 구분하면:</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">int</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> Amount </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> CalculateAmount</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">();</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal">Count.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">fetch_add</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(Amount);</span></span></code></pre></figure>
+<p>지역 변수나 안전하게 공유된 읽기 전용 데이터로 계산한다면 별도 보호가 필요 없다. 함수 안에서 다른 Thread가 변경하는 공유 데이터를 읽는다면 그 접근은 따로 동기화해야 한다.</p>
+<h3 id="compare_exchange는-같으면-바꾸는-거야">compare_exchange는 같으면 바꾸는 거야?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#compare_exchange는-같으면-바꾸는-거야" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>현재 값이 Expected와 같으면 교체한다. 다르면 교체하지 않고, Expected에 관찰한 값을 써준다.</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="cpp" data-theme="github-light github-dark"><code data-language="cpp" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">int</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> Expected </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> 10</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">;</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">bool</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> Changed </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal"> Count.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">compare_exchange_strong</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(Expected, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">20</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">);</span></span></code></pre></figure>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>비교 순간 Count</th><th>Count에 하는 일</th><th style="text-align:right;">Expected</th><th>반환값</th></tr></thead><tbody><tr><td>10</td><td>20으로 변경</td><td style="text-align:right;">10 유지</td><td>true</td></tr><tr><td>7</td><td>변경하지 않음</td><td style="text-align:right;">7로 변경</td><td>false</td></tr></tbody></table></div>
+<blockquote class="callout note is-collapsible is-collapsed" data-callout="note" data-callout-fold>
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Expected까지 갱신한다고? </p></div>
+                  <div class="fold-callout-icon callout-fold"></div>
+                </div>
+<div class="callout-content">
+<p>Expected는 참조 인자여서 함수가 값을 수정할 수 있다. 보통 각 Thread의 지역 변수로 둔다.</p>
+<p>실패 시 얻는 값은 <strong>비교 순간에 관찰한 값</strong>이다. 함수가 반환된 뒤에도 Count가 계속 그 값이라는 보장은 없다.</p>
+<p><code>if (Count.load() == 10)</code> 다음에 <code>store(20)</code>을 하면 그 사이 다른 Thread가 바꿀 수 있다. CAS는 비교와 조건부 변경을 하나로 처리한다.</p>
+<p>반환형이 bool인 것이지, 대상이 bool에 한정되는 것은 아니다.</p>
+</div>
+</blockquote>
+<h3 id="자리가-남았을-때만-증가시키려면">자리가 남았을 때만 증가시키려면?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#자리가-남았을-때만-증가시키려면" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>검사와 증가를 따로 하면 정원을 넘을 수 있다. CAS로 “아직 예상한 값일 때만 증가”시킨다.</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="cpp" data-theme="github-light github-dark"><code data-language="cpp" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">// Count가 9일 때 두 Thread가 모두 조건을 통과할 수 있다.</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">if</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> (Count.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">load</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">() </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">&lt;</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> 10</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">)</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">{</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal">    Count.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">fetch_add</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">1</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">);</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"> // 9 → 10 → 11</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">    AdmitOnePlayer</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">();</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">}</span></span></code></pre></figure>
+<blockquote class="callout note is-collapsible is-collapsed" data-callout="note" data-callout-fold>
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>CAS로 자리를 확보하는 과정과 재시도 이유 </p></div>
+                  <div class="fold-callout-icon callout-fold"></div>
+                </div>
+<div class="callout-content">
+<p><strong>“9를 보고 왔는데, 지금도 9라면 10으로 바꾸겠다.”</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="text" data-theme="github-light github-dark"><code data-language="text" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>A와 B: 각각 Expected = 9</span></span>
+<span data-line><span>A: 9인가? → 맞음 → 10으로 변경 → 성공</span></span>
+<span data-line><span>B: 9인가? → 지금은 10 → 실패, Expected = 10</span></span>
+<span data-line><span>B: 정원이 찼으므로 입장하지 않음</span></span></code></pre></figure>
+<p><strong>실패했다고 항상 정원이 찬 것은 아니다. 시작값이 8이라면:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="text" data-theme="github-light github-dark"><code data-language="text" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>A와 B: 각각 Expected = 8</span></span>
+<span data-line><span>A: 8 → 9 성공</span></span>
+<span data-line><span>B: 8을 예상했지만 현재 9 → 실패, Expected = 9</span></span>
+<span data-line><span>B: 아직 한 자리 남음 → 9 → 10 재시도 → 성공 가능</span></span></code></pre></figure>
+<p>실패는 “예상과 달라졌다”는 뜻이다. 새 값으로 제한을 다시 확인한다.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="cpp" data-theme="github-light github-dark"><code data-language="cpp" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">int</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> Expected </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal"> Count.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">load</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">();</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">while</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> (Expected </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">&lt;</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> 10</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">)</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">{</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    if</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> (Count.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">compare_exchange_strong</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(Expected, Expected </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">+</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> 1</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">))</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    {</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">        AdmitOnePlayer</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">();</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"> // 확보한 Thread만 실행</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">        break</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    }</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">    // 실패하면 Expected가 갱신된다. 제한부터 다시 확인한다.</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">}</span></span></code></pre></figure>
+<p><code>Expected + 1</code>은 먼저 계산되지만, CAS가 현재 값과 Expected를 다시 비교한다. 그 사이 값이 달라지면 낡은 예상으로 변경하는 데 실패한다.</p>
+<p>Count는 0~10에서 시작하고 모든 자리 확보 코드가 같은 규칙을 따라야 한다. 입장이 실패할 수 있다면 자리 반환도 필요하다. 이 CAS가 입장 함수 내부의 공유 데이터까지 보호하지는 않는다. Lock으로 검사와 변경을 함께 보호하는 방법도 있다.</p>
+</div>
+</blockquote>
+<hr/>
+<h2 id="다른-데이터를-전달할-때">다른 데이터를 전달할 때<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#다른-데이터를-전달할-때" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="ready만-atomic인데-result는-왜-안전해질까">Ready만 atomic인데 Result는 왜 안전해질까?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#ready만-atomic인데-result는-왜-안전해질까" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>준비한 쪽의 release 신호를 acquire로 읽으면, 그전에 쓴 Result를 이후에 안전하게 읽을 수 있다.</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="cpp" data-theme="github-light github-dark"><code data-language="cpp" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">int</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> Result </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> 0</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">;</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">std</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">::atomic</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">&lt;bool></span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> Ready{</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">false</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">};</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">// Worker — 한 번만 작성하고 이후 Result를 수정하지 않음</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">Result </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> 42</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal">Ready.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">store</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">true</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">, </span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">std</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">::memory_order_release);</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">// Main</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">if</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> (Ready.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">load</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">std</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">::memory_order_acquire))</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">{</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">    Use</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(Result);</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">}</span></span></code></pre></figure>
+<blockquote class="callout note is-collapsible is-collapsed" data-callout="note" data-callout-fold>
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>무엇이 무엇을 보장하는 걸까? </p></div>
+                  <div class="fold-callout-icon callout-fold"></div>
+                </div>
+<div class="callout-content">
+<p>Main이 <strong>이 release가 쓴 true를 읽었을 때</strong> 다음 연결이 생긴다.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="text" data-theme="github-light github-dark"><code data-language="text" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>Result = 42</span></span>
+<span data-line><span>    ↓ Worker에서 먼저 수행</span></span>
+<span data-line><span>Ready.store(true, release)</span></span>
+<span data-line><span>    ↓ 이 값을 acquire로 읽음</span></span>
+<span data-line><span>Ready.load(acquire) == true</span></span>
+<span data-line><span>    ↓ Main에서 이후 수행</span></span>
+<span data-line><span>Use(Result)</span></span></code></pre></figure>
+<p>이 연결이 Result 쓰기와 읽기 사이에 happens-before 관계를 만든다. Result가 atomic으로 바뀐 것은 아니다. 충돌하는 접근을 동기화로 순서 지은 것이다.</p>
+<p>Acquire는 새 값이 올 때까지 기다리지 않는다. false를 읽었다면 아직 이 공개 신호를 받은 것이 아니다.</p>
+<p>옵션을 생략한 기본 seq_cst store/load에도 각각 release/acquire 역할이 있어서 이 예시는 안전하다.</p>
+</div>
+</blockquote>
+<h3 id="코드에서-result를-먼저-썼으니-일반-bool도-되지-않을까">코드에서 Result를 먼저 썼으니 일반 bool도 되지 않을까?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#코드에서-result를-먼저-썼으니-일반-bool도-되지-않을까" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>한 Thread 안의 코드 순서만으로 다른 Thread와의 동기화가 생기지는 않는다.</strong></p>
+<blockquote class="callout note is-collapsible is-collapsed" data-callout="note" data-callout-fold>
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>동기화가 필요한 이유 </p></div>
+                  <div class="fold-callout-icon callout-fold"></div>
+                </div>
+<div class="callout-content">
+<p>일반 Ready를 한쪽에서 쓰고 다른 쪽에서 동기화 없이 읽으면 Ready 자체부터 Data Race다. C++에서는 정의되지 않은 동작이다.</p>
+<p>컴파일러는 반복문에서 일반 변수를 매번 다시 읽지 않도록 최적화할 수 있다. CPU의 저장 버퍼 등으로 다른 코어가 쓰기를 관찰하는 시점도 단순한 코드 순서만으로 판단할 수 없다.</p>
+<p>이것들은 필요성을 이해하는 예시이지, Data Race가 있을 때 항상 특정 결과가 나온다는 설명은 아니다. 동기화 규칙을 지키면 컴파일러와 CPU가 필요한 보장을 구현한다.</p>
+<p><code>std::this_thread::yield()</code>는 실행 기회 양보 요청일 뿐이다. Ready나 Result의 동기화를 대신하지 않는다.</p>
+</div>
+</blockquote>
+<h3 id="한쪽만-relaxed면-안-돼">한쪽만 relaxed면 안 돼?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#한쪽만-relaxed면-안-돼" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>위 Result 전달에서는 안 된다. 다른 동기화가 없다면 공개와 수신 양쪽이 연결되어야 한다.</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>store</th><th>load</th><th>해당 true를 읽은 뒤 Result 전달</th></tr></thead><tbody><tr><td>release</td><td>acquire</td><td>보장</td></tr><tr><td>seq_cst</td><td>seq_cst</td><td>보장</td></tr><tr><td>seq_cst</td><td>acquire</td><td>보장</td></tr><tr><td>release</td><td>seq_cst</td><td>보장</td></tr><tr><td>release</td><td>relaxed</td><td>이 신호만으로 보장 안 됨</td></tr><tr><td>relaxed</td><td>acquire</td><td>이 신호만으로 보장 안 됨</td></tr></tbody></table></div>
+<p>release는 store에, acquire는 load에 사용하는 역할이다. load에 release를 지정하는 것은 올바른 사용이 아니다.</p>
+<h3 id="acquire는-언제까지-보호해-lock-같은-거야">Acquire는 언제까지 보호해? Lock 같은 거야?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#acquire는-언제까지-보호해-lock-같은-거야" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>다른 Thread를 막는 기능이 아니다. 공개 후의 새 쓰기까지 보호하지 않는다.</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="cpp" data-theme="github-light github-dark"><code data-language="cpp" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">Result </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> 42</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal">Ready.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">store</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">true</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">, </span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">std</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">::memory_order_release);</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">Result </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> 100</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">;</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"> // Main의 읽기와 충돌할 수 있음</span></span></code></pre></figure>
+<blockquote class="callout note is-collapsible is-collapsed" data-callout="note" data-callout-fold>
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>“Ready 이전 변수는 전부 안전하다”와는 다른 이유 </p></div>
+                  <div class="fold-callout-icon callout-fold"></div>
+                </div>
+<div class="callout-content">
+<p>마지막 쓰기는 release 이후라 그 신호로 Main의 읽기와 순서가 연결되지 않는다. 다른 동기화가 없다면 Data Race다. 단순히 42 또는 100 중 하나를 안전하게 읽는다는 뜻이 아니다.</p>
+<p>반대로 공개 후 아무도 Result를 수정하지 않는다면, 신호를 받은 Main이 나중에 다시 읽어도 안전하다. 보장의 유효 시간이 정해져 있는 것이 아니다.</p>
+<p>Ready를 false로 되돌려도 이미 true를 읽고 Result를 사용하는 Main을 멈추지 못한다. 같은 데이터를 다시 쓰려면 사용 완료 확인이나 Lock 등 재사용 규칙이 필요하다.</p>
+<p>Atomic을 “작은 Lock”으로 떠올리는 것은 개별 연산의 원자성을 이해하는 비유일 뿐이다. Lock처럼 주변 코드의 보호 구간을 소유하는 것은 아니다.</p>
+<p><a href="https://eel.is/c++draft/intro.races" class="external external-link">C++ Data Race와 happens-before 규정<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></p>
+</div>
+</blockquote>
+<hr/>
+<h2 id="memory-order가-달라지면">Memory order가 달라지면<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#memory-order가-달라지면" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="relaxed는-정확히-무엇을-남겨두는-거야">Relaxed는 정확히 무엇을 남겨두는 거야?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#relaxed는-정확히-무엇을-남겨두는-거야" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>해당 atomic 연산의 원자성과, 그 객체 하나의 변경 순서는 유지한다. 다른 데이터 전달은 동기화하지 않는다.</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="cpp" data-theme="github-light github-dark"><code data-language="cpp" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal">TotalHits.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">fetch_add</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">1</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">, </span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">std</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">::memory_order_relaxed);</span></span></code></pre></figure>
+<p>숫자 자체만 필요한 통계라면 후보가 된다. 그 숫자를 보고 다른 결과 데이터까지 읽는다면 요구사항이 달라진다.</p>
+<blockquote class="callout note is-collapsible is-collapsed" data-callout="note" data-callout-fold>
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Modification order가 뭐였지? </p></div>
+                  <div class="fold-callout-icon callout-fold"></div>
+                </div>
+<div class="callout-content">
+<p>하나의 atomic 객체에 일어난 변경들의 순서다. 0에서 두 번 증가했다면 <code>0 → 1 → 2</code>로 변경된다. 누가 먼저 증가하는지는 정하지 않는다.</p>
+<p>다른 atomic 변수까지 합친 하나의 공통 순서는 아니다. 읽는 Thread가 모든 중간값을 보거나, 즉시 최신값을 읽는다는 뜻도 아니다.</p>
+</div>
+</blockquote>
+<h3 id="seq_cst는-그냥-releaseacquire의-다른-이름이야">Seq_cst는 그냥 release/acquire의 다른 이름이야?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#seq_cst는-그냥-releaseacquire의-다른-이름이야" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>아니다. 데이터 전달에 필요한 역할에 더해, seq_cst 연산들 사이에 하나의 공통 순서를 요구한다.</strong></p>
+<p>seq_cst는 <strong>sequentially consistent</strong>의 줄임말이다. 기본 store는 release 역할, 기본 load는 acquire 역할을 포함하지만, 누가 먼저 실행될지 정하거나 여러 연산을 하나로 묶지는 않는다.</p>
+<blockquote class="callout note is-collapsible is-collapsed" data-callout="note" data-callout-fold>
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>둘 다 0을 읽는 예시로 차이 보기 </p></div>
+                  <div class="fold-callout-icon callout-fold"></div>
+                </div>
+<div class="callout-content">
+<p>X와 Y는 atomic int이며 초기값이 모두 0이다.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="cpp" data-theme="github-light github-dark"><code data-language="cpp" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">// Thread A</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal">X.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">store</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">1</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">);</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">int</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> SeenY </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal"> Y.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">load</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">();</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">// Thread B</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal">Y.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">store</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">1</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">);</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">int</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> SeenX </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal"> X.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">load</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">();</span></span></code></pre></figure>
+<p><strong>네 연산이 모두 기본 seq_cst라면 둘 다 0일 수 없다.</strong></p>
+<p>A가 Y=0을 읽었다면 공통 순서는 다음 관계를 가져야 한다.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="text" data-theme="github-light github-dark"><code data-language="text" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>A: X=1 저장</span></span>
+<span data-line><span>→ A: Y 읽기 0</span></span>
+<span data-line><span>→ B: Y=1 저장</span></span>
+<span data-line><span>→ B: X 읽기 1</span></span></code></pre></figure>
+<p>마지막 X는 1이어야 한다. 반대도 같다. <code>(SeenY, SeenX)</code>는 (0,1), (1,0), (1,1)이 가능하다.</p>
+<hr/>
+<p><strong>store를 release, load를 acquire로 바꾸면 (0,0)도 허용된다.</strong></p>
+<p>저장 버퍼를 이용해 이해하면:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>순서</th><th>코어 A</th><th>코어 B</th></tr></thead><tbody><tr><td>1</td><td>X=1을 저장 버퍼에 넣음</td><td>Y=1을 저장 버퍼에 넣음</td></tr><tr><td>2</td><td>B의 쓰기가 아직 안 보여 Y=0 읽음</td><td>A의 쓰기가 아직 안 보여 X=0 읽음</td></tr><tr><td>3</td><td>X=1이 다른 코어에도 보이게 됨</td><td>Y=1이 다른 코어에도 보이게 됨</td></tr></tbody></table></div>
+<p>둘 다 초기값을 읽었으므로 상대 release와 연결되지 않는다. Release는 모든 코어가 값을 볼 때까지 기다리는 기능이 아니다.</p>
+<p>이 표는 가능한 하드웨어 설명 모델이다. 모든 CPU의 정확한 구현을 뜻하지 않는다. C++의 차이는 release/acquire는 이 결과를 허용하고 seq_cst는 금지한다는 것이다.</p>
+<p><a href="https://eel.is/c++draft/atomics.order" class="external external-link">C++ memory order 규정<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></p>
+</div>
+</blockquote>
+<h3 id="그러면-무조건-seq_cst를-쓰면-되지-않을까">그러면 무조건 seq_cst를 쓰면 되지 않을까?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#그러면-무조건-seq_cst를-쓰면-되지-않을까" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>이해하기 쉬운 기본값으로 시작해도 된다. 다만 강한 순서 보장이 잘못된 알고리즘까지 고쳐주지는 않는다.</strong></p>
+<p>정원 검사와 증가가 분리된 코드는 seq_cst여도 잘못될 수 있다. 반대로 통계 숫자만 세는 데는 relaxed로 충분할 수 있다. 비용 차이는 CPU와 연산에 따라 달라서, relaxed가 무조건 빠르지는 않다.</p>
+<hr/>
+<blockquote class="callout note is-collapsible is-collapsed" data-callout="note" data-callout-fold>
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Unreal에서는 왜 std::atomic을 쓰라고 할까? </p></div>
+                  <div class="fold-callout-icon callout-fold"></div>
+                </div>
+<div class="callout-content">
+<p>Epic은 TAtomic을 deprecated로 표시하고 유지보수하지 않으므로 새 코드에 std::atomic을 권고한다. 이것을 std::atomic이 항상 더 빠르다는 뜻으로 해석하지 않는다.</p>
+<p><a href="https://dev.epicgames.com/documentation/en-us/unreal-engine/API/Runtime/Core/TAtomic" class="external external-link">Epic TAtomic 문서<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></p>
+</div>
+</blockquote>
+<hr/>
+<h2 id="직접-판단하기--작업은-한-번만-실행했는데">직접 판단하기 — 작업은 한 번만 실행했는데<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#직접-판단하기--작업은-한-번만-실행했는데" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>두 Worker가 아래 함수를 각각 한 번 호출한다. Main은 그동안 완료를 확인한다. 초기값은 다음과 같다.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="cpp" data-theme="github-light github-dark"><code data-language="cpp" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">std</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">::atomic</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">&lt;int></span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> Attempts{</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">0</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">};</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">std</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">::atomic</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">&lt;bool></span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> Claimed{</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">false</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">};</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">int</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> Result </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> 0</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">;</span></span></code></pre></figure>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="cpp" data-theme="github-light github-dark"><code data-language="cpp" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">void</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> Worker</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">()</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">{</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    int</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> Seen </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal"> Attempts.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">load</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">();</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal">    Attempts.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">store</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(Seen </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">+</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> 1</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">);</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    if</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> (</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">!</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal">Claimed.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">exchange</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">true</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">))</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    {</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">        Result </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> Calculate</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">();</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    }</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">}</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">void</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> CheckFromMain</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">()</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">{</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    if</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> (Claimed.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">load</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">())</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    {</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">        Use</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(Result);</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    }</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">}</span></span></code></pre></figure>
+<p>Calculate는 공유 데이터에 접근하지 않고 값 하나를 계산하며 실패하지 않는다. 각 Worker는 한 번만 실행하고, 같은 작업을 재사용하지 않는다.</p>
+<p><strong>Main은 Worker가 끝날 때까지 기다리지 않고 <code>CheckFromMain()</code>을 호출한다. 따라서 Worker가 아직 계산 중일 수도 있다.</strong></p>
+<p>원하는 동작은 세 가지다.</p>
+<ul>
+<li>두 Worker가 모두 끝나면 Attempts는 2다.</li>
+<li>Calculate는 한 Worker만 실행한다.</li>
+<li>Main은 계산이 완료된 Result만 안전하게 사용한다.</li>
+</ul>
+<p><strong>현재 코드는 이 요구사항을 만족할까? 잘못된 부분만 수정하고, 왜 충분한지 설명해보자.</strong></p>
+<blockquote class="callout question is-collapsible is-collapsed" data-callout="question" data-callout-fold>
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>내 판단과 비교하기 </p></div>
+                  <div class="fold-callout-icon callout-fold"></div>
+                </div>
+<div class="callout-content">
+<p><strong>한 번만 실행하는 부분은 맞지만, 시도 횟수와 결과 전달은 잘못되어 있다.</strong></p>
+<p>Attempts는 두 Worker가 같은 0을 읽으면 최종 1이 될 수 있다. 증가 전체를 <code>fetch_add</code>로 바꾼다.</p>
+<p>Claimed의 exchange는 처음 실행한 Worker에만 이전 값 false를 돌려준다. 다른 Worker는 true를 받으므로 Calculate는 한 번만 실행된다. 이 부분은 유지할 수 있다.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="text" data-theme="github-light github-dark"><code data-language="text" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>exchange(true) 실행 → 이전 값 반환 → ! 적용 → if 진입 여부 결정</span></span>
+<span data-line> </span>
+<span data-line><span>첫 Worker:  false 반환 → !false → 진입</span></span>
+<span data-line><span>다음 Worker: true 반환 → !true  → 진입하지 않음</span></span></code></pre></figure>
+<p>if 본문에 들어가지 않아도 exchange 자체는 실행된다.</p>
+<p>하지만 Claimed는 <strong>작업을 맡았다는 표시</strong>다. true가 된 다음에 계산하므로 완료 신호로 사용할 수 없다. 기본 seq_cst라도 뒤에서 실행될 Result 쓰기를 미리 공개해주지는 않는다.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="text" data-theme="github-light github-dark"><code data-language="text" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>Worker: Claimed = true → 계산 중… → Result 기록</span></span>
+<span data-line><span>Main:           true 읽음 → Result 사용 시도</span></span></code></pre></figure>
+<p>Main이 일반 Result를 읽는 것과 Worker가 쓰는 것 사이에 동기화가 없어 Data Race가 생길 수 있다.</p>
+<p><strong>계산 중에 CheckFromMain()을 호출하는 것은 괜찮다. 준비되지 않은 Result를 읽는 것이 문제다.</strong></p>
+<hr/>
+<p><strong>작업 확보와 완료를 서로 다른 상태로 둔다.</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="cpp" data-theme="github-light github-dark"><code data-language="cpp" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">std</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">::atomic</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">&lt;bool></span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> Ready{</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">false</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">};</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"> // Thread 시작 전에 초기화</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">void</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> Worker</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">()</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">{</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal">    Attempts.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">fetch_add</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">1</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">);</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    if</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> (</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">!</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal">Claimed.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">exchange</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">true</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">))</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    {</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">        Result </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> Calculate</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">();</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal">        Ready.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">store</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">true</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">);</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    }</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">}</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">void</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> CheckFromMain</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">()</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">{</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    if</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> (Ready.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">load</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">())</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    {</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">        Use</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(Result);</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    }</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">}</span></span></code></pre></figure>
+<p>원래 문제와 마찬가지로 모든 atomic 연산은 기본 seq_cst를 사용한다. Attempts의 최종값 2는 두 Worker 완료를 join 등으로 확인한 뒤에 검사한다.</p>
+<p>Ready에 true를 저장하기 전에 Result를 작성했다. Main이 그 true를 기본 seq_cst load로 읽으면 앞선 Result 쓰기와 동기화된다. 이후 Result를 다시 쓰지 않으므로 안전하게 읽을 수 있다.</p>
+<p>보장을 명시적으로 낮추는 별도 선택도 가능하다. 이 예시에서는 통계용 Attempts의 증가에 relaxed, Ready의 store/load에 release/acquire를 사용할 수 있다. 원래 오류를 고치기 위해 필요한 변경은 아니며, 더 빨라진다고 단정할 수도 없다.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="text" data-theme="github-light github-dark"><code data-language="text" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>Claimed → 내가 맡았다 → 중복 계산 방지</span></span>
+<span data-line><span>Ready   → 다 만들었다 → 결과 읽기 허용</span></span></code></pre></figure>
+</div>
+</blockquote>
+<hr/>
+<h2 id="정리">정리<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#정리" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>이름</th><th>기억할 단서</th></tr></thead><tbody><tr><td><a href="#load%ED%95%98%EA%B3%A0-1%EC%9D%84-%EB%8D%94%ED%95%B4-store%ED%95%98%EB%A9%B4-%EA%B0%99%EC%9D%80-%EC%A6%9D%EA%B0%80-%EC%95%84%EB%8B%8C%EA%B0%80" class="internal internal-link alias">load / store</a></td><td><strong>각각</strong> 원자적 · 둘을 묶지는 않음</td></tr><tr><td><a href="#load%ED%95%98%EA%B3%A0-1%EC%9D%84-%EB%8D%94%ED%95%B4-store%ED%95%98%EB%A9%B4-%EA%B0%99%EC%9D%80-%EC%A6%9D%EA%B0%80-%EC%95%84%EB%8B%8C%EA%B0%80" class="internal internal-link alias">fetch_add</a></td><td>읽기 + 더하기 + 저장을 <strong>한 번에</strong></td></tr><tr><td><a href="#exchange-fetch_add-%EB%8A%94-%EB%AD%90%EA%B0%80-%EB%8B%A4%EB%A5%BC%EA%B9%8C" class="internal internal-link alias">exchange</a></td><td>교체하고 <strong>이전 값</strong> 반환</td></tr><tr><td><a href="#compare_exchange%EB%8A%94-%EA%B0%99%EC%9C%BC%EB%A9%B4-%EB%B0%94%EA%BE%B8%EB%8A%94-%EA%B1%B0%EC%95%BC" class="internal internal-link alias">CAS</a></td><td><strong>같으면 교체</strong> · 실패하면 Expected 갱신</td></tr><tr><td><a href="#%EC%9E%90%EB%A6%AC%EA%B0%80-%EB%82%A8%EC%95%98%EC%9D%84-%EB%95%8C%EB%A7%8C-%EC%A6%9D%EA%B0%80%EC%8B%9C%ED%82%A4%EB%A0%A4%EB%A9%B4" class="internal internal-link alias">CAS 재시도</a></td><td>실패 ≠ 정원 초과 · <strong>새 값으로 재판단</strong></td></tr><tr><td><a href="#relaxed%EB%8A%94-%EC%A0%95%ED%99%95%ED%9E%88-%EB%AC%B4%EC%97%87%EC%9D%84-%EB%82%A8%EA%B2%A8%EB%91%90%EB%8A%94-%EA%B1%B0%EC%95%BC" class="internal internal-link alias">relaxed</a></td><td><strong>원자성 유지</strong> · 다른 데이터 동기화 없음</td></tr><tr><td><a href="#ready%EB%A7%8C-atomic%EC%9D%B8%EB%8D%B0-result%EB%8A%94-%EC%99%9C-%EC%95%88%EC%A0%84%ED%95%B4%EC%A7%88%EA%B9%8C" class="internal internal-link alias">release / acquire</a></td><td>신호 전 작성 → <strong>그 신호 수신</strong> → 사용</td></tr><tr><td><a href="#seq_cst%EB%8A%94-%EA%B7%B8%EB%83%A5-releaseacquire%EC%9D%98-%EB%8B%A4%EB%A5%B8-%EC%9D%B4%EB%A6%84%EC%9D%B4%EC%95%BC" class="internal internal-link alias">seq_cst</a></td><td>기본값 · seq_cst끼리 <strong>공통 순서</strong></td></tr><tr><td><a href="#relaxed%EB%8A%94-%EC%A0%95%ED%99%95%ED%9E%88-%EB%AC%B4%EC%97%87%EC%9D%84-%EB%82%A8%EA%B2%A8%EB%91%90%EB%8A%94-%EA%B1%B0%EC%95%BC" class="internal internal-link alias">modification order</a></td><td><strong>atomic 하나</strong>의 변경 순서</td></tr><tr><td><a href="#acquire%EB%8A%94-%EC%96%B8%EC%A0%9C%EA%B9%8C%EC%A7%80-%EB%B3%B4%ED%98%B8%ED%95%B4-lock-%EA%B0%99%EC%9D%80-%EA%B1%B0%EC%95%BC" class="internal internal-link alias">공개 후 수정</a></td><td>acquire ≠ Lock · <strong>새 쓰기는 별도 동기화</strong></td></tr><tr><td><a href="#%EC%A7%81%EC%A0%91-%ED%8C%90%EB%8B%A8%ED%95%98%EA%B8%B0--%EC%9E%91%EC%97%85%EC%9D%80-%ED%95%9C-%EB%B2%88%EB%A7%8C-%EC%8B%A4%ED%96%89%ED%96%88%EB%8A%94%EB%8D%B0" class="internal internal-link alias">Claimed / Ready</a></td><td><strong>맡았다 ≠ 끝났다</strong></td></tr></tbody></table></div></div></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="toc"><button type="button" class="toc-header" aria-controls="toc-18" aria-expanded="true"><h3>목차</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-0" class="toc-content overflow"><li class="depth-0"><a href="#atomic인데-왜-틀릴-수-있지" data-for="atomic인데-왜-틀릴-수-있지">Atomic인데 왜 틀릴 수 있지?</a></li><li class="depth-0"><a href="#값-하나를-바꿀-때" data-for="값-하나를-바꿀-때">값 하나를 바꿀 때</a></li><li class="depth-1"><a href="#두-thread가-증가시키면-번갈아-실행될까" data-for="두-thread가-증가시키면-번갈아-실행될까">두 Thread가 증가시키면 번갈아 실행될까?</a></li><li class="depth-1"><a href="#load하고-1을-더해-store하면-같은-증가-아닌가" data-for="load하고-1을-더해-store하면-같은-증가-아닌가">load하고 1을 더해 store하면 같은 증가 아닌가?</a></li><li class="depth-1"><a href="#exchange-fetch_add-는-뭐가-다를까" data-for="exchange-fetch_add-는-뭐가-다를까">exchange, fetch_add, ++는 뭐가 다를까?</a></li><li class="depth-1"><a href="#함수나-변수를-인자로-넣으면-그것도-보호할까" data-for="함수나-변수를-인자로-넣으면-그것도-보호할까">함수나 변수를 인자로 넣으면 그것도 보호할까?</a></li><li class="depth-1"><a href="#compare_exchange는-같으면-바꾸는-거야" data-for="compare_exchange는-같으면-바꾸는-거야">compare_exchange는 같으면 바꾸는 거야?</a></li><li class="depth-1"><a href="#자리가-남았을-때만-증가시키려면" data-for="자리가-남았을-때만-증가시키려면">자리가 남았을 때만 증가시키려면?</a></li><li class="depth-0"><a href="#다른-데이터를-전달할-때" data-for="다른-데이터를-전달할-때">다른 데이터를 전달할 때</a></li><li class="depth-1"><a href="#ready만-atomic인데-result는-왜-안전해질까" data-for="ready만-atomic인데-result는-왜-안전해질까">Ready만 atomic인데 Result는 왜 안전해질까?</a></li><li class="depth-1"><a href="#코드에서-result를-먼저-썼으니-일반-bool도-되지-않을까" data-for="코드에서-result를-먼저-썼으니-일반-bool도-되지-않을까">코드에서 Result를 먼저 썼으니 일반 bool도 되지 않을까?</a></li><li class="depth-1"><a href="#한쪽만-relaxed면-안-돼" data-for="한쪽만-relaxed면-안-돼">한쪽만 relaxed면 안 돼?</a></li><li class="depth-1"><a href="#acquire는-언제까지-보호해-lock-같은-거야" data-for="acquire는-언제까지-보호해-lock-같은-거야">Acquire는 언제까지 보호해? Lock 같은 거야?</a></li><li class="depth-0"><a href="#memory-order가-달라지면" data-for="memory-order가-달라지면">Memory order가 달라지면</a></li><li class="depth-1"><a href="#relaxed는-정확히-무엇을-남겨두는-거야" data-for="relaxed는-정확히-무엇을-남겨두는-거야">Relaxed는 정확히 무엇을 남겨두는 거야?</a></li><li class="depth-1"><a href="#seq_cst는-그냥-releaseacquire의-다른-이름이야" data-for="seq_cst는-그냥-releaseacquire의-다른-이름이야">Seq_cst는 그냥 release/acquire의 다른 이름이야?</a></li><li class="depth-1"><a href="#그러면-무조건-seq_cst를-쓰면-되지-않을까" data-for="그러면-무조건-seq_cst를-쓰면-되지-않을까">그러면 무조건 seq_cst를 쓰면 되지 않을까?</a></li><li class="depth-0"><a href="#직접-판단하기--작업은-한-번만-실행했는데" data-for="직접-판단하기--작업은-한-번만-실행했는데">직접 판단하기 — 작업은 한 번만 실행했는데</a></li><li class="depth-0"><a href="#정리" data-for="정리">정리</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Created with <a href="https://quartz.jzhao.xyz/">Quartz v5.0.0</a> © 2026</p><ul><li><a href="https://github.com/HyeseonLikesPizza/yeoeunseon/tree/main/yeoeunseon/%EC%9C%A4%EC%97%AC%EB%AF%BC">원본 기록</a></li></ul></footer></div></div></body><script src="../static/resource-after-e13fffa1.js" type="application/javascript" data-persist="true"></script><script src="../static/resource-after-8b336f9a.js" type="application/javascript" data-persist="true"></script><script src="../static/resource-after-baba652b.js" type="application/javascript" data-persist="true"></script><script src="../static/resource-after-5eb75950.js" type="module" data-persist="true"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript" data-persist="true"></script><script src="../postscript-5e06a1c1.js" type="module" data-persist="true"></script></html>

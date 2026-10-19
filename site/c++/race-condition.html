@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="ko" dir="ltr"><head><title>Race Condition | 윤여민</title><meta charset="utf-8"/><link rel="preload" href="../index-ae276ac8.css" as="style"/><link rel="preload" href="../prescript-2bfc6315.js" as="script"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto Sans KR:wght@400;700&amp;family=Noto Sans KR:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="개발 공부 기록"/><meta property="og:title" content="Race Condition | 윤여민"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="Race Condition | 윤여민"/><meta name="twitter:description" content="경쟁 상태(Race Condition) Summary Race Condition은 스레드의 실행 순서에 따라 결과가 달라지는 문제다."/><meta property="og:description" content="경쟁 상태(Race Condition) Summary Race Condition은 스레드의 실행 순서에 따라 결과가 달라지는 문제다."/><meta property="og:image:alt" content="경쟁 상태(Race Condition) Summary Race Condition은 스레드의 실행 순서에 따라 결과가 달라지는 문제다."/><meta property="og:image" content="https://yeomin-yoon.github.io/development-notes/static/og-image.png"/><meta property="og:image:url" content="https://yeomin-yoon.github.io/development-notes/static/og-image.png"/><meta name="twitter:image" content="https://yeomin-yoon.github.io/development-notes/static/og-image.png"/><meta property="og:image:type" content="image/.png"/><meta property="twitter:domain" content="yeomin-yoon.github.io/development-notes"/><meta property="og:url" content="https://yeomin-yoon.github.io/development-notes/c++/race-condition"/><meta property="twitter:url" content="https://yeomin-yoon.github.io/development-notes/c++/race-condition"/><link rel="icon" href="../static/icon.png"/><meta name="description" content="경쟁 상태(Race Condition) Summary Race Condition은 스레드의 실행 순서에 따라 결과가 달라지는 문제다."/><meta name="generator" content="Quartz"/><link href="../index-ae276ac8.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../component-735924e0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../component-589c1cea.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../component-bbc3f7c0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../component-2911f5d1.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../component-53b25b2b.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../component-8a06014f.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../component-77d6a441.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../component-6ee21cee.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../component-1ea6ad18.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../component-788c9ca3.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../component-4abc06bd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../component-274a3dfe.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../component-94cb6c84.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../static/resource-style-a5c806d2.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../static/resource-style-6bd36952.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" data-persist="true"/><script src="../prescript-2bfc6315.js" type="application/javascript" data-persist="true"></script><script type="application/javascript" data-persist="true">const fetchData = fetch("../static/contentIndex.json").then(data => data.json())</script></head><body data-slug="c++/race-condition" data-basepath="/development-notes"><div id="quartz-root" class="page" data-frame="default"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="..">개발 공부 기록</a></h2><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 0.5rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button" aria-label="검색" aria-expanded="false"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>검색</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="검색어를 입력하세요" placeholder="검색어를 입력하세요"/><div class="search-layout" data-preview="true" data-field-priority="[&quot;title&quot;,&quot;content&quot;,&quot;tags&quot;]"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode" aria-label="다크 모드"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="다크 모드"><title>다크 모드</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="라이트 모드"><title>라이트 모드</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode" aria-label="리더 모드"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="리더 모드"><title>리더 모드</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer nav-files-container" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a2, b2) => {\n    if (!a2.isFolder &amp;&amp; !b2.isFolder || a2.isFolder &amp;&amp; b2.isFolder) {\n      return (a2.displayName || \&quot;\&quot;).localeCompare(b2.displayName || \&quot;\&quot;, void 0, {\n        numeric: true,\n        sensitivity: \&quot;base\&quot;\n      });\n    }\n    if (!a2.isFolder &amp;&amp; b2.isFolder) {\n      return 1;\n    }\n    return -1;\n  }&quot;,&quot;filterFn&quot;:&quot;(node) => node.slugSegment !== \&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;(node) => {\n    return node;\n  }&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-5" aria-label="탐색기"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>목차</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-5" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#" class="nav-file-title tree-item-self"></a></li></template><template id="template-folder"><li><div class="folder-container nav-folder-title tree-item-self"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon nav-folder-collapse-indicator collapse-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content tree-item-children"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../c++/">C++</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>Race Condition</a></div></nav><h1 class="article-title">Race Condition</h1><p show-comma="false" class="content-meta"><time datetime="2026-07-07T12:28:05.000Z">2026년 7월 07일</time></p></div></div><article class="popover-hint"><div class="markdown-preview-view markdown-rendered"><h1 id="경쟁-상태race-condition">경쟁 상태(Race Condition)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#경쟁-상태race-condition" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<blockquote class="callout abstract" data-callout="abstract">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Summary</p></div>
+                  
+                </div>
+<div class="callout-content">
+<p><strong>Race Condition</strong>은 스레드의 실행 순서에 따라 결과가 달라지는 문제다.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="text" data-theme="github-light github-dark"><code data-language="text" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>공유하지 않기                  가장 좋은 해결</span></span>
+<span data-line><span>여러 변수·여러 코드 줄 보호     mutex</span></span>
+<span data-line><span>단순한 값 하나의 연산           atomic</span></span>
+<span data-line><span>mutex가 측정된 병목             검증된 Lock-Free 구현 검토</span></span></code></pre></figure>
+<p>일반적인 실무에서는 <strong>mutex가 기본 선택</strong>이다.</p>
+</div>
+</blockquote>
+<h2 id="race-condition과-data-race">Race Condition과 Data Race<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#race-condition과-data-race" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>용어</th><th>쉬운 의미</th></tr></thead><tbody><tr><td><strong>Race Condition</strong></td><td>실행 순서가 프로그램의 올바른 결과를 바꾸는 문제</td></tr><tr><td><strong>Data Race</strong></td><td>여러 스레드가 같은 메모리를 보호 없이 동시에 사용하며 하나 이상이 쓰는 상태</td></tr></tbody></table></div>
+<p>C++에서 Data Race는 **정의되지 않은 동작(Undefined Behavior, UB)**이다.</p>
+<p>전문적으로는 같은 메모리에 충돌하는 접근이 겹치고, 하나 이상이 비원자적이며, 접근 사이에 Happens-Before 관계가 없을 때 Data Race가 발생한다.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="text" data-theme="github-light github-dark"><code data-language="text" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>읽기 + 읽기     다른 쓰기가 없다면 안전</span></span>
+<span data-line><span>읽기 + 쓰기     Data Race</span></span>
+<span data-line><span>쓰기 + 쓰기     Data Race</span></span></code></pre></figure>
+<p>Data Race와 Race Condition은 같은 말이 아니다. atomic을 사용해 Data Race를 없애도 여러 연산의 논리적 순서가 잘못되면 Race Condition은 남을 수 있다.</p>
+<hr/>
+<h2 id="왜-counter가-위험할까">왜 Counter++가 위험할까?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#왜-counter가-위험할까" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="cpp" data-theme="github-light github-dark"><code data-language="cpp" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">int</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> Counter </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> 0</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">;</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">void</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> Increase</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">()</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">{</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">    ++</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">Counter;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">}</span></span></code></pre></figure>
+<p><code>++Counter</code>는 한 줄이지만 실제로는 다음 과정이다.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="text" data-theme="github-light github-dark"><code data-language="text" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>값 읽기 → 1 증가 → 결과 쓰기</span></span></code></pre></figure>
+<p>두 스레드의 작업이 겹치면:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="text" data-theme="github-light github-dark"><code data-language="text" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>Thread A: 0 읽기 → 1 계산 ───────→ 1 쓰기</span></span>
+<span data-line><span>Thread B:     0 읽기 → 1 계산 ───→ 1 쓰기</span></span>
+<span data-line> </span>
+<span data-line><span>기대: 2</span></span>
+<span data-line><span>가능한 결과의 예: 1</span></span></code></pre></figure>
+<p>한 번의 변경이 덮이는 현상을 **Lost Update(갱신 손실)**라고 한다.</p>
+<blockquote class="callout warning" data-callout="warning">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Caution</p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>이 코드는 Data Race이므로 실제 결과가 반드시 1이라는 뜻은 아니다. C++에서는 프로그램의 동작 자체가 UB다.</p>
+</div>
+</blockquote>
+<hr/>
+<h2 id="mutex와-atomic-비교">Mutex와 Atomic 비교<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#mutex와-atomic-비교" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<blockquote>
+<p><strong>Mutex는 코드 구역을 보호하고, Atomic은 변수 하나의 개별 연산을 보호한다.</strong></p>
+</blockquote>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>구분</th><th><code>std::mutex</code></th><th><code>std::atomic</code></th></tr></thead><tbody><tr><td>보호 단위</td><td>여러 변수와 여러 코드 줄</td><td>atomic 객체 하나의 개별 연산</td></tr><tr><td>사용 예</td><td>계좌 이체, 여러 상태 동시 변경</td><td>카운터 증가, 플래그 변경</td></tr><tr><td>충돌 시</td><td>다른 스레드가 락을 기다림</td><td>원자 연산을 수행하며 구현에 따라 재시도 가능</td></tr><tr><td>난도</td><td>비교적 단순</td><td>복합 로직에서는 어려움</td></tr></tbody></table></div>
+<hr/>
+<h2 id="mutex">Mutex<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#mutex" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="cpp" data-theme="github-light github-dark"><code data-language="cpp" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">std</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">::mutex AccountMutex;</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">int</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> PlayerGold </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> 100</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">;</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">int</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> ShopGold </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> 0</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">;</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">void</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> BuyItem</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">()</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">{</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">    std</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">::lock_guard</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">&lt;</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">std</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">::mutex</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">></span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> Lock</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(AccountMutex);</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    PlayerGold </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">-=</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> 10</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    ShopGold </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">+=</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> 10</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">}</span></span></code></pre></figure>
+<p>골드 차감과 증가는 함께 완료되어야 한다. mutex는 한 스레드가 임계 구역을 실행하는 동안 다른 스레드가 중간에 들어오지 못하게 한다.</p>
+<p><code>std::lock_guard</code>는 범위를 벗어날 때 자동으로 락을 해제한다. 이런 수명 기반 관리를 <strong>RAII</strong>라고 한다.</p>
+<blockquote>
+<p>같은 데이터를 읽고 쓰는 모든 스레드가 <strong>동일한 mutex</strong>를 사용해야 한다.</p>
+</blockquote>
+<hr/>
+<h2 id="atomic">Atomic<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#atomic" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="cpp" data-theme="github-light github-dark"><code data-language="cpp" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">std</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">::atomic</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">&lt;int></span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> Counter{</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">0</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">};</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">void</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> Increase</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">()</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">{</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal">    Counter.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">fetch_add</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">1</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">);</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">}</span></span></code></pre></figure>
+<p><code>fetch_add(1)</code>은 읽기·증가·쓰기를 하나의 원자적 연산으로 처리한다.</p>
+<p>atomic은 해당 객체의 개별 연산만 보호한다. 여러 atomic 변수나 앞뒤 코드 전체가 자동으로 하나의 작업이 되는 것은 아니다.</p>
+<blockquote class="callout tip" data-callout="tip">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Important</p></div>
+                  
+                </div>
+<div class="callout-content">
+<p><strong>Atomic과 Lock-Free는 같은 말이 아니다.</strong> <code>std::atomic</code>은 원자성을 제공하지만 플랫폼과 타입에 따라 내부 잠금을 사용할 수 있다.</p>
+</div>
+</blockquote>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="cpp" data-theme="github-light github-dark"><code data-language="cpp" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">const</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword"> bool</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> bLockFree </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal"> Counter.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">is_lock_free</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">();</span></span></code></pre></figure>
+<hr/>
+<h2 id="mutex와-lock-free의-차이">Mutex와 Lock-Free의 차이<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#mutex와-lock-free의-차이" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>둘 다 공유 데이터를 안전하게 다룰 수 있다. 차이는 <strong>전체 진행이 특정 스레드에게 의존하는가</strong>다.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="text" data-theme="github-light github-dark"><code data-language="text" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>Mutex</span></span>
+<span data-line><span>Thread A가 락을 가진 채 멈춤</span></span>
+<span data-line><span>→ 같은 락이 필요한 B와 C도 대기</span></span>
+<span data-line> </span>
+<span data-line><span>Lock-Free</span></span>
+<span data-line><span>Thread A가 연산 도중 멈춤</span></span>
+<span data-line><span>→ 락 소유자가 없음</span></span>
+<span data-line><span>→ Thread B가 원자 연산에 성공해 완료 가능</span></span></code></pre></figure>
+<blockquote>
+<p><strong>Lock-Free는 잠금을 기다리느라 전체가 멈추지 않고, 경쟁 중 적어도 하나가 계속 완료되는 구조다.</strong></p>
+</blockquote>
+<p>mutex도 락 소유자가 정상 실행되면 작업 하나를 완료한다. 차이는 락 소유자가 멈췄을 때 다른 스레드의 진행까지 막히는가에 있다.</p>
+<p>이때 같은 자원을 얻으려는 상황은 Race Condition이 아니라 **경합(Contention)**이라고 한다.</p>
+<h3 id="cas-흐름">CAS 흐름<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#cas-흐름" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Lock-Free 자료구조는 주로 <strong>CAS(Compare-And-Swap)</strong> 같은 원자 연산을 사용한다.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="text" data-theme="github-light github-dark"><code data-language="text" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>현재 값 읽기</span></span>
+<span data-line><span>→ 새 값 계산</span></span>
+<span data-line><span>→ CAS 시도</span></span>
+<span data-line><span>   ├─ 성공: 완료</span></span>
+<span data-line><span>   └─ 실패: 다른 스레드가 먼저 변경함 → 다시 시도</span></span></code></pre></figure>
+<p>모든 스레드가 바로 성공하는 것은 아니다. 특정 스레드는 계속 실패하는 <strong>Starvation</strong>을 겪을 수 있다.</p>
+<h3 id="언제-사용하는가">언제 사용하는가?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#언제-사용하는가" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>락 소유자의 중단 때문에 시스템 전체 진행이 막히면 안 될 때</li>
+<li>mutex 대기가 실제 프로파일링에서 병목으로 확인됐을 때</li>
+<li>검증된 Lock-Free Queue 같은 구현을 사용할 수 있을 때</li>
+</ul>
+<p>Lock-Free는 높은 경합에서 항상 빠르지 않으며 직접 구현과 검증이 매우 어렵다. 일반 코드는 mutex부터 사용한다.</p>
+<hr/>
+<h2 id="happens-before">Happens-Before<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#happens-before" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<blockquote>
+<p><strong>Happens-Before는 함수나 문법이 아니라 C++ 메모리 모델의 순서 관계다.</strong></p>
+</blockquote>
+<h3 id="왜-필요한가">왜 필요한가?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#왜-필요한가" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>한 스레드가 먼저 값을 썼다고 해서 다른 스레드가 그 값을 같은 순서로 본다고 자동 보장되지는 않기 때문이다.</p>
+<p>순서를 바꾸거나 관찰 결과에 영향을 줄 수 있는 주체는 컴파일러만이 아니다.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>주체</th><th>관련 동작</th></tr></thead><tbody><tr><td>컴파일러</td><td>명령어 재배치, 레지스터 사용, 불필요한 읽기 제거</td></tr><tr><td>CPU</td><td>Out-of-Order Execution, Store Buffer 등</td></tr><tr><td>메모리 시스템</td><td>코어별 캐시와 캐시 일관성 처리</td></tr></tbody></table></div>
+<p>CPU와 캐시는 단일 스레드 결과가 유지되도록 동작하지만, 이것만으로 C++ 스레드 사이의 순서와 값 전달이 보장되지는 않는다.</p>
+<p>Happens-Before는 두 가지를 보장한다.</p>
+<ol>
+<li><strong>순서</strong>: 앞 작업을 뒤 작업보다 먼저 처리된 것으로 본다.</li>
+<li><strong>메모리 가시성</strong>: 앞 스레드가 쓴 값이 뒤 스레드의 읽기에 반영된다.</li>
+</ol>
+<p>여기서 가시성은 코드가 보기 좋다는 뜻이 아니라, <strong>실행 중 한 스레드의 메모리 변경을 다른 스레드가 관찰할 수 있다는 뜻</strong>이다.</p>
+<p>같은 mutex를 올바르게 사용하면 Happens-Before 관계가 만들어진다.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="text" data-theme="github-light github-dark"><code data-language="text" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>Thread A                              Thread B</span></span>
+<span data-line> </span>
+<span data-line><span>mutex 잠금</span></span>
+<span data-line><span>Data = 42</span></span>
+<span data-line><span>mutex 해제  ── Happens-Before ──→    같은 mutex 잠금</span></span>
+<span data-line><span>                                      Data 읽기: 42</span></span></code></pre></figure>
+<p>Happens-Before를 직접 호출하지 않는다. mutex, <code>std::thread::join()</code>, 올바른 atomic 메모리 순서 같은 동기화 기능을 사용하면 그 결과로 관계가 생긴다.</p>
+<p>처음에는 동일한 mutex로 공유 데이터를 보호하고 atomic의 기본 메모리 순서를 사용하면 충분하다.</p>
+<hr/>
+<h2 id="캐시-라인-경합">캐시 라인 경합<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#캐시-라인-경합" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>여러 코어가 같은 atomic을 계속 수정하면 <strong>Cache Line Bouncing</strong>이 발생할 수 있다.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="text" data-theme="github-light github-dark"><code data-language="text" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>Core A가 캐시 라인의 쓰기 권한 획득</span></span>
+<span data-line><span>→ Core B가 수정하려고 권한을 가져감</span></span>
+<span data-line><span>→ Core A가 다시 권한을 되찾음</span></span></code></pre></figure>
+<p>CPU는 캐시를 캐시 라인 단위로 관리한다. 한 코어가 쓰려면 다른 코어가 가진 같은 캐시 라인 사본을 무효화하고 쓰기 가능한 상태를 가져와야 한다. 여러 코어가 번갈아 쓰면 권한과 데이터가 계속 이동해 비용이 커진다.</p>
+<p>이 과정은 Data Race를 막기 위한 것이 아니라 **Cache Coherence(캐시 일관성)**를 유지하기 위한 것이다. C++ 코드의 Data Race는 mutex나 atomic으로 별도 해결해야 한다.</p>
+<hr/>
+<h2 id="volatile">volatile<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#volatile" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<blockquote>
+<p><strong>일반적인 C++·Unreal 멀티스레드 코드에서는 <code>volatile</code>을 동기화에 사용하지 않는다.</strong></p>
+</blockquote>
+<p><code>volatile</code>은 메모리 접근 자체가 중요하다고 컴파일러에 알리는 한정자다. 구현 환경에 따라 하드웨어 레지스터나 특수한 신호 처리에서 사용한다.</p>
+<h3 id="왜-접근-자체가-중요할까">왜 접근 자체가 중요할까?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#왜-접근-자체가-중요할까" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>일반 변수는 프로그램 코드가 값을 바꾸지 않으면 컴파일러가 “값이 그대로일 것”이라고 판단할 수 있다. 그래서 반복되는 읽기를 한 번으로 줄이거나 필요 없다고 판단한 쓰기를 제거할 수 있다.</p>
+<p>하지만 하드웨어 상태 레지스터는 프로그램 밖의 장치가 값을 바꿀 수 있다.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="cpp" data-theme="github-light github-dark"><code data-language="cpp" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">// 구현 환경이 제공한 하드웨어 상태 레지스터라고 가정</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">volatile</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> std</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">::</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">uint32_t*</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> StatusRegister </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> GetStatusRegister</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">();</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">while</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> ((</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">*</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">StatusRegister </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">&amp;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> ReadyBit) </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">==</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> 0</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">)</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">{</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">    // 장치가 ReadyBit를 설정할 때까지 상태를 다시 읽는다.</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">}</span></span></code></pre></figure>
+<p>프로그램 코드에는 <code>StatusRegister</code>의 값을 바꾸는 부분이 없지만 실제 하드웨어가 값을 변경한다. 따라서 각 읽기를 없애지 말고 실제 접근으로 남겨야 한다.</p>
+<p>쓰기 역시 장치에 명령을 전달하는 동작일 수 있어서, 최종 변수값만 같다는 이유로 제거하면 안 된다. 이런 경우에는 <strong>값의 계산 결과뿐 아니라 읽기·쓰기 행위 자체가 외부 장치에 의미</strong>가 있다.</p>
+<blockquote class="callout note" data-callout="note">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Note</p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>이것은 구현 환경에서 하드웨어 레지스터를 다룰 때의 용도다. <code>volatile</code>은 스레드 사이의 원자성이나 값 전달 순서를 보장하지 않는다.</p>
+</div>
+</blockquote>
+<p>다음 기능은 제공하지 않는다.</p>
+<ul>
+<li>원자성</li>
+<li>상호 배제</li>
+<li>Happens-Before</li>
+</ul>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="text" data-theme="github-light github-dark"><code data-language="text" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>게임의 공유 변수·플래그 → atomic 또는 mutex</span></span>
+<span data-line><span>하드웨어 레지스터       → 환경에 따라 volatile 검토</span></span></code></pre></figure>
+<hr/>
+<h2 id="unreal에서의-기본-원칙">Unreal에서의 기본 원칙<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#unreal에서의-기본-원칙" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>가장 좋은 방법은 Worker Thread와 GameThread가 같은 UObject 상태를 직접 공유하지 않게 하는 것이다.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="text" data-theme="github-light github-dark"><code data-language="text" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>GameThread에서 필요한 값 복사</span></span>
+<span data-line><span>→ Worker Thread에서 순수 데이터로 계산</span></span>
+<span data-line><span>→ GameThread에서 객체 유효성 확인 후 결과 반영</span></span></code></pre></figure>
+<p>자세한 패턴은 <a href="../unreal/async--and--threadpool" class="internal internal-link alias" data-slug="unreal/async--and--threadpool">Async &amp; ThreadPool</a> 참고.</p>
+<hr/>
+<h2 id="정리">정리<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#정리" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="text" data-theme="github-light github-dark"><code data-language="text" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>공유 제거 가능              → 공유하지 않기</span></span>
+<span data-line><span>여러 변수·복합 작업         → mutex</span></span>
+<span data-line><span>단순 카운터·플래그          → atomic</span></span>
+<span data-line><span>mutex가 실제 병목           → 검증된 Lock-Free 구현 검토</span></span></code></pre></figure>
+<ul>
+<li>Mutex: 구역을 잠그고 한 스레드만 실행</li>
+<li>Atomic: 변수 하나의 개별 연산을 원자적으로 처리</li>
+<li>Lock-Free: 특정 락 소유자 없이 전체 중 적어도 하나가 계속 완료</li>
+<li>Happens-Before: 스레드 사이의 순서와 메모리 가시성 관계</li>
+<li>Atomic이라고 항상 Lock-Free는 아니며, Lock-Free라고 항상 빠른 것도 아님</li>
+</ul>
+<hr/>
+<h2 id="참고">참고<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#참고" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li><a href="https://eel.is/c++draft/intro.races" class="external external-link">C++ Working Draft: Data Races<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://eel.is/c++draft/atomics.lockfree" class="external external-link">C++ Working Draft: Lock-free Property<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://eel.is/c++draft/basic.exec" class="external external-link">C++ Working Draft: Progress Guarantee<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+</ul>
+<p><a href="../c++/c++-정리-목차" class="internal internal-link alias" data-slug="c++/c++-정리-목차">C++ 정리 목차</a> · <a href="../c++/cache-locality" class="internal internal-link alias" data-slug="c++/cache-locality">Cache Locality</a> · <a href="../unreal/async--and--threadpool" class="internal internal-link alias" data-slug="unreal/async--and--threadpool">Async &amp; ThreadPool</a></p></div></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="toc"><button type="button" class="toc-header" aria-controls="toc-5" aria-expanded="true"><h3>목차</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-0" class="toc-content overflow"><li class="depth-0"><a href="#경쟁-상태race-condition" data-for="경쟁-상태race-condition">경쟁 상태(Race Condition)</a></li><li class="depth-1"><a href="#race-condition과-data-race" data-for="race-condition과-data-race">Race Condition과 Data Race</a></li><li class="depth-1"><a href="#왜-counter가-위험할까" data-for="왜-counter가-위험할까">왜 Counter++가 위험할까?</a></li><li class="depth-1"><a href="#mutex와-atomic-비교" data-for="mutex와-atomic-비교">Mutex와 Atomic 비교</a></li><li class="depth-1"><a href="#mutex" data-for="mutex">Mutex</a></li><li class="depth-1"><a href="#atomic" data-for="atomic">Atomic</a></li><li class="depth-1"><a href="#mutex와-lock-free의-차이" data-for="mutex와-lock-free의-차이">Mutex와 Lock-Free의 차이</a></li><li class="depth-2"><a href="#cas-흐름" data-for="cas-흐름">CAS 흐름</a></li><li class="depth-2"><a href="#언제-사용하는가" data-for="언제-사용하는가">언제 사용하는가?</a></li><li class="depth-1"><a href="#happens-before" data-for="happens-before">Happens-Before</a></li><li class="depth-2"><a href="#왜-필요한가" data-for="왜-필요한가">왜 필요한가?</a></li><li class="depth-1"><a href="#캐시-라인-경합" data-for="캐시-라인-경합">캐시 라인 경합</a></li><li class="depth-1"><a href="#volatile" data-for="volatile">volatile</a></li><li class="depth-2"><a href="#왜-접근-자체가-중요할까" data-for="왜-접근-자체가-중요할까">왜 접근 자체가 중요할까?</a></li><li class="depth-1"><a href="#unreal에서의-기본-원칙" data-for="unreal에서의-기본-원칙">Unreal에서의 기본 원칙</a></li><li class="depth-1"><a href="#정리" data-for="정리">정리</a></li><li class="depth-1"><a href="#참고" data-for="참고">참고</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Created with <a href="https://quartz.jzhao.xyz/">Quartz v5.0.0</a> © 2026</p><ul><li><a href="https://github.com/HyeseonLikesPizza/yeoeunseon/tree/main/yeoeunseon/%EC%9C%A4%EC%97%AC%EB%AF%BC">원본 기록</a></li></ul></footer></div></div></body><script src="../static/resource-after-e13fffa1.js" type="application/javascript" data-persist="true"></script><script src="../static/resource-after-8b336f9a.js" type="application/javascript" data-persist="true"></script><script src="../static/resource-after-baba652b.js" type="application/javascript" data-persist="true"></script><script src="../static/resource-after-5eb75950.js" type="module" data-persist="true"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript" data-persist="true"></script><script src="../postscript-5e06a1c1.js" type="module" data-persist="true"></script></html>

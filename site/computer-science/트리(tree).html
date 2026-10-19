@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="ko" dir="ltr"><head><title>트리(Tree) | 윤여민</title><meta charset="utf-8"/><link rel="preload" href="../index-ae276ac8.css" as="style"/><link rel="preload" href="../prescript-2bfc6315.js" as="script"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto Sans KR:wght@400;700&amp;family=Noto Sans KR:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="개발 공부 기록"/><meta property="og:title" content="트리(Tree) | 윤여민"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="트리(Tree) | 윤여민"/><meta name="twitter:description" content="Summary 트리는 부모-자식 관계로 데이터를 계층적으로 표현하는 자료구조다. 일반 트리는 계층 구조를 표현하고, BST는 정렬 규칙으로 검색 방향을 정한다. 자주 찾는 데이터는 HashMap 인덱스를 함께 두기도 한다."/><meta property="og:description" content="Summary 트리는 부모-자식 관계로 데이터를 계층적으로 표현하는 자료구조다. 일반 트리는 계층 구조를 표현하고, BST는 정렬 규칙으로 검색 방향을 정한다. 자주 찾는 데이터는 HashMap 인덱스를 함께 두기도 한다."/><meta property="og:image:alt" content="Summary 트리는 부모-자식 관계로 데이터를 계층적으로 표현하는 자료구조다. 일반 트리는 계층 구조를 표현하고, BST는 정렬 규칙으로 검색 방향을 정한다. 자주 찾는 데이터는 HashMap 인덱스를 함께 두기도 한다."/><meta property="og:image" content="https://yeomin-yoon.github.io/development-notes/static/og-image.png"/><meta property="og:image:url" content="https://yeomin-yoon.github.io/development-notes/static/og-image.png"/><meta name="twitter:image" content="https://yeomin-yoon.github.io/development-notes/static/og-image.png"/><meta property="og:image:type" content="image/.png"/><meta property="twitter:domain" content="yeomin-yoon.github.io/development-notes"/><meta property="og:url" content="https://yeomin-yoon.github.io/development-notes/computer-science/트리(tree)"/><meta property="twitter:url" content="https://yeomin-yoon.github.io/development-notes/computer-science/트리(tree)"/><link rel="icon" href="../static/icon.png"/><meta name="description" content="Summary 트리는 부모-자식 관계로 데이터를 계층적으로 표현하는 자료구조다. 일반 트리는 계층 구조를 표현하고, BST는 정렬 규칙으로 검색 방향을 정한다. 자주 찾는 데이터는 HashMap 인덱스를 함께 두기도 한다."/><meta name="generator" content="Quartz"/><link href="../index-ae276ac8.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../component-735924e0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../component-589c1cea.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../component-bbc3f7c0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../component-2911f5d1.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../component-53b25b2b.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../component-8a06014f.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../component-77d6a441.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../component-6ee21cee.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../component-1ea6ad18.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../component-788c9ca3.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../component-4abc06bd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../component-274a3dfe.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../component-94cb6c84.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../static/resource-style-a5c806d2.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../static/resource-style-6bd36952.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" data-persist="true"/><script src="../prescript-2bfc6315.js" type="application/javascript" data-persist="true"></script><script type="application/javascript" data-persist="true">const fetchData = fetch("../static/contentIndex.json").then(data => data.json())</script></head><body data-slug="computer-science/트리(tree)" data-basepath="/development-notes"><div id="quartz-root" class="page" data-frame="default"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="..">개발 공부 기록</a></h2><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 0.5rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button" aria-label="검색" aria-expanded="false"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>검색</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="검색어를 입력하세요" placeholder="검색어를 입력하세요"/><div class="search-layout" data-preview="true" data-field-priority="[&quot;title&quot;,&quot;content&quot;,&quot;tags&quot;]"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode" aria-label="다크 모드"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="다크 모드"><title>다크 모드</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="라이트 모드"><title>라이트 모드</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode" aria-label="리더 모드"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="리더 모드"><title>리더 모드</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer nav-files-container" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a2, b2) => {\n    if (!a2.isFolder &amp;&amp; !b2.isFolder || a2.isFolder &amp;&amp; b2.isFolder) {\n      return (a2.displayName || \&quot;\&quot;).localeCompare(b2.displayName || \&quot;\&quot;, void 0, {\n        numeric: true,\n        sensitivity: \&quot;base\&quot;\n      });\n    }\n    if (!a2.isFolder &amp;&amp; b2.isFolder) {\n      return 1;\n    }\n    return -1;\n  }&quot;,&quot;filterFn&quot;:&quot;(node) => node.slugSegment !== \&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;(node) => {\n    return node;\n  }&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-16" aria-label="탐색기"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>목차</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-16" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#" class="nav-file-title tree-item-self"></a></li></template><template id="template-folder"><li><div class="folder-container nav-folder-title tree-item-self"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon nav-folder-collapse-indicator collapse-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content tree-item-children"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../computer-science/">Computer Science</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>트리(Tree)</a></div></nav><h1 class="article-title">트리(Tree)</h1><p show-comma="false" class="content-meta"><time datetime="2026-07-16T04:59:37.000Z">2026년 7월 16일</time></p></div></div><article class="popover-hint"><div class="markdown-preview-view markdown-rendered"><blockquote class="callout abstract" data-callout="abstract">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Summary</p></div>
+                  
+                </div>
+<div class="callout-content">
+<p><strong>트리는 부모-자식 관계로 데이터를 계층적으로 표현하는 자료구조다.</strong></p>
+<p>일반 트리는 계층 구조를 표현하고, BST는 정렬 규칙으로 검색 방향을 정한다.<br/>
+자주 찾는 데이터는 HashMap 인덱스를 함께 두기도 한다.</p>
+</div>
+</blockquote>
+<hr/>
+<h2 id="핵심-정리">핵심 정리<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#핵심-정리" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>구분</th><th>역할</th><th>검색 방식</th></tr></thead><tbody><tr><td>일반 트리</td><td>부모-자식 계층 구조 표현</td><td>DFS/BFS 순회</td></tr><tr><td>BST</td><td>정렬 규칙 기반 검색</td><td>값 비교</td></tr><tr><td>균형 트리</td><td>치우친 BST의 검색 성능 보완</td><td>균형을 유지하며 값 비교</td></tr><tr><td>HashMap</td><td>key로 빠르게 찾기 위한 별도 인덱스</td><td>해시</td></tr></tbody></table></div>
+<p>트리는 구조를 표현하고, HashMap은 빠른 검색을 맡는다.</p>
+<h2 id="기본-흐름">기본 흐름<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#기본-흐름" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="text" data-theme="github-light github-dark"><code data-language="text" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>계층 구조가 필요하다</span></span>
+<span data-line><span>→ 트리로 표현한다.</span></span>
+<span data-line> </span>
+<span data-line><span>일반 트리에서 특정 노드를 찾아야 한다</span></span>
+<span data-line><span>→ 정렬 규칙이 없으면 DFS/BFS로 순회한다.</span></span>
+<span data-line> </span>
+<span data-line><span>값 비교로 탐색 방향을 정할 수 있다</span></span>
+<span data-line><span>→ BST를 검토한다.</span></span>
+<span data-line> </span>
+<span data-line><span>검색을 자주 해야 한다</span></span>
+<span data-line><span>→ 트리 구조와 별도로 HashMap 인덱스를 둘 수 있다.</span></span></code></pre></figure>
+<hr/>
+<h2 id="트리란">트리란?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#트리란" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>트리는 데이터를 부모-자식 관계로 표현한다.</p>
+<p>예를 들어 행정구역은 자연스럽게 트리처럼 볼 수 있다.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="text" data-theme="github-light github-dark"><code data-language="text" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>경기도</span></span>
+<span data-line><span>├── 수원시</span></span>
+<span data-line><span>│   ├── 영통구</span></span>
+<span data-line><span>│   │   ├── 매탄동</span></span>
+<span data-line><span>│   │   └── 원천동</span></span>
+<span data-line><span>│   └── 장안구</span></span>
+<span data-line><span>└── 성남시</span></span>
+<span data-line><span>    └── 분당구</span></span></code></pre></figure>
+<p>이 구조에서:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>용어</th><th>의미</th><th>예시</th></tr></thead><tbody><tr><td>Root</td><td>가장 위의 노드</td><td>경기도</td></tr><tr><td>Parent</td><td>부모 노드</td><td>수원시는 영통구의 부모</td></tr><tr><td>Child</td><td>자식 노드</td><td>영통구는 수원시의 자식</td></tr><tr><td>Leaf</td><td>자식이 없는 노드</td><td>매탄동, 원천동</td></tr><tr><td>Depth</td><td>루트에서 얼마나 떨어졌는가</td><td>경기도는 깊이 0</td></tr><tr><td>Subtree</td><td>어떤 노드를 루트로 하는 작은 트리</td><td>수원시 이하 전체</td></tr></tbody></table></div>
+<hr/>
+<h2 id="c에서-트리는-어떻게-구현하나">C++에서 트리는 어떻게 구현하나?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#c에서-트리는-어떻게-구현하나" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>C++ 표준 라이브러리에 <code>Tree</code>라는 직접적인 컨테이너는 없다.</p>
+<p>보통 노드를 직접 만들고, 각 노드가 자식 목록을 가진다.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="cpp" data-theme="github-light github-dark"><code data-language="cpp" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">struct</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="property"> Region</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">{</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">    std</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">::string Name;</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">    std</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">::vector</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">&lt;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">Region</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">*></span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> Children;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">};</span></span></code></pre></figure>
+<p>핵심은 이 부분이다.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="cpp" data-theme="github-light github-dark"><code data-language="cpp" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">std</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">::vector</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">&lt;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">Region</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">*></span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> Children;</span></span></code></pre></figure>
+<p>즉, 노드 하나가 자기 자식들을 저장한다.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="text" data-theme="github-light github-dark"><code data-language="text" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>Region</span></span>
+<span data-line><span>├─ Name</span></span>
+<span data-line><span>└─ Children</span></span>
+<span data-line><span>   ├─ child pointer</span></span>
+<span data-line><span>   ├─ child pointer</span></span>
+<span data-line><span>   └─ child pointer</span></span></code></pre></figure>
+<blockquote class="callout note" data-callout="note">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Note</p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>위 예시는 구조를 이해하기 위한 단순 예시다. 실제 C++ 코드에서는 누가 노드를 소유하고 삭제할지 정해야 한다. 소유권이 필요하면 <code>std::unique_ptr&lt;Region></code> 같은 스마트 포인터를 검토한다.</p>
+</div>
+</blockquote>
+<p>예를 들어 소유권까지 표현하면 이런 형태가 될 수 있다.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="cpp" data-theme="github-light github-dark"><code data-language="cpp" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">struct</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="property"> Region</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">{</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">    std</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">::string Name;</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">    std</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">::vector</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">&lt;</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">std</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">::unique_ptr</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">&lt;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">Region</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">>></span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> Children;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">};</span></span></code></pre></figure>
+<p>아래 DFS/BFS 예제는 구조를 보기 쉽게 하기 위해 <code>Region*</code> 기준으로 작성한다.<br/>
+<code>std::unique_ptr&lt;Region></code>로 자식을 소유한다면 순회할 때 <code>Child.get()</code>으로 포인터를 꺼내 사용할 수 있다.</p>
+<hr/>
+<h2 id="일반-트리에서-노드-찾기">일반 트리에서 노드 찾기<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#일반-트리에서-노드-찾기" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>일반 트리는 보통 자식들 사이에 정렬 규칙이 없다.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="text" data-theme="github-light github-dark"><code data-language="text" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>경기도</span></span>
+<span data-line><span>├── 수원시</span></span>
+<span data-line><span>├── 성남시</span></span>
+<span data-line><span>├── 용인시</span></span>
+<span data-line><span>└── 안양시</span></span></code></pre></figure>
+<p><code>&quot;용인시&quot;</code>를 찾는다고 해보자.</p>
+<p>현재 <code>경기도</code> 노드에서 어느 자식으로 가야 하는지 알 수 있는 규칙이 없다.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="text" data-theme="github-light github-dark"><code data-language="text" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>수원시로 가야 하나?</span></span>
+<span data-line><span>성남시로 가야 하나?</span></span>
+<span data-line><span>용인시로 가야 하나?</span></span>
+<span data-line><span>안양시로 가야 하나?</span></span></code></pre></figure>
+<p>그래서 일반적으로는 노드를 하나씩 확인해야 한다.</p>
+<p>대표적인 순회 방식이 DFS와 BFS다.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="text" data-theme="github-light github-dark"><code data-language="text" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>DFS = 깊이 우선 탐색</span></span>
+<span data-line><span>BFS = 너비 우선 탐색</span></span></code></pre></figure>
+<blockquote class="callout tip" data-callout="tip">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Important</p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>일반 트리의 검색 방법이 DFS/BFS “뿐”이라는 뜻은 아니다. 다만 정렬 규칙이 없는 계층 구조에서는 결국 확인할 후보를 순회해야 하며, DFS와 BFS가 가장 기본적인 순회 방식이다.</p>
+</div>
+</blockquote>
+<hr/>
+<h2 id="dfs">DFS<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#dfs" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>DFS(Depth First Search)는 한 방향으로 깊게 내려간 뒤, 더 갈 곳이 없으면 돌아오면서 다른 자식을 탐색한다.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="text" data-theme="github-light github-dark"><code data-language="text" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>경기도</span></span>
+<span data-line><span> ↓</span></span>
+<span data-line><span>수원시</span></span>
+<span data-line><span> ↓</span></span>
+<span data-line><span>영통구</span></span>
+<span data-line><span> ↓</span></span>
+<span data-line><span>매탄동</span></span></code></pre></figure>
+<p>재귀 함수로 표현하기 쉽다.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="cpp" data-theme="github-light github-dark"><code data-language="cpp" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="property">Region</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">*</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> FindDFS</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="property">Region</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">*</span><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;" data-token-type="important"> Node</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">, </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">const</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> std</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">::</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="property">string</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">&amp;</span><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;" data-token-type="important"> TargetName</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">)</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">{</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    if</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> (</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">!</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">Node)</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    {</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">        return</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> nullptr</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    }</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    if</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> (Node->Name </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">==</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> TargetName)</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    {</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">        return</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> Node;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    }</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    for</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> (Region</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">*</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> Child : Node->Children)</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    {</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">        if</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> (Region</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">*</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> Found </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> FindDFS</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(Child, TargetName))</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">        {</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">            return</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> Found;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">        }</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    }</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    return</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> nullptr</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">}</span></span></code></pre></figure>
+<h3 id="특징">특징<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#특징" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>특징</th><th>설명</th></tr></thead><tbody><tr><td>탐색 방향</td><td>한 경로를 깊게 내려감</td></tr><tr><td>구현</td><td>재귀로 구현하기 쉬움</td></tr><tr><td>주의</td><td>트리가 매우 깊으면 재귀 호출이 깊어질 수 있음</td></tr></tbody></table></div>
+<hr/>
+<h2 id="bfs">BFS<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#bfs" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>BFS(Breadth First Search)는 같은 깊이의 노드들을 먼저 탐색한다.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="text" data-theme="github-light github-dark"><code data-language="text" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>경기도</span></span>
+<span data-line> </span>
+<span data-line><span>수원시, 성남시</span></span>
+<span data-line> </span>
+<span data-line><span>영통구, 장안구, 분당구</span></span></code></pre></figure>
+<p>큐를 사용해 구현한다.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="cpp" data-theme="github-light github-dark"><code data-language="cpp" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="property">Region</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">*</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> FindBFS</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="property">Region</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">*</span><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;" data-token-type="important"> Root</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">, </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">const</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> std</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">::</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="property">string</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">&amp;</span><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;" data-token-type="important"> TargetName</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">)</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">{</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    if</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> (</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">!</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">Root)</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    {</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">        return</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> nullptr</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    }</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">    std</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">::queue</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">&lt;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">Region</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">*></span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> Queue;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal">    Queue.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">push</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(Root);</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    while</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> (</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">!</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal">Queue.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">empty</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">())</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    {</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">        Region</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">*</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> Current </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal"> Queue.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">front</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">();</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal">        Queue.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">pop</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">();</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">        if</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> (Current->Name </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">==</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> TargetName)</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">        {</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">            return</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> Current;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">        }</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">        for</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> (Region</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">*</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> Child : Current->Children)</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">        {</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal">            Queue.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">push</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(Child);</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">        }</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    }</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    return</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> nullptr</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">}</span></span></code></pre></figure>
+<h3 id="특징-1">특징<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#특징-1" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>특징</th><th>설명</th></tr></thead><tbody><tr><td>탐색 방향</td><td>가까운 깊이부터 확인</td></tr><tr><td>구현</td><td>큐 사용</td></tr><tr><td>장점</td><td>루트에서 가까운 노드를 먼저 찾음</td></tr></tbody></table></div>
+<hr/>
+<h2 id="일반-트리의-검색-비용">일반 트리의 검색 비용<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#일반-트리의-검색-비용" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>정렬 규칙이 없는 일반 트리에서는 최악의 경우 모든 노드를 확인해야 한다.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="text" data-theme="github-light github-dark"><code data-language="text" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>찾는 노드가 마지막에 있거나</span></span>
+<span data-line><span>아예 존재하지 않으면</span></span>
+<span data-line><span>전체 노드를 확인해야 한다.</span></span></code></pre></figure>
+<p>따라서 일반적인 검색 비용은 최악의 경우 <code>O(N)</code>이다.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="text" data-theme="github-light github-dark"><code data-language="text" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>N = 트리 전체 노드 수</span></span></code></pre></figure>
+<hr/>
+<h2 id="bst와-일반-트리-차이">BST와 일반 트리 차이<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#bst와-일반-트리-차이" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>BST(Binary Search Tree)는 이진 탐색 트리다.</p>
+<p>각 노드는 최대 두 자식을 가진다.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="text" data-theme="github-light github-dark"><code data-language="text" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>        50</span></span>
+<span data-line><span>      /    \</span></span>
+<span data-line><span>    30      80</span></span>
+<span data-line><span>   /  \    /  \</span></span>
+<span data-line><span> 20   40 70 100</span></span></code></pre></figure>
+<p>규칙은 아래와 같다.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="text" data-theme="github-light github-dark"><code data-language="text" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>왼쪽 자식 &lt; 부모 &lt; 오른쪽 자식</span></span></code></pre></figure>
+<p>예를 들어 <code>70</code>을 찾는다면:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="text" data-theme="github-light github-dark"><code data-language="text" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>70 > 50</span></span>
+<span data-line><span>→ 오른쪽으로 이동</span></span>
+<span data-line> </span>
+<span data-line><span>70 &lt; 80</span></span>
+<span data-line><span>→ 왼쪽으로 이동</span></span>
+<span data-line> </span>
+<span data-line><span>70 발견</span></span></code></pre></figure>
+<p>일반 트리와 달리 BST는 비교 결과로 탐색 방향을 정할 수 있다.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="text" data-theme="github-light github-dark"><code data-language="text" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>작으면 왼쪽</span></span>
+<span data-line><span>크면 오른쪽</span></span></code></pre></figure>
+<p>균형이 잘 잡힌 BST라면 평균적으로 <code>O(log N)</code>에 탐색할 수 있다.</p>
+<p>하지만 한쪽으로 치우치면 리스트처럼 되어 <code>O(N)</code>이 될 수 있다.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="text" data-theme="github-light github-dark"><code data-language="text" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>10</span></span>
+<span data-line><span>  \</span></span>
+<span data-line><span>   20</span></span>
+<span data-line><span>     \</span></span>
+<span data-line><span>      30</span></span>
+<span data-line><span>        \</span></span>
+<span data-line><span>         40</span></span></code></pre></figure>
+<hr/>
+<h2 id="균형-트리">균형 트리<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#균형-트리" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>BST가 한쪽으로 치우치는 문제를 줄이기 위해 균형을 유지하는 트리들이 있다.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>트리</th><th>목적</th></tr></thead><tbody><tr><td>AVL Tree</td><td>균형을 엄격하게 유지</td></tr><tr><td>Red-Black Tree</td><td>균형을 느슨하게 유지하면서 삽입·삭제 비용 조절</td></tr><tr><td>B-Tree</td><td>디스크/DB 인덱스처럼 큰 블록 단위 저장에 적합</td></tr></tbody></table></div>
+<p>균형 트리는 탐색, 삽입, 삭제를 보통 <code>O(log N)</code>으로 유지하려고 설계된다.</p>
+<p>C++의 <code>std::map</code>, <code>std::set</code>은 일반적으로 Red-Black Tree 같은 균형 이진 탐색 트리로 구현된다.</p>
+<blockquote class="callout note" data-callout="note">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Note</p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>표준은 내부 구현을 특정 트리로 강제하지는 않지만, <code>std::map</code>과 <code>std::set</code>은 정렬 상태와 <code>O(log N)</code> 연산을 제공해야 한다.</p>
+</div>
+</blockquote>
+<hr/>
+<h2 id="트리와-hashmap을-같이-쓰는-경우">트리와 HashMap을 같이 쓰는 경우<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#트리와-hashmap을-같이-쓰는-경우" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>일반 트리는 계층 구조를 잘 표현한다.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="text" data-theme="github-light github-dark"><code data-language="text" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>경기도</span></span>
+<span data-line><span>└── 수원시</span></span>
+<span data-line><span>    └── 영통구</span></span>
+<span data-line><span>        └── 매탄동</span></span></code></pre></figure>
+<p>하지만 <code>&quot;영통구&quot;</code>를 이름으로 자주 찾아야 한다면 매번 DFS/BFS를 돌리는 것은 비효율적일 수 있다.</p>
+<p>이럴 때 별도의 인덱스를 같이 둔다.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="cpp" data-theme="github-light github-dark"><code data-language="cpp" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">std</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">::unordered_map</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">&lt;</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">std</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">::string, Region</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">*></span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> RegionMap;</span></span></code></pre></figure>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="text" data-theme="github-light github-dark"><code data-language="text" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>&quot;경기도&quot; → 경기도 노드</span></span>
+<span data-line><span>&quot;수원시&quot; → 수원시 노드</span></span>
+<span data-line><span>&quot;영통구&quot; → 영통구 노드</span></span>
+<span data-line><span>&quot;매탄동&quot; → 매탄동 노드</span></span></code></pre></figure>
+<p>검색은 HashMap이 담당한다.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="cpp" data-theme="github-light github-dark"><code data-language="cpp" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">auto</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> It </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal"> RegionMap.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">find</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;영통구&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">);</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">Region</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">*</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> Found </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> (It </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">!=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal"> RegionMap.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">end</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">()) </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">?</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal"> It->second </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">:</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> nullptr</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">;</span></span></code></pre></figure>
+<p><code>operator[]</code>는 key가 없을 때 새 항목을 만들 수 있으므로, 조회만 할 때는 <code>find()</code>가 더 안전하다.</p>
+<p>역할을 나누면 이렇게 된다.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>자료구조</th><th>담당</th></tr></thead><tbody><tr><td>트리</td><td>부모-자식 계층 관계 표현</td></tr><tr><td>HashMap</td><td>이름이나 ID로 빠르게 검색</td></tr></tbody></table></div>
+<blockquote class="callout warning" data-callout="warning">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Caution</p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>트리와 HashMap을 함께 쓰면 노드를 추가·삭제·이름 변경할 때 두 자료구조를 같이 갱신해야 한다. 빠른 검색을 얻는 대신 동기화 관리 비용이 생긴다.</p>
+</div>
+</blockquote>
+<hr/>
+<h2 id="비교-정리">비교 정리<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#비교-정리" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>자료구조</th><th>목적</th><th>검색 방식</th><th>평균 시간복잡도</th></tr></thead><tbody><tr><td>일반 트리</td><td>계층 구조 표현</td><td>DFS / BFS 순회</td><td><code>O(N)</code></td></tr><tr><td>BST</td><td>정렬 규칙 기반 검색</td><td>값 비교</td><td>평균 <code>O(log N)</code>, 최악 <code>O(N)</code></td></tr><tr><td>AVL Tree</td><td>균형 유지</td><td>값 비교</td><td><code>O(log N)</code></td></tr><tr><td>Red-Black Tree</td><td>균형 유지</td><td>값 비교</td><td><code>O(log N)</code></td></tr><tr><td>B-Tree</td><td>디스크/DB 인덱스</td><td>값 비교</td><td><code>O(log N)</code></td></tr><tr><td>HashMap</td><td>key 기반 검색</td><td>해시</td><td>평균 <code>O(1)</code></td></tr></tbody></table></div>
+<hr/>
+<h2 id="정리">정리<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#정리" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ol>
+<li>트리는 부모-자식 관계로 계층 구조를 표현한다.</li>
+<li>일반 트리는 정렬 규칙이 없어서 DFS/BFS로 순회하며 찾는 경우가 많다.</li>
+<li>일반 트리에서 특정 노드 검색은 최악의 경우 <code>O(N)</code>이다.</li>
+<li>BST는 왼쪽 &lt; 부모 &lt; 오른쪽 규칙이 있어 탐색 방향을 정할 수 있다.</li>
+<li>균형 잡힌 BST는 평균적으로 <code>O(log N)</code> 탐색이 가능하다.</li>
+<li>실무에서는 계층 표현은 트리, 빠른 검색은 HashMap이 담당하게 함께 쓰는 경우가 많다.</li>
+</ol>
+<hr/>
+<p><a href="../정리집-목차" class="internal internal-link alias" data-slug="정리집-목차">정리집 목차</a> · <a href="../computer-science/그래프-표현-방법과-컨테이너-선택" class="internal internal-link alias" data-slug="computer-science/그래프-표현-방법과-컨테이너-선택">그래프 표현 방법과 컨테이너 선택</a> · <a href="../c++/stl-컨테이너-선택-기준" class="internal internal-link alias" data-slug="c++/stl-컨테이너-선택-기준">STL 컨테이너 선택 기준</a></p></div></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="toc"><button type="button" class="toc-header" aria-controls="toc-16" aria-expanded="true"><h3>목차</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-0" class="toc-content overflow"><li class="depth-0"><a href="#핵심-정리" data-for="핵심-정리">핵심 정리</a></li><li class="depth-0"><a href="#기본-흐름" data-for="기본-흐름">기본 흐름</a></li><li class="depth-0"><a href="#트리란" data-for="트리란">트리란?</a></li><li class="depth-0"><a href="#c에서-트리는-어떻게-구현하나" data-for="c에서-트리는-어떻게-구현하나">C++에서 트리는 어떻게 구현하나?</a></li><li class="depth-0"><a href="#일반-트리에서-노드-찾기" data-for="일반-트리에서-노드-찾기">일반 트리에서 노드 찾기</a></li><li class="depth-0"><a href="#dfs" data-for="dfs">DFS</a></li><li class="depth-1"><a href="#특징" data-for="특징">특징</a></li><li class="depth-0"><a href="#bfs" data-for="bfs">BFS</a></li><li class="depth-1"><a href="#특징-1" data-for="특징-1">특징</a></li><li class="depth-0"><a href="#일반-트리의-검색-비용" data-for="일반-트리의-검색-비용">일반 트리의 검색 비용</a></li><li class="depth-0"><a href="#bst와-일반-트리-차이" data-for="bst와-일반-트리-차이">BST와 일반 트리 차이</a></li><li class="depth-0"><a href="#균형-트리" data-for="균형-트리">균형 트리</a></li><li class="depth-0"><a href="#트리와-hashmap을-같이-쓰는-경우" data-for="트리와-hashmap을-같이-쓰는-경우">트리와 HashMap을 같이 쓰는 경우</a></li><li class="depth-0"><a href="#비교-정리" data-for="비교-정리">비교 정리</a></li><li class="depth-0"><a href="#정리" data-for="정리">정리</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Created with <a href="https://quartz.jzhao.xyz/">Quartz v5.0.0</a> © 2026</p><ul><li><a href="https://github.com/HyeseonLikesPizza/yeoeunseon/tree/main/yeoeunseon/%EC%9C%A4%EC%97%AC%EB%AF%BC">원본 기록</a></li></ul></footer></div></div></body><script src="../static/resource-after-e13fffa1.js" type="application/javascript" data-persist="true"></script><script src="../static/resource-after-8b336f9a.js" type="application/javascript" data-persist="true"></script><script src="../static/resource-after-baba652b.js" type="application/javascript" data-persist="true"></script><script src="../static/resource-after-5eb75950.js" type="module" data-persist="true"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript" data-persist="true"></script><script src="../postscript-5e06a1c1.js" type="module" data-persist="true"></script></html>

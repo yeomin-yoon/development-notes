@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="ko" dir="ltr"><head><title>VectorVsHashPatterns_실험 기록 | 윤여민</title><meta charset="utf-8"/><link rel="preload" href="../../../index-ae276ac8.css" as="style"/><link rel="preload" href="../../../prescript-2bfc6315.js" as="script"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto Sans KR:wght@400;700&amp;family=Noto Sans KR:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="개발 공부 기록"/><meta property="og:title" content="VectorVsHashPatterns_실험 기록 | 윤여민"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="VectorVsHashPatterns_실험 기록 | 윤여민"/><meta name="twitter:description" content="왜 이 실험을 더 했는가 앞선 실험에서 조회 목록을 늘리자 시간이 달라졌다. 하지만 그때는 목록의 메모리 크기와 조회 순서, 접근하는 키 수가 함께 달라졌다. 그래서 이번에는 둘로 나눴다. A."/><meta property="og:description" content="왜 이 실험을 더 했는가 앞선 실험에서 조회 목록을 늘리자 시간이 달라졌다. 하지만 그때는 목록의 메모리 크기와 조회 순서, 접근하는 키 수가 함께 달라졌다. 그래서 이번에는 둘로 나눴다. A."/><meta property="og:image:alt" content="왜 이 실험을 더 했는가 앞선 실험에서 조회 목록을 늘리자 시간이 달라졌다. 하지만 그때는 목록의 메모리 크기와 조회 순서, 접근하는 키 수가 함께 달라졌다. 그래서 이번에는 둘로 나눴다. A."/><meta property="og:image" content="https://yeomin-yoon.github.io/development-notes/static/og-image.png"/><meta property="og:image:url" content="https://yeomin-yoon.github.io/development-notes/static/og-image.png"/><meta name="twitter:image" content="https://yeomin-yoon.github.io/development-notes/static/og-image.png"/><meta property="og:image:type" content="image/.png"/><meta property="twitter:domain" content="yeomin-yoon.github.io/development-notes"/><meta property="og:url" content="https://yeomin-yoon.github.io/development-notes/problem-solvings/vector와-unordered_map-비교/실험/vectorvshashpatterns_실험-기록"/><meta property="twitter:url" content="https://yeomin-yoon.github.io/development-notes/problem-solvings/vector와-unordered_map-비교/실험/vectorvshashpatterns_실험-기록"/><link rel="icon" href="../../../static/icon.png"/><meta name="description" content="왜 이 실험을 더 했는가 앞선 실험에서 조회 목록을 늘리자 시간이 달라졌다. 하지만 그때는 목록의 메모리 크기와 조회 순서, 접근하는 키 수가 함께 달라졌다. 그래서 이번에는 둘로 나눴다. A."/><meta name="generator" content="Quartz"/><link href="../../../index-ae276ac8.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-735924e0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-589c1cea.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-bbc3f7c0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-2911f5d1.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-53b25b2b.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-8a06014f.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-77d6a441.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-6ee21cee.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-1ea6ad18.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-788c9ca3.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-4abc06bd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-274a3dfe.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-94cb6c84.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-a5c806d2.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-6bd36952.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" data-persist="true"/><script src="../../../prescript-2bfc6315.js" type="application/javascript" data-persist="true"></script><script type="application/javascript" data-persist="true">const fetchData = fetch("../../../static/contentIndex.json").then(data => data.json())</script></head><body data-slug="problem-solvings/vector와-unordered_map-비교/실험/vectorvshashpatterns_실험-기록" data-basepath="/development-notes"><div id="quartz-root" class="page" data-frame="default"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="../../..">개발 공부 기록</a></h2><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 0.5rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button" aria-label="검색" aria-expanded="false"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>검색</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="검색어를 입력하세요" placeholder="검색어를 입력하세요"/><div class="search-layout" data-preview="true" data-field-priority="[&quot;title&quot;,&quot;content&quot;,&quot;tags&quot;]"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode" aria-label="다크 모드"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="다크 모드"><title>다크 모드</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="라이트 모드"><title>라이트 모드</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode" aria-label="리더 모드"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="리더 모드"><title>리더 모드</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer nav-files-container" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a2, b2) => {\n    if (!a2.isFolder &amp;&amp; !b2.isFolder || a2.isFolder &amp;&amp; b2.isFolder) {\n      return (a2.displayName || \&quot;\&quot;).localeCompare(b2.displayName || \&quot;\&quot;, void 0, {\n        numeric: true,\n        sensitivity: \&quot;base\&quot;\n      });\n    }\n    if (!a2.isFolder &amp;&amp; b2.isFolder) {\n      return 1;\n    }\n    return -1;\n  }&quot;,&quot;filterFn&quot;:&quot;(node) => node.slugSegment !== \&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;(node) => {\n    return node;\n  }&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-26" aria-label="탐색기"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>목차</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-26" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#" class="nav-file-title tree-item-self"></a></li></template><template id="template-folder"><li><div class="folder-container nav-folder-title tree-item-self"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon nav-folder-collapse-indicator collapse-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content tree-item-children"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../../../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../problem-solvings/">Problem Solvings</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../problem-solvings/vector와-unordered_map-비교/">vector와 unordered_map 비교</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../problem-solvings/vector와-unordered_map-비교/실험/">실험</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>VectorVsHashPatterns_실험 기록</a></div></nav><h1 class="article-title">VectorVsHashPatterns_실험 기록</h1><p show-comma="false" class="content-meta"><time datetime="2026-10-15T03:11:34.000Z">2026년 10월 15일</time></p></div></div><article class="popover-hint"><div class="markdown-preview-view markdown-rendered"><h2 id="왜-이-실험을-더-했는가">왜 이 실험을 더 했는가<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#왜-이-실험을-더-했는가" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>앞선 실험에서 조회 목록을 늘리자 시간이 달라졌다. 하지만 그때는 <strong>목록의 메모리 크기와 조회 순서, 접근하는 키 수</strong>가 함께 달라졌다.</p>
+<p>그래서 이번에는 둘로 나눴다.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="text" data-theme="github-light github-dark"><code data-language="text" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>A. 같은 조회 목록의 순서만 변경</span></span>
+<span data-line><span>   원소 수·목록 크기·키별 횟수·비교 횟수 유지</span></span>
+<span data-line> </span>
+<span data-line><span>B. 같은 크기의 목록에서 찾는 키 범위 변경</span></span>
+<span data-line><span>   원소 수·목록 크기 유지</span></span></code></pre></figure>
+<p>기존 코드의 patterns 모드다. 기존 Compare/VectorLookup/MapLookup을 재사용했다. 단일 Thread, 7 samples, 중앙값, 실행 순서 교대다.</p>
+<p><strong>이번 후속 실험의 키는 1~N이다.</strong> 이전 본 실험의 분산된 정수 키와 다르므로, 이전 표와 절대 시간만 직접 비교하지 않는다. 이번 실험 안에서 통제한 조건끼리 비교한다.</p>
+<hr/>
+<h2 id="a-조회-목록이-같아도-순서가-영향을-줄까">A. 조회 목록이 같아도 순서가 영향을 줄까?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#a-조회-목록이-같아도-순서가-영향을-줄까" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p><strong>같은 키를 같은 횟수만큼 찾았는데도 시간이 달라졌다.</strong></p>
+<p>조회 수는 모두 65,536개다. int 목록의 데이터 크기는 256KiB이며, 컨테이너·찾는 키·키별 빈도를 유지했다.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="text" data-theme="github-light github-dark"><code data-language="text" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>periodic   512개 조회 패턴을 128번 반복</span></span>
+<span data-line><span>shuffled   그 전체 목록을 무작위로 섞음</span></span>
+<span data-line><span>grouped    그 전체 목록을 정렬해 같은 키끼리 모음</span></span></code></pre></figure>
+<p>성공/실패를 절반씩 섞은 입력도 따로 확인했다. 섞기와 정렬은 측정 밖이다.</p>
+<p>8개 원소, seed 1, 혼합 조회:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>순서</th><th style="text-align:right;">vector · Run 1</th><th style="text-align:right;">map · Run 1</th><th style="text-align:right;">vector · Run 2</th><th style="text-align:right;">map · Run 2</th></tr></thead><tbody><tr><td>반복 패턴</td><td style="text-align:right;">2.00 ns</td><td style="text-align:right;">1.16 ns</td><td style="text-align:right;">2.00 ns</td><td style="text-align:right;">1.08 ns</td></tr><tr><td>무작위로 섞음</td><td style="text-align:right;">4.95 ns</td><td style="text-align:right;">5.80 ns</td><td style="text-align:right;">4.97 ns</td><td style="text-align:right;">5.86 ns</td></tr><tr><td>같은 키끼리 모음</td><td style="text-align:right;">1.36 ns</td><td style="text-align:right;">1.07 ns</td><td style="text-align:right;">1.37 ns</td><td style="text-align:right;">1.07 ns</td></tr></tbody></table></div>
+<p>세 경우의 평균 vector 비교는 <strong>6.295회</strong>, map equality는 <strong>1회</strong>로 같았다. 존재하지 않는 키까지 포함한 고유 조회 키도 16개로 같았다.</p>
+<p>→ 원소 수·비교 횟수·목록 크기만으로 실행 시간을 설명할 수 없다. <strong>데이터를 만나는 순서 자체도 영향을 준다.</strong></p>
+<p>이번 조건에서는 같은 키를 모으면 vector가 map보다 빠른 성공 조회도 있었다. 반대로 같은 multiset을 섞으면 map이 이기는 조건도 있었다. “8개면 vector” 같은 경계값으로 남기지 않는다.</p>
+<h3 id="그렇다면-branch-prediction-때문이라고-확정할까">그렇다면 Branch Prediction 때문이라고 확정할까?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#그렇다면-branch-prediction-때문이라고-확정할까" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>아래 시간 측정만으로는 아니었다. 이후 <a href="../../../problem-solvings/vector와-unordered_map-비교/실험/vectorvshash_vtune-조회-순서-실험" class="internal internal-link alias" data-slug="problem-solvings/vector와-unordered_map-비교/실험/vectorvshash_vtune-조회-순서-실험">VTune 후속 실험</a>에서 8개 원소의 같은 혼합 조회를 두 번씩 수집했고, 순서를 섞으면 분기 실패와 CPI가 함께 증가했다. 이 작은 조건에서는 분기 예측을 원인으로 볼 측정 근거가 생겼다. 캐시 기여율이나 다른 규모까지 확인한 것은 아니다.</p>
+<p>순서를 바꾸면 성공/실패 분기의 규칙성도 달라지고, 같은 후보를 얼마나 가까운 시점에 다시 읽는지도 달라진다. 분기 예측과 시간적 locality 모두 설명 후보다.</p>
+<p>다만 이전보다 한 가지는 더 좁혀졌다.</p>
+<p><strong>목록의 메모리 크기를 늘리지 않아도 차이가 생겼다.</strong> 따라서 앞선 목록 길이 실험을 “목록이 커져 cache에 안 들어가서”만으로 설명하면 부족하다.</p>
+<p>정렬된 조회 순서를 실제 게임에 곧바로 적용하라는 뜻도 아니다. 이 실험은 읽기와 합산이며, 처리 순서에 의미가 있는 시스템에서는 의미 보존을 먼저 확인해야 한다.</p>
+<hr/>
+<h2 id="b-목록-크기를-고정하고-찾는-키를-넓히면">B. 목록 크기를 고정하고 찾는 키를 넓히면?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#b-목록-크기를-고정하고-찾는-키를-넓히면" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p><strong>map에 저장된 원소 수는 50,000개로 유지했다. 조회 목록은 모두 65,536개다.</strong></p>
+<p>저장된 Enemy 중 일부 위치에서만 키를 고르게 하다가, 선택 가능한 키 범위를 전체로 넓혔다. 조회는 모두 성공이다.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>선택 가능한 키 수</th><th style="text-align:right;">실제 고유 조회 키 수</th><th style="text-align:right;">equality/조회</th><th style="text-align:right;">map Run 1</th><th style="text-align:right;">map Run 2</th></tr></thead><tbody><tr><td>8</td><td style="text-align:right;">8</td><td style="text-align:right;">1.124</td><td style="text-align:right;">4.12 ns</td><td style="text-align:right;">4.13 ns</td></tr><tr><td>64</td><td style="text-align:right;">64</td><td style="text-align:right;">1.078</td><td style="text-align:right;">3.87 ns</td><td style="text-align:right;">3.86 ns</td></tr><tr><td>512</td><td style="text-align:right;">512</td><td style="text-align:right;">1.096</td><td style="text-align:right;">5.15 ns</td><td style="text-align:right;">5.14 ns</td></tr><tr><td>4,096</td><td style="text-align:right;">4,096</td><td style="text-align:right;">1.108</td><td style="text-align:right;">6.46 ns</td><td style="text-align:right;">6.49 ns</td></tr><tr><td>50,000</td><td style="text-align:right;">36,548</td><td style="text-align:right;">1.116</td><td style="text-align:right;">13.47 ns</td><td style="text-align:right;">13.97 ns</td></tr></tbody></table></div>
+<p>50,000개 중 모든 키가 반드시 등장하는 목록은 아니다. 난수 선택 결과 36,548개를 실제로 조회했다.</p>
+<p>→ 목록 자체의 메모리 크기가 같아도, <strong>접근하는 후보 노드의 범위를 넓히면</strong> 조회 비용이 달라졌다. equality 횟수는 약 1.1회로 비슷했다.</p>
+<p>그렇다고 비용이 키 수에 단조 증가하지는 않았다. 8개보다 64개에서 조금 더 짧았다. 키별 bucket 상태·빈도·실행 잡음까지 있으며 최적 키 수를 정한 실험이 아니다.</p>
+<p>접근하는 키를 바꾸면 키 값과 후보 분포·재접근 패턴도 달라진다. 따라서 이 결과 역시 cache miss만 분리해 측정한 것은 아니다.</p>
+<hr/>
+<h2 id="c-일부-큰-값이-반복된-이유도-확인했다">C. 일부 큰 값이 반복된 이유도 확인했다<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#c-일부-큰-값이-반복된-이유도-확인했다" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>전체 patterns 실행의 seed 2, 4,096개 일부 구간에서 vector 시간이 약 390 → 650ns, 혼합 조회는 약 590 → 1,000ns로 바뀌었다. 두 독립 실행에서 비슷한 변화가 보여 무시하지 않았다.</p>
+<p><strong>그 차이를 조회 순서의 효과로 곧바로 기록하지 않았다.</strong></p>
+<p>patterns-control 모드를 추가했다. 각 조건의 앞뒤에 <strong>항상 동일한 periodic 목록</strong>을 vector로 한 번 실행해 기준 시간을 남겼다.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="text" data-theme="github-light github-dark"><code data-language="text" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>변하지 않는 기준 작업</span></span>
+<span data-line><span>→ 후보 조건 7회 측정</span></span>
+<span data-line><span>→ 같은 기준 작업 재측정</span></span></code></pre></figure>
+<p>기준 작업은 순서도 바꾸지 않는다. 그것까지 느려진다면 후보의 변화 전부를 순서에 귀속할 수 없다.</p>
+<p>4,096개, seed 1, 혼합 조회의 Control Run 2:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>후보 순서</th><th style="text-align:right;">vector</th><th style="text-align:right;">map</th><th style="text-align:right;">기준 전</th><th style="text-align:right;">기준 후</th></tr></thead><tbody><tr><td>반복 패턴</td><td style="text-align:right;">586 ns</td><td style="text-align:right;">1.75 ns</td><td style="text-align:right;">586 ns</td><td style="text-align:right;">584 ns</td></tr><tr><td>무작위로 섞음</td><td style="text-align:right;">583 ns</td><td style="text-align:right;">10.27 ns</td><td style="text-align:right;">584 ns</td><td style="text-align:right;">592 ns</td></tr><tr><td>같은 키끼리 모음</td><td style="text-align:right;">584 ns</td><td style="text-align:right;">1.25 ns</td><td style="text-align:right;">594 ns</td><td style="text-align:right;">619 ns</td></tr></tbody></table></div>
+<p><strong>이 구간에서는 vector 시간과 기준 작업이 대체로 유지되는 동안 map의 순서 효과가 반복됐다.</strong></p>
+<p>다른 구간은 기준 자체도 바뀌었다. Control Run 2의 seed 2에서는 기준이 약 390ns에서 449ns로, 이후 혼합 기준도 약 650~720ns까지 변했다.</p>
+<p>→ 실행 중 변화가 있는 구간의 vector 시간 차이는 순서 효과와 구분해서 보류한다. CPU 주파수·스케줄링·cache 상태를 직접 수집하지 않았으므로 기준 변동의 원인도 확정하지 않았다.</p>
+<p>기준을 앞뒤로 한 번씩 실행했다고 환경을 완전히 통제한 것은 아니다. 측정 도중의 짧은 변동까지 모두 잡지는 못한다.</p>
+<hr/>
+<h2 id="기록과-재현">기록과 재현<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#기록과-재현" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>41개 후속 조건을 두 번, 기준 대조 12개 조건을 두 번 실행했다. 기록된 checksum 불일치는 모두 0이었다.</p>
+<ul>
+<li><a href="../../../problem-solvings/vector와-unordered_map-비교/실험/vectorvshashpatterns_run1.csv" class="internal internal-link alias" data-slug="problem-solvings/vector와-unordered_map-비교/실험/vectorvshashpatterns_run1.csv">순서·키 범위 Run 1</a></li>
+<li><a href="../../../problem-solvings/vector와-unordered_map-비교/실험/vectorvshashpatterns_run2.csv" class="internal internal-link alias" data-slug="problem-solvings/vector와-unordered_map-비교/실험/vectorvshashpatterns_run2.csv">순서·키 범위 Run 2</a></li>
+<li><a href="../../../problem-solvings/vector와-unordered_map-비교/실험/vectorvshashpatterns_controlrun1.csv" class="internal internal-link alias" data-slug="problem-solvings/vector와-unordered_map-비교/실험/vectorvshashpatterns_controlrun1.csv">기준 대조 Run 1</a></li>
+<li><a href="../../../problem-solvings/vector와-unordered_map-비교/실험/vectorvshashpatterns_controlrun2.csv" class="internal internal-link alias" data-slug="problem-solvings/vector와-unordered_map-비교/실험/vectorvshashpatterns_controlrun2.csv">기준 대조 Run 2</a></li>
+<li><a href="../../../problem-solvings/vector와-unordered_map-비교/실험/vectorvshashfactors.cpp" class="internal internal-link alias" data-slug="problem-solvings/vector와-unordered_map-비교/실험/vectorvshashfactors.cpp">코드</a></li>
+</ul>
+<p>학습 폴더 기준으로 <code>재현/BuildVectorFactors.cmd</code>로 만든 최적화 빌드를 실행한다.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bat" data-theme="github-light github-dark"><code data-language="bat" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">tmp\VectorVsHashFactors.exe patterns</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">tmp\VectorVsHashFactors.exe patterns-control</span></span></code></pre></figure>
+<p>앞의 두 patterns 기록은 기준 대조를 추가하기 전 빌드다. 공통 lookup/측정 함수는 그대로이고, 마지막 코드에서 각 모드를 다시 실행할 수 있다. 새 빌드의 동일한 절대 시간까지 보장하지 않는다.</p>
+<p>이 patterns 비교 당시에는 Sampling Driver/관리자 권한 오류로 hardware event를 수집하지 못했다. 이후 실제 Windows 관리자 실행으로 <a href="../../../problem-solvings/vector와-unordered_map-비교/실험/vtune-하드웨어-수집-권한-문제-해결" class="internal internal-link alias" data-slug="problem-solvings/vector와-unordered_map-비교/실험/vtune-하드웨어-수집-권한-문제-해결">수집 문제를 해결</a>하고, 8개 원소의 periodic/shuffled 혼합 조회를 <a href="../../../problem-solvings/vector와-unordered_map-비교/실험/vectorvshash_vtune-조회-순서-실험" class="internal internal-link alias" data-slug="problem-solvings/vector와-unordered_map-비교/실험/vectorvshash_vtune-조회-순서-실험">하드웨어 A/B 수집</a>으로 확인했다. 나머지 규모·키 범위 조건은 아직 수집하지 않았다.</p>
+<hr/>
+<h2 id="이번에-더-확인한-것">이번에 더 확인한 것<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#이번에-더-확인한-것" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>남길 결론</th><th>아직 남는 질문</th></tr></thead><tbody><tr><td>같은 목록 크기·같은 비교 횟수에서도 순서가 비용을 바꿈</td><td>Branch Miss와 locality의 기여율</td></tr><tr><td>같은 목록 크기에서도 접근하는 키 범위가 비용을 바꿈</td><td>Cache/TLB/노드별 접근 비용 분리</td></tr><tr><td>기준 작업도 변한 구간은 원인 해석을 보류해야 함</td><td>주파수·스케줄링·메모리 상태 중 무엇인가</td></tr></tbody></table></div>
+<p><strong>시간 차이를 봤다면, 그때 함께 바뀐 조건을 분리해서 다시 측정한다.</strong></p>
+<p><a href="../../../problem-solvings/vector와-unordered_map-비교/vector와-unordered_map-조회-비용-비교" class="internal internal-link alias" data-slug="problem-solvings/vector와-unordered_map-비교/vector와-unordered_map-조회-비용-비교">전체 풀이와 결론</a></p></div></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="toc"><button type="button" class="toc-header" aria-controls="toc-26" aria-expanded="true"><h3>목차</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-0" class="toc-content overflow"><li class="depth-0"><a href="#왜-이-실험을-더-했는가" data-for="왜-이-실험을-더-했는가">왜 이 실험을 더 했는가</a></li><li class="depth-0"><a href="#a-조회-목록이-같아도-순서가-영향을-줄까" data-for="a-조회-목록이-같아도-순서가-영향을-줄까">A. 조회 목록이 같아도 순서가 영향을 줄까?</a></li><li class="depth-1"><a href="#그렇다면-branch-prediction-때문이라고-확정할까" data-for="그렇다면-branch-prediction-때문이라고-확정할까">그렇다면 Branch Prediction 때문이라고 확정할까?</a></li><li class="depth-0"><a href="#b-목록-크기를-고정하고-찾는-키를-넓히면" data-for="b-목록-크기를-고정하고-찾는-키를-넓히면">B. 목록 크기를 고정하고 찾는 키를 넓히면?</a></li><li class="depth-0"><a href="#c-일부-큰-값이-반복된-이유도-확인했다" data-for="c-일부-큰-값이-반복된-이유도-확인했다">C. 일부 큰 값이 반복된 이유도 확인했다</a></li><li class="depth-0"><a href="#기록과-재현" data-for="기록과-재현">기록과 재현</a></li><li class="depth-0"><a href="#이번에-더-확인한-것" data-for="이번에-더-확인한-것">이번에 더 확인한 것</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Created with <a href="https://quartz.jzhao.xyz/">Quartz v5.0.0</a> © 2026</p><ul><li><a href="https://github.com/HyeseonLikesPizza/yeoeunseon/tree/main/yeoeunseon/%EC%9C%A4%EC%97%AC%EB%AF%BC">원본 기록</a></li></ul></footer></div></div></body><script src="../../../static/resource-after-e13fffa1.js" type="application/javascript" data-persist="true"></script><script src="../../../static/resource-after-8b336f9a.js" type="application/javascript" data-persist="true"></script><script src="../../../static/resource-after-baba652b.js" type="application/javascript" data-persist="true"></script><script src="../../../static/resource-after-5eb75950.js" type="module" data-persist="true"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript" data-persist="true"></script><script src="../../../postscript-5e06a1c1.js" type="module" data-persist="true"></script></html>

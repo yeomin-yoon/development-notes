@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="ko" dir="ltr"><head><title>가상 함수 | 윤여민</title><meta charset="utf-8"/><link rel="preload" href="../index-ae276ac8.css" as="style"/><link rel="preload" href="../prescript-2bfc6315.js" as="script"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto Sans KR:wght@400;700&amp;family=Noto Sans KR:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="개발 공부 기록"/><meta property="og:title" content="가상 함수 | 윤여민"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="가상 함수 | 윤여민"/><meta name="twitter:description" content="가상 함수(Virtual Function) Summary 가상 함수 = 실제 객체에서 재정의한 함수를 호출하는 함수 Character* Ptr → Warrior 객체 일반 함수 호출 → Character 함수 실행 가상 함수 호출 → Warrior 함수 실행 함수에 virtual이 붙어 있으면 포인터 타입이 아니라 실제 객체 타입에 맞는 함수가 실행된다."/><meta property="og:description" content="가상 함수(Virtual Function) Summary 가상 함수 = 실제 객체에서 재정의한 함수를 호출하는 함수 Character* Ptr → Warrior 객체 일반 함수 호출 → Character 함수 실행 가상 함수 호출 → Warrior 함수 실행 함수에 virtual이 붙어 있으면 포인터 타입이 아니라 실제 객체 타입에 맞는 함수가 실행된다."/><meta property="og:image:alt" content="가상 함수(Virtual Function) Summary 가상 함수 = 실제 객체에서 재정의한 함수를 호출하는 함수 Character* Ptr → Warrior 객체 일반 함수 호출 → Character 함수 실행 가상 함수 호출 → Warrior 함수 실행 함수에 virtual이 붙어 있으면 포인터 타입이 아니라 실제 객체 타입에 맞는 함수가 실행된다."/><meta property="og:image" content="https://yeomin-yoon.github.io/development-notes/static/og-image.png"/><meta property="og:image:url" content="https://yeomin-yoon.github.io/development-notes/static/og-image.png"/><meta name="twitter:image" content="https://yeomin-yoon.github.io/development-notes/static/og-image.png"/><meta property="og:image:type" content="image/.png"/><meta property="twitter:domain" content="yeomin-yoon.github.io/development-notes"/><meta property="og:url" content="https://yeomin-yoon.github.io/development-notes/c++/가상-함수"/><meta property="twitter:url" content="https://yeomin-yoon.github.io/development-notes/c++/가상-함수"/><link rel="icon" href="../static/icon.png"/><meta name="description" content="가상 함수(Virtual Function) Summary 가상 함수 = 실제 객체에서 재정의한 함수를 호출하는 함수 Character* Ptr → Warrior 객체 일반 함수 호출 → Character 함수 실행 가상 함수 호출 → Warrior 함수 실행 함수에 virtual이 붙어 있으면 포인터 타입이 아니라 실제 객체 타입에 맞는 함수가 실행된다."/><meta name="generator" content="Quartz"/><link href="../index-ae276ac8.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../component-735924e0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../component-589c1cea.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../component-bbc3f7c0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../component-2911f5d1.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../component-53b25b2b.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../component-8a06014f.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../component-77d6a441.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../component-6ee21cee.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../component-1ea6ad18.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../component-788c9ca3.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../component-4abc06bd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../component-274a3dfe.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../component-94cb6c84.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../static/resource-style-a5c806d2.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../static/resource-style-6bd36952.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" data-persist="true"/><script src="../prescript-2bfc6315.js" type="application/javascript" data-persist="true"></script><script type="application/javascript" data-persist="true">const fetchData = fetch("../static/contentIndex.json").then(data => data.json())</script></head><body data-slug="c++/가상-함수" data-basepath="/development-notes"><div id="quartz-root" class="page" data-frame="default"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="..">개발 공부 기록</a></h2><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 0.5rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button" aria-label="검색" aria-expanded="false"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>검색</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="검색어를 입력하세요" placeholder="검색어를 입력하세요"/><div class="search-layout" data-preview="true" data-field-priority="[&quot;title&quot;,&quot;content&quot;,&quot;tags&quot;]"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode" aria-label="다크 모드"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="다크 모드"><title>다크 모드</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="라이트 모드"><title>라이트 모드</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode" aria-label="리더 모드"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="리더 모드"><title>리더 모드</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer nav-files-container" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a2, b2) => {\n    if (!a2.isFolder &amp;&amp; !b2.isFolder || a2.isFolder &amp;&amp; b2.isFolder) {\n      return (a2.displayName || \&quot;\&quot;).localeCompare(b2.displayName || \&quot;\&quot;, void 0, {\n        numeric: true,\n        sensitivity: \&quot;base\&quot;\n      });\n    }\n    if (!a2.isFolder &amp;&amp; b2.isFolder) {\n      return 1;\n    }\n    return -1;\n  }&quot;,&quot;filterFn&quot;:&quot;(node) => node.slugSegment !== \&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;(node) => {\n    return node;\n  }&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-11" aria-label="탐색기"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>목차</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-11" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#" class="nav-file-title tree-item-self"></a></li></template><template id="template-folder"><li><div class="folder-container nav-folder-title tree-item-self"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon nav-folder-collapse-indicator collapse-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content tree-item-children"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../c++/">C++</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>가상 함수</a></div></nav><h1 class="article-title">가상 함수</h1><p show-comma="false" class="content-meta"><time datetime="2026-07-07T12:28:05.000Z">2026년 7월 07일</time></p></div></div><article class="popover-hint"><div class="markdown-preview-view markdown-rendered"><h1 id="가상-함수virtual-function">가상 함수(Virtual Function)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#가상-함수virtual-function" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<blockquote class="callout abstract" data-callout="abstract">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Summary</p></div>
+                  
+                </div>
+<div class="callout-content">
+<p><strong>가상 함수 = 실제 객체에서 재정의한 함수를 호출하는 함수</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="text" data-theme="github-light github-dark"><code data-language="text" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>Character* Ptr → Warrior 객체</span></span>
+<span data-line> </span>
+<span data-line><span>일반 함수 호출  → Character 함수 실행</span></span>
+<span data-line><span>가상 함수 호출  → Warrior 함수 실행</span></span></code></pre></figure>
+<p>함수에 <code>virtual</code>이 붙어 있으면 <strong>포인터 타입이 아니라 실제 객체 타입에 맞는 함수가 실행된다.</strong></p>
+</div>
+</blockquote>
+<h2 id="관련-개념">관련 개념<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#관련-개념" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>개념</th><th>역할</th></tr></thead><tbody><tr><td><code>virtual</code></td><td>기반 포인터·참조로 호출해도 실제 객체의 재정의 함수 실행</td></tr><tr><td><code>override</code></td><td>재정의 실수를 컴파일 단계에서 검사</td></tr><tr><td>객체 슬라이싱</td><td>파생 객체를 기반 타입 값으로 복사하면 파생 부분이 잘림</td></tr><tr><td>가상 소멸자</td><td>기반 포인터로 삭제할 때 파생 부분부터 올바르게 정리</td></tr><tr><td>순수 가상 함수</td><td>파생 클래스가 구현해야 할 인터페이스</td></tr><tr><td>vptr·vtable</td><td>동적 디스패치에 널리 쓰이는 컴파일러 구현 방식</td></tr></tbody></table></div>
+<hr/>
+<h2 id="가상-함수가-필요한-이유">가상 함수가 필요한 이유<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#가상-함수가-필요한-이유" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p><code>Warrior</code>가 <code>Character</code>를 상속하면 <code>Character*</code> 포인터나 <code>Character&amp;</code> 참조로 <code>Warrior</code> 객체를 다룰 수 있다.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="cpp" data-theme="github-light github-dark"><code data-language="cpp" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">Warrior Object;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">Character</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">*</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> Ptr </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator"> &amp;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">Object;</span></span></code></pre></figure>
+<p>이때 코드에 적힌 포인터 타입은 <code>Character*</code>지만, 실제로 만들어진 객체는 <code>Warrior</code>다.</p>
+<ul>
+<li><strong>정적 타입(Static Type)</strong>: 코드에 선언된 타입인 <code>Character*</code></li>
+<li><strong>동적 타입(Dynamic Type)</strong>: 포인터가 실제로 가리키는 객체 타입인 <code>Warrior</code></li>
+</ul>
+<p>일반 함수는 정적 타입을 보고 호출할 함수를 정한다. 가상 함수는 동적 타입을 확인해서 호출할 함수를 정한다.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="cpp" data-theme="github-light github-dark"><code data-language="cpp" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="punctuation">#include</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> &lt;iostream></span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">class</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="property"> Character</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">{</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">public:</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">    // 일반 함수</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    void</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> Attack</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">() { </span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">std</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">::cout </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">&lt;&lt;</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> &quot;Character Attack</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="string">\n</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">; }</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    </span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">    // virtual이 붙은 가상 함수</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    virtual</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword"> void</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> Move</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">() { </span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">std</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">::cout </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">&lt;&lt;</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> &quot;Character Move</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="string">\n</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">; }</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">};</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">class</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="property"> Warrior</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> : </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">public</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="property"> Character</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">{</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">public:</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    void</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> Attack</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">() { </span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">std</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">::cout </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">&lt;&lt;</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> &quot;Warrior Attack</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="string">\n</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">; }</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    void</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> Move</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">() </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">override</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> { </span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">std</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">::cout </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">&lt;&lt;</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> &quot;Warrior Move</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="string">\n</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string">&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">; }</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">};</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">int</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> main</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">()</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">{</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    Warrior Object;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    Character</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">*</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> Ptr </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator"> &amp;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">Object;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    </span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal">    Ptr-></span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">Attack</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">();</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"> // 일반 함수: Character Attack</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal">    Ptr-></span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">Move</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">();</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">   // 가상 함수: Warrior Move</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">}</span></span></code></pre></figure>
+<p><code>Ptr</code>의 타입은 두 호출 모두 <code>Character*</code>로 같다. 그러나 <code>Move()</code>에는 <code>virtual</code>이 붙어 있어서 실제 객체인 <code>Warrior</code>의 함수가 실행된다.</p>
+<hr/>
+<h2 id="정적-바인딩과-동적-바인딩">정적 바인딩과 동적 바인딩<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#정적-바인딩과-동적-바인딩" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>**바인딩(Binding)**은 함수 호출문이 “어느 클래스의 함수를 실행할지” 결정되는 것을 뜻한다.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th style="text-align:left;">구분</th><th style="text-align:left;">일반 함수</th><th style="text-align:left;">가상 함수</th></tr></thead><tbody><tr><td style="text-align:left;"><strong>바인딩 방식</strong></td><td style="text-align:left;">정적 바인딩 (Static Binding)</td><td style="text-align:left;">동적 바인딩 (Dynamic Binding)</td></tr><tr><td style="text-align:left;"><strong>결정 시점</strong></td><td style="text-align:left;">실행 전에 결정</td><td style="text-align:left;">실행 중 실제 객체를 보고 결정</td></tr><tr><td style="text-align:left;"><strong>판단 기준</strong></td><td style="text-align:left;">정적 타입</td><td style="text-align:left;">동적 타입</td></tr></tbody></table></div>
+<ul>
+<li><strong>정적 바인딩(Static Binding)</strong>: 컴파일할 때 호출할 함수가 결정된다.</li>
+<li><strong>동적 바인딩(Dynamic Binding)</strong>: 프로그램이 실행될 때 실제 객체에 맞는 함수가 결정된다.</li>
+<li><strong>런타임 다형성(Runtime Polymorphism)</strong>: 같은 부모 타입의 포인터나 참조로 호출해도 실제 객체에 따라 다른 동작을 하는 성질이다.</li>
+</ul>
+<blockquote class="callout note" data-callout="note">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Note</p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>여기서 **런타임(Runtime)**은 프로그램이 실행 중인 시점을 뜻하고, **다형성(Polymorphism)**은 같은 호출이 객체에 따라 여러 형태로 동작한다는 뜻이다.</p>
+</div>
+</blockquote>
+<hr/>
+<h2 id="객체-슬라이싱object-slicing">객체 슬라이싱(Object Slicing)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#객체-슬라이싱object-slicing" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<blockquote>
+<p><strong>객체 슬라이싱 = 파생 객체를 기반 클래스 타입의 값으로 복사할 때, 기반 클래스 부분만 복사되는 현상</strong></p>
+</blockquote>
+<p><code>Warrior</code> 객체 하나에는 <code>Character</code>에서 물려받은 부분과 <code>Warrior</code>가 추가한 부분이 함께 들어 있다.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="text" data-theme="github-light github-dark"><code data-language="text" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>원본 Warrior 객체</span></span>
+<span data-line><span>├─ Character 부분</span></span>
+<span data-line><span>└─ Warrior 전용 부분</span></span></code></pre></figure>
+<p>그런데 <code>Warrior</code>를 <code>Character</code> 타입의 <strong>새 객체</strong>에 값으로 복사하면, 새 객체에는 <code>Character</code> 부분을 담을 공간만 있다.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="text" data-theme="github-light github-dark"><code data-language="text" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>Character Copy = Object;</span></span>
+<span data-line> </span>
+<span data-line><span>원본 Warrior 객체                 새 Character 객체</span></span>
+<span data-line><span>├─ Character 부분  ── 복사 ──→   └─ Character 부분</span></span>
+<span data-line><span>└─ Warrior 전용 부분                 (복사되지 않음)</span></span></code></pre></figure>
+<p>이처럼 새 객체를 만드는 과정에서 <code>Warrior</code> 전용 부분이 제외되는 모습을 잘린 것에 비유해 **슬라이싱(Slicing)**이라고 한다.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="cpp" data-theme="github-light github-dark"><code data-language="cpp" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">Warrior Object;</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">Character Copy </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> Object;</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"> // Character 부분만 복사한 새 객체</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal">Copy.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">Move</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">();</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">             // Character::Move()</span></span></code></pre></figure>
+<p><code>Copy</code>의 타입도, 실제로 만들어진 객체도 <code>Character</code>다. 따라서 <code>Move()</code>가 가상 함수여도 <code>Character::Move()</code>가 실행된다.</p>
+<blockquote class="callout note" data-callout="note">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Note</p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>원본 <code>Object</code>는 그대로 <code>Warrior</code>다. 원본 객체 자체가 잘리거나 변경되는 것이 아니다.</p>
+</div>
+</blockquote>
+<h3 id="포인터나-참조에서는-왜-슬라이싱되지-않을까">포인터나 참조에서는 왜 슬라이싱되지 않을까?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#포인터나-참조에서는-왜-슬라이싱되지-않을까" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>포인터와 참조는 새로운 <code>Character</code> 객체를 만들지 않고 기존 <code>Warrior</code> 객체를 그대로 가리킨다.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="cpp" data-theme="github-light github-dark"><code data-language="cpp" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">Character</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">*</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> Pointer </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator"> &amp;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">Object;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">Character</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">&amp;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> Reference </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> Object;</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal">Pointer-></span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">Move</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">();</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">  // Warrior::Move()</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal">Reference.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">Move</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">();</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"> // Warrior::Move()</span></span></code></pre></figure>
+<p>실제 객체는 여전히 <code>Warrior</code>이므로 가상 함수 호출도 <code>Warrior::Move()</code>로 연결된다.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="text" data-theme="github-light github-dark"><code data-language="text" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>값으로 복사   → 새 Character 객체 생성 → 슬라이싱 발생</span></span>
+<span data-line><span>포인터·참조   → 기존 Warrior 객체 참조 → 슬라이싱 없음</span></span></code></pre></figure>
+<hr/>
+<h2 id="vptr과-vtable의-동작">vptr과 vtable의 동작<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#vptr과-vtable의-동작" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>C++ 표준은 가상 함수의 구현 방식을 강제하지 않지만, 대부분의 컴파일러는 **vtable(가상 함수 테이블)**과 **vptr(가상 테이블 포인터)**을 사용해 동적 바인딩을 구현한다.</p>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;flowchart LR\n    A[\&quot;Character*가 Move 호출\&quot;] --> B[\&quot;객체의 vptr 확인\&quot;]\n    B --> C[\&quot;Warrior vtable 접근\&quot;]\n    C --> D[\&quot;Warrior::Move 실행\&quot;]&quot;">flowchart LR
+    A[&quot;Character*가 Move 호출&quot;] --> B[&quot;객체의 vptr 확인&quot;]
+    B --> C[&quot;Warrior vtable 접근&quot;]
+    C --> D[&quot;Warrior::Move 실행&quot;]
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<ul>
+<li><strong>vtable (Virtual Function Table)</strong>: 가상 함수의 최종 재정의 함수 주소 등을 담는, 컴파일러가 만드는 표다. 일반적인 구현에서는 같은 동적 타입의 객체들이 공유한다.</li>
+<li><strong>vptr (Virtual Table Pointer)</strong>: 객체 내부에서 해당 객체에 맞는 vtable을 가리키는 숨은 포인터다.</li>
+</ul>
+<blockquote class="callout note" data-callout="note">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Note</p></div>
+                  
+                </div>
+<div class="callout-content">
+<p><code>vptr</code>과 <code>vtable</code>은 널리 쓰이는 구현 방식이지만 C++ 표준이 요구하는 구조는 아니다. 다중 상속이나 가상 상속에서는 객체에 여러 <code>vptr</code>이 생기는 등 구조가 더 복잡해질 수 있다.</p>
+</div>
+</blockquote>
+<hr/>
+<h2 id="객체-크기와-성능-비용">객체 크기와 성능 비용<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#객체-크기와-성능-비용" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="객체-메모리-변화와-패딩">객체 메모리 변화와 패딩<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#객체-메모리-변화와-패딩" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>일반적인 컴파일러 구현에서는 클래스가 다형적이면 객체에 vtable을 가리키는 숨은 포인터가 포함된다.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="cpp" data-theme="github-light github-dark"><code data-language="cpp" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">class</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="property"> Normal</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> { </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">int</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> Value; };</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">class</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="property"> Polymorphic</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> { </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">int</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> Value; </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">virtual</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword"> void</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> Func</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(); };</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">// 흔한 64비트 구현의 예:</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">// sizeof(Normal)      == 4</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">// sizeof(Polymorphic) == 16</span></span></code></pre></figure>
+<ul>
+<li>포인터가 8바이트인 흔한 64비트 환경에서는 숨은 포인터와 정렬 패딩 때문에 위 예제의 <code>Polymorphic</code>이 16바이트가 될 수 있다.</li>
+<li>가상 함수가 늘어나면 일반적으로 vtable 항목이 늘어난다. 단순한 단일 상속에서는 객체 크기가 그대로인 경우가 많다.</li>
+<li>정확한 객체 크기와 <code>vptr</code> 개수는 ABI, 컴파일러, 상속 구조에 따라 달라지므로 <code>sizeof</code>로 확인해야 한다.</li>
+</ul>
+<h3 id="런타임-성능-비용">런타임 성능 비용<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#런타임-성능-비용" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>가상 함수는 일반 함수에 비해 약간의 런타임 오버헤드가 존재한다.</p>
+<ol>
+<li>vtable에서 함수 주소를 찾은 뒤 호출하는 <strong>간접 호출 비용</strong></li>
+<li>실제 호출 대상을 컴파일 시점에 알기 어려워 생기는 <strong>인라이닝 제한</strong></li>
+</ol>
+<blockquote class="callout tip" data-callout="tip">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Tip</p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>성능이 극도로 중요한 타이트한 루프 내부가 아니라면 대부분의 경우 가상 함수 호출 비용은 미미하다. 또한 컴파일러가 코드 분석을 통해 동적 바인딩을 일반 함수 호출로 바꾸는 <strong>탈가상화(Devirtualization) 최적화</strong>를 적용하기도 한다.</p>
+</div>
+</blockquote>
+<hr/>
+<h2 id="override-지정자">override 지정자<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#override-지정자" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<blockquote>
+<p><strong>핵심: <code>override</code>는 부모의 가상 함수를 제대로 재정의했는지 컴파일러가 검사하게 한다.</strong></p>
+</blockquote>
+<p><code>override</code>가 없어도 함수 형태가 정확하면 재정의된다. 하지만 오타가 있거나 매개변수 타입, <code>const</code> 등이 다르면 재정의가 아닌 별개의 함수가 될 수 있다. <code>override</code>를 붙이면 이런 실수를 컴파일 오류로 알려준다.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="cpp" data-theme="github-light github-dark"><code data-language="cpp" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">class</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="property"> Parent</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> { </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">virtual</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword"> void</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> Render</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">float</span><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;" data-token-type="important"> DeltaTime</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">); };</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">class</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="property"> Child</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> : </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">public</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="property"> Parent</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> { </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">void</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> Render</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">double</span><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;" data-token-type="important"> DeltaTime</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">) </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">override</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">; };</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"> // ❌ 컴파일 에러 발생</span></span></code></pre></figure>
+<hr/>
+<h2 id="가상-소멸자virtual-destructor">가상 소멸자(Virtual Destructor)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#가상-소멸자virtual-destructor" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<blockquote class="callout tip" data-callout="tip">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Important</p></div>
+                  
+                </div>
+<div class="callout-content">
+<p><strong>가상 소멸자는 다른 객체의 소멸을 막는 기능이 아니다.</strong></p>
+<p><code>Warrior</code> 객체 하나를 삭제할 때, 그 객체 전체를 <code>Warrior → Character</code> 순서로 빠짐없이 정리하게 한다.</p>
+</div>
+</blockquote>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="text" data-theme="github-light github-dark"><code data-language="text" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>잘못된 이해</span></span>
+<span data-line><span>Character 객체 + Warrior 객체       ← 객체 두 개가 따로 존재하는 것이 아님</span></span>
+<span data-line> </span>
+<span data-line><span>실제 구조</span></span>
+<span data-line><span>Warrior 객체 하나</span></span>
+<span data-line><span>└─ 그 안에 Character 기반 클래스 부분이 포함됨</span></span></code></pre></figure>
+<p>상속으로 만들어진 <code>Character</code> 부분은 별도로 생성된 부모 객체가 아니다. <code>Warrior</code> 객체 하나를 구성하는 **기반 클래스 부분 객체(Base Class Subobject)**다.</p>
+<p>객체 하나를 완전히 삭제하려면 바깥쪽인 <code>Warrior</code>부터 정리하고, 그 안에 포함된 <code>Character</code> 부분을 이어서 정리한다.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="text" data-theme="github-light github-dark"><code data-language="text" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>Warrior 객체 하나 삭제</span></span>
+<span data-line><span>        ↓</span></span>
+<span data-line><span>Warrior::~Warrior()       자식에서 추가한 부분 정리</span></span>
+<span data-line><span>        ↓</span></span>
+<span data-line><span>Character::~Character()   상속받은 기반 클래스 부분 정리</span></span></code></pre></figure>
+<p>이 과정은 같은 객체 하나의 내부를 순서대로 정리하는 것이다. 다른 <code>Character</code> 객체나 다른 <code>Warrior</code> 객체에는 아무 영향도 주지 않는다.</p>
+<p>문제는 실제로 만든 객체가 <code>Warrior</code>여도 포인터에는 <code>Character*</code>라고 적혀 있을 수 있다는 점이다.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="cpp" data-theme="github-light github-dark"><code data-language="cpp" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">class</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="property"> Character</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">{</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">public:</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    virtual</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> ~Character</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">() </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword"> default</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">};</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">class</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="property"> Warrior</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> : </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">public</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="property"> Character</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">{</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">public:</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">    ~Warrior</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">() </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">override</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator"> =</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword"> default</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">};</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">Character</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">*</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> Ptr </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword"> new</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> Warrior</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">();</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">delete</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> Ptr;</span></span></code></pre></figure>
+<p><code>Character</code> 소멸자가 <code>virtual</code>이므로 <code>delete Ptr</code>는 실제 객체가 <code>Warrior</code>라는 사실을 반영한다. 그 결과 같은 객체 안에서 <code>Warrior</code> 소멸자와 <code>Character</code> 소멸자가 올바른 순서로 실행된다.</p>
+<blockquote>
+<p><strong>규칙: 기반 클래스 포인터로 파생 객체를 삭제할 수 있다면 기반 클래스의 소멸자를 <code>virtual</code>로 선언한다.</strong></p>
+</blockquote>
+<h3 id="정의되지-않은-동작이란">정의되지 않은 동작이란?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#정의되지-않은-동작이란" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>반대로 <code>Character</code> 소멸자가 가상이 아닌 상태에서 <code>Character*</code>로 <code>Warrior</code>를 삭제하면 **정의되지 않은 동작(Undefined Behavior, UB)**이다. 이는 C++ 표준이 실행 결과를 보장하지 않는다는 뜻이다.</p>
+<p>흔히 파생 클래스의 소멸자가 실행되지 않아 파일, 메모리 같은 자원이 정리되지 않는 모습으로 나타날 수 있다. 하지만 “부모 소멸자만 실행된다”는 결과조차 표준이 보장하지 않으므로 그런 동작에 의존해서는 안 된다.</p>
+<hr/>
+<h2 id="순수-가상-함수와-추상-클래스">순수 가상 함수와 추상 클래스<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#순수-가상-함수와-추상-클래스" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>구체적인 파생 클래스가 구현해야 하는 인터페이스는 순수 가상 함수로 표현할 수 있다.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="cpp" data-theme="github-light github-dark"><code data-language="cpp" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">class</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="property"> Character</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">{</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">public:</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    virtual</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> ~Character</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">() </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword"> default</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">;</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    virtual</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword"> void</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> Move</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">() </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> 0</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">};</span></span></code></pre></figure>
+<p><code>= 0</code>이 붙은 함수가 순수 가상 함수다. 순수 가상 함수가 하나라도 남아 있는 클래스는 **추상 클래스(Abstract Class)**이며 직접 객체를 만들 수 없다. 파생 클래스도 이를 재정의하지 않으면 계속 추상 클래스다.</p>
+<hr/>
+<h2 id="생성자와-소멸자에서의-가상-함수-호출-주의">생성자와 소멸자에서의 가상 함수 호출 주의<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#생성자와-소멸자에서의-가상-함수-호출-주의" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<blockquote class="callout warning" data-callout="warning">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Caution</p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>생성자와 소멸자에서 가상 함수를 호출하는 것은 문법적으로 가능하지만, 파생 클래스까지 동적 디스패치되지 않는다.</p>
+<ul>
+<li>기반 클래스 생성자가 실행될 때 파생 클래스 부분은 아직 초기화되지 않았다.</li>
+<li>따라서 기반 클래스 생성자에서 호출하면 현재 생성 중인 기반 클래스의 최종 재정의 함수가 실행된다.</li>
+<li>소멸 중에도 이미 소멸된 파생 클래스 쪽으로 호출되지 않고 현재 소멸 중인 클래스 기준으로 실행된다.</li>
+</ul>
+<p>파생 클래스의 재정의 함수가 실행되기를 기대하는 코드는 작성하지 않는 것이 좋다. 특히 생성자나 소멸자에서 가상 디스패치가 순수 가상 함수에 도달하면 정의되지 않은 동작이므로 호출하지 않는다.</p>
+</div>
+</blockquote>
+<hr/>
+<h2 id="정리">정리<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#정리" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li><code>virtual</code>: 실제 객체 타입을 기준으로 함수 호출</li>
+<li>적용 조건: 기반 클래스 포인터나 참조로 파생 객체를 다룰 때 동적 디스패치</li>
+<li>객체 슬라이싱: 파생 객체를 기반 클래스 값으로 복사하면 파생 클래스 부분과 다형성이 사라짐</li>
+<li><code>vptr</code>: 객체가 자신의 vtable을 가리키는 포인터</li>
+<li><code>vtable</code>: 가상 함수 주소를 저장하는 클래스별 테이블</li>
+<li><code>override</code>: 가상 함수 재정의 실수를 컴파일 단계에서 검사</li>
+<li>순수 가상 함수: 파생 클래스가 구현할 인터페이스 정의</li>
+<li>가상 소멸자: 객체 하나를 실제 파생 타입부터 기반 클래스 부분까지 안전하게 삭제</li>
+<li>비용: 일반적인 구현에서 객체 크기 증가, 간접 호출, 인라이닝 제한</li>
+</ul>
+<hr/>
+<p>관련 키워드: <code>C++</code>, <code>상속</code>, <code>다형성</code>, <code>메모리 구조</code></p>
+<p><a href="../c++/c++-정리-목차" class="internal internal-link alias" data-slug="c++/c++-정리-목차">C++ 정리 목차</a> · <a href="../c++/템플릿" class="internal internal-link alias" data-slug="c++/템플릿">템플릿</a> · <a href="../unreal/reflection" class="internal internal-link" data-slug="unreal/reflection">Reflection</a></p></div></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="toc"><button type="button" class="toc-header" aria-controls="toc-11" aria-expanded="true"><h3>목차</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-0" class="toc-content overflow"><li class="depth-0"><a href="#가상-함수virtual-function" data-for="가상-함수virtual-function">가상 함수(Virtual Function)</a></li><li class="depth-1"><a href="#관련-개념" data-for="관련-개념">관련 개념</a></li><li class="depth-1"><a href="#가상-함수가-필요한-이유" data-for="가상-함수가-필요한-이유">가상 함수가 필요한 이유</a></li><li class="depth-1"><a href="#정적-바인딩과-동적-바인딩" data-for="정적-바인딩과-동적-바인딩">정적 바인딩과 동적 바인딩</a></li><li class="depth-1"><a href="#객체-슬라이싱object-slicing" data-for="객체-슬라이싱object-slicing">객체 슬라이싱(Object Slicing)</a></li><li class="depth-2"><a href="#포인터나-참조에서는-왜-슬라이싱되지-않을까" data-for="포인터나-참조에서는-왜-슬라이싱되지-않을까">포인터나 참조에서는 왜 슬라이싱되지 않을까?</a></li><li class="depth-1"><a href="#vptr과-vtable의-동작" data-for="vptr과-vtable의-동작">vptr과 vtable의 동작</a></li><li class="depth-1"><a href="#객체-크기와-성능-비용" data-for="객체-크기와-성능-비용">객체 크기와 성능 비용</a></li><li class="depth-2"><a href="#객체-메모리-변화와-패딩" data-for="객체-메모리-변화와-패딩">객체 메모리 변화와 패딩</a></li><li class="depth-2"><a href="#런타임-성능-비용" data-for="런타임-성능-비용">런타임 성능 비용</a></li><li class="depth-1"><a href="#override-지정자" data-for="override-지정자">override 지정자</a></li><li class="depth-1"><a href="#가상-소멸자virtual-destructor" data-for="가상-소멸자virtual-destructor">가상 소멸자(Virtual Destructor)</a></li><li class="depth-2"><a href="#정의되지-않은-동작이란" data-for="정의되지-않은-동작이란">정의되지 않은 동작이란?</a></li><li class="depth-1"><a href="#순수-가상-함수와-추상-클래스" data-for="순수-가상-함수와-추상-클래스">순수 가상 함수와 추상 클래스</a></li><li class="depth-1"><a href="#생성자와-소멸자에서의-가상-함수-호출-주의" data-for="생성자와-소멸자에서의-가상-함수-호출-주의">생성자와 소멸자에서의 가상 함수 호출 주의</a></li><li class="depth-1"><a href="#정리" data-for="정리">정리</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Created with <a href="https://quartz.jzhao.xyz/">Quartz v5.0.0</a> © 2026</p><ul><li><a href="https://github.com/HyeseonLikesPizza/yeoeunseon/tree/main/yeoeunseon/%EC%9C%A4%EC%97%AC%EB%AF%BC">원본 기록</a></li></ul></footer></div></div></body><script src="../static/resource-after-e13fffa1.js" type="application/javascript" data-persist="true"></script><script src="../static/resource-after-8b336f9a.js" type="application/javascript" data-persist="true"></script><script src="../static/resource-after-baba652b.js" type="application/javascript" data-persist="true"></script><script src="../static/resource-after-5eb75950.js" type="module" data-persist="true"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript" data-persist="true"></script><script src="../postscript-5e06a1c1.js" type="module" data-persist="true"></script></html>

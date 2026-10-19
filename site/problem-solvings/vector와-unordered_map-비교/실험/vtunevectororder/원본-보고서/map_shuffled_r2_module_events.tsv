@@ -1,0 +1,3 @@
+war:Column filter is ON.
+Module	Hardware Event Count:INST_RETIRED.ANY	Hardware Event Count:CPU_CLK_UNHALTED.THREAD	Hardware Event Count:BR_INST_RETIRED.ALL_BRANCHES	Hardware Event Count:BR_MISP_RETIRED.ALL_BRANCHES	Hardware Event Count:CPU_CLK_UNHALTED.THREAD_P	Hardware Event Count:MEM_LOAD_RETIRED.L1_MISS	Hardware Event Count:MEM_LOAD_RETIRED.L3_MISS
+vectororderprofile.exe	16156256000	14650342000	2487653847	198804269	14592021888	0	0

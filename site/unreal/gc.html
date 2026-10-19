@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="ko" dir="ltr"><head><title>GC | 윤여민</title><meta charset="utf-8"/><link rel="preload" href="../index-ae276ac8.css" as="style"/><link rel="preload" href="../prescript-2bfc6315.js" as="script"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto Sans KR:wght@400;700&amp;family=Noto Sans KR:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="개발 공부 기록"/><meta property="og:title" content="GC | 윤여민"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="GC | 윤여민"/><meta name="twitter:description" content="Unreal Engine GC Summary Unreal Engine의 **GC(Garbage Collection)**는 더 이상 도달할 수 없는 UObject를 찾아 정리하는 메모리 관리 시스템이다."/><meta property="og:description" content="Unreal Engine GC Summary Unreal Engine의 **GC(Garbage Collection)**는 더 이상 도달할 수 없는 UObject를 찾아 정리하는 메모리 관리 시스템이다."/><meta property="og:image:alt" content="Unreal Engine GC Summary Unreal Engine의 **GC(Garbage Collection)**는 더 이상 도달할 수 없는 UObject를 찾아 정리하는 메모리 관리 시스템이다."/><meta property="og:image" content="https://yeomin-yoon.github.io/development-notes/static/og-image.png"/><meta property="og:image:url" content="https://yeomin-yoon.github.io/development-notes/static/og-image.png"/><meta name="twitter:image" content="https://yeomin-yoon.github.io/development-notes/static/og-image.png"/><meta property="og:image:type" content="image/.png"/><meta property="twitter:domain" content="yeomin-yoon.github.io/development-notes"/><meta property="og:url" content="https://yeomin-yoon.github.io/development-notes/unreal/gc"/><meta property="twitter:url" content="https://yeomin-yoon.github.io/development-notes/unreal/gc"/><link rel="icon" href="../static/icon.png"/><meta name="description" content="Unreal Engine GC Summary Unreal Engine의 **GC(Garbage Collection)**는 더 이상 도달할 수 없는 UObject를 찾아 정리하는 메모리 관리 시스템이다."/><meta name="generator" content="Quartz"/><link href="../index-ae276ac8.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../component-735924e0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../component-589c1cea.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../component-bbc3f7c0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../component-2911f5d1.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../component-53b25b2b.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../component-8a06014f.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../component-77d6a441.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../component-6ee21cee.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../component-1ea6ad18.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../component-788c9ca3.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../component-4abc06bd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../component-274a3dfe.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../component-94cb6c84.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../static/resource-style-a5c806d2.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../static/resource-style-6bd36952.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" data-persist="true"/><script src="../prescript-2bfc6315.js" type="application/javascript" data-persist="true"></script><script type="application/javascript" data-persist="true">const fetchData = fetch("../static/contentIndex.json").then(data => data.json())</script></head><body data-slug="unreal/gc" data-basepath="/development-notes"><div id="quartz-root" class="page" data-frame="default"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="..">개발 공부 기록</a></h2><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 0.5rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button" aria-label="검색" aria-expanded="false"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>검색</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="검색어를 입력하세요" placeholder="검색어를 입력하세요"/><div class="search-layout" data-preview="true" data-field-priority="[&quot;title&quot;,&quot;content&quot;,&quot;tags&quot;]"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode" aria-label="다크 모드"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="다크 모드"><title>다크 모드</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="라이트 모드"><title>라이트 모드</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode" aria-label="리더 모드"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="리더 모드"><title>리더 모드</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer nav-files-container" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a2, b2) => {\n    if (!a2.isFolder &amp;&amp; !b2.isFolder || a2.isFolder &amp;&amp; b2.isFolder) {\n      return (a2.displayName || \&quot;\&quot;).localeCompare(b2.displayName || \&quot;\&quot;, void 0, {\n        numeric: true,\n        sensitivity: \&quot;base\&quot;\n      });\n    }\n    if (!a2.isFolder &amp;&amp; b2.isFolder) {\n      return 1;\n    }\n    return -1;\n  }&quot;,&quot;filterFn&quot;:&quot;(node) => node.slugSegment !== \&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;(node) => {\n    return node;\n  }&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-38" aria-label="탐색기"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>목차</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-38" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#" class="nav-file-title tree-item-self"></a></li></template><template id="template-folder"><li><div class="folder-container nav-folder-title tree-item-self"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon nav-folder-collapse-indicator collapse-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content tree-item-children"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../unreal/">Unreal</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>GC</a></div></nav><h1 class="article-title">GC</h1><p show-comma="false" class="content-meta"><time datetime="2026-08-07T19:40:42.000Z">2026년 8월 08일</time></p></div></div><article class="popover-hint"><div class="markdown-preview-view markdown-rendered"><h1 id="unreal-engine-gc">Unreal Engine GC<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#unreal-engine-gc" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<blockquote class="callout abstract" data-callout="abstract">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Summary</p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>Unreal Engine의 **GC(Garbage Collection)**는 더 이상 도달할 수 없는 <code>UObject</code>를 찾아 정리하는 메모리 관리 시스템이다.<br/>
+C++ 자체에는 일반적인 의미의 GC가 없기 때문에, Unreal은 <code>UObject</code>, <a href="../unreal/reflection" class="internal internal-link" data-slug="unreal/reflection">Reflection</a>, <code>UPROPERTY</code>를 기반으로 자체 런타임 메모리 관리 체계를 만든다.</p>
+</div>
+</blockquote>
+<h2 id="uobject-포인터는-이것부터">UObject 포인터는 이것부터<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#uobject-포인터는-이것부터" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<blockquote class="callout abstract" data-callout="abstract">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Summary</p></div>
+                  
+                </div>
+<div class="callout-content">
+<p><strong>보관(Store)은 <code>TObjectPtr</code>, 사용(Borrow)은 <code>T*</code>.</strong></p>
+<p>정확히는 <code>UCLASS</code>/<code>USTRUCT</code> 멤버로 강하게 보관할 때 <code>UPROPERTY() TObjectPtr&lt;T></code>를 쓰고, 함수 인수·반환값·지역 변수로 잠깐 빌려 쓸 때 <code>T*</code>를 쓴다.</p>
+</div>
+</blockquote>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="text" data-theme="github-light github-dark"><code data-language="text" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>UPROPERTY</span></span>
+<span data-line><span>= 엔진이 이 멤버를 인식하고 추적할 수 있게 한다.</span></span>
+<span data-line> </span>
+<span data-line><span>TObjectPtr&lt;T></span></span>
+<span data-line><span>= 로드된 UObject를 지속적으로 저장하는 UE5 권장 포인터 표현이다.</span></span>
+<span data-line> </span>
+<span data-line><span>UPROPERTY() + TObjectPtr&lt;T></span></span>
+<span data-line><span>= GC가 추적하는 지속적인 강한 참조가 된다.</span></span></code></pre></figure>
+<blockquote class="callout tip" data-callout="tip">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Important</p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>기준은 헤더인지 <code>.cpp</code>인지가 아니다. <strong>오래 저장하는가, 잠깐 빌려 쓰는가, 대상의 수명을 유지할 것인가</strong>로 포인터를 선택한다.</p>
+</div>
+</blockquote>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>의도</th><th>기본 선택</th></tr></thead><tbody><tr><td><code>UCLASS</code>/<code>USTRUCT</code> 멤버로 저장하고 대상을 살려둠</td><td><code>UPROPERTY() TObjectPtr&lt;T></code></td></tr><tr><td>함수 인수·반환값·지역 변수로 잠깐 사용</td><td><code>T*</code></td></tr><tr><td>멤버로 기억하지만 대상을 살려두지 않음</td><td><code>TWeakObjectPtr&lt;T></code></td></tr><tr><td>에셋을 지금 로드하지 않고 경로로 참조</td><td><code>UPROPERTY() TSoftObjectPtr&lt;T></code></td></tr><tr><td>비-UObject 소유자가 대상을 살려둠</td><td><code>TStrongObjectPtr&lt;T></code></td></tr></tbody></table></div>
+<h2 id="gc-동작-흐름">GC 동작 흐름<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#gc-동작-흐름" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="text" data-theme="github-light github-dark"><code data-language="text" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>Root Set</span></span>
+<span data-line><span>→ UPROPERTY로 표시된 TObjectPtr 같은 추적 가능한 참조를 따라감</span></span>
+<span data-line><span>→ 도달 가능: 유지</span></span>
+<span data-line><span>→ 도달 불가: 수집 대상</span></span></code></pre></figure>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>참조</th><th>역할</th></tr></thead><tbody><tr><td><code>TObjectPtr</code> + <code>UPROPERTY</code></td><td>객체를 살려두는 멤버 참조</td></tr><tr><td><code>TWeakObjectPtr</code></td><td>객체를 살려두지 않고 유효성만 확인</td></tr><tr><td><code>TSoftObjectPtr</code></td><td>에셋 경로를 보관하고 필요할 때 로드</td></tr></tbody></table></div>
+<hr/>
+<h2 id="왜-unreal에는-gc가-있을까">왜 Unreal에는 GC가 있을까<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#왜-unreal에는-gc가-있을까" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>기본 C++에서는 RAII, 스마트 포인터와 명시적인 소유권으로 객체 수명을 설계한다. 도달 불가능한 객체를 자동으로 찾아 정리하는 일반적인 추적 GC는 제공하지 않는다.</p>
+<p>게임에서는 Actor, Component, UI, 에셋 참조처럼 수많은 객체가 계속 생성되고 사라진다. 소유 관계를 잘못 설계하면 메모리 누수나 Dangling Pointer가 생기기 쉽다.</p>
+<p>Unreal은 C++의 성능을 유지하면서도 엔진 객체를 안정적으로 관리하기 위해 <code>UObject</code> 기반 GC를 제공한다.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>환경</th><th>런타임 타입 정보</th><th>Reflection</th><th>GC</th></tr></thead><tbody><tr><td><strong>순수 C++</strong></td><td>제한적 RTTI 제공</td><td>일반적인 런타임 Reflection 없음</td><td>RAII·스마트 포인터·명시적 소유권, 일반적인 추적 GC 없음</td></tr><tr><td><strong>C# / Java</strong></td><td>언어 차원에서 제공</td><td>언어 차원에서 제공</td><td>언어/런타임 차원에서 제공</td></tr><tr><td><strong>Unreal C++</strong></td><td><code>UCLASS</code> 기반 제공</td><td>UHT와 메타데이터로 제공</td><td><code>UObject</code> 참조 그래프로 제공</td></tr></tbody></table></div>
+<hr/>
+<h2 id="gc는-어떻게-객체를-판단할까">GC는 어떻게 객체를 판단할까<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#gc는-어떻게-객체를-판단할까" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Unreal GC의 핵심은 <strong>참조 그래프를 따라가며 도달 가능한 UObject를 표시하는 것</strong>이다.</p>
+<blockquote class="callout note" data-callout="note">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Note</p></div>
+                  
+                </div>
+<div class="callout-content">
+<p><strong>참조 그래프</strong>는 UObject 사이의 참조 관계를 나타낸다.<br/>
+Unreal GC는 Root Set에서 출발해 <code>UPROPERTY</code>로 이어진 UObject들을 따라가며 아직 사용 중인 객체를 찾는다.<br/>
+선을 따라 도달할 수 있는 객체는 유지되고, 도달할 수 없는 객체는 수집 대상이 된다.</p>
+</div>
+</blockquote>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;flowchart TD\n    A[Root Set] --> B[UPROPERTY로 추적되는 참조]\n    B --> C[도달 가능한 UObject 표시]\n    C --> D{표시되지 않은 UObject가 있는가?}\n    D -- Yes --> E[수집 대상]\n    D -- No --> F[유지]\n\n    style E fill:#ffd6d6\n    style F fill:#d6ffd6&quot;">flowchart TD
+    A[Root Set] --> B[UPROPERTY로 추적되는 참조]
+    B --> C[도달 가능한 UObject 표시]
+    C --> D{표시되지 않은 UObject가 있는가?}
+    D -- Yes --> E[수집 대상]
+    D -- No --> F[유지]
+
+    style E fill:#ffd6d6
+    style F fill:#d6ffd6
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<p>GC는 Root Set에서 다음 참조를 따라간다.</p>
+<ul>
+<li><code>UPROPERTY</code>로 노출된 UObject 참조</li>
+<li>컨테이너 안의 추적 가능한 UObject 참조</li>
+<li><code>AddReferencedObjects</code>로 보고된 참조</li>
+</ul>
+<p>이 그래프에서 도달할 수 없는 UObject는 수집 대상이 된다.</p>
+<blockquote class="callout warning" data-callout="warning">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Caution</p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>UObject 포인터를 일반 C++ 멤버 변수로만 들고 있으면 GC가 그 참조를 추적하지 못한다. 객체를 살려야 하는 소유 참조라면 <code>UPROPERTY()</code>를 붙이거나 UE5에서는 <code>UPROPERTY()</code>와 <code>TObjectPtr</code> 조합을 사용한다.</p>
+</div>
+</blockquote>
+<p>예시:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="cpp" data-theme="github-light github-dark"><code data-language="cpp" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">// GC가 추적하지 못하는 일반 포인터</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">UObject</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">*</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> CachedObject;</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">// 기존 코드에서 볼 수 있는 UPROPERTY raw pointer 형태</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">UPROPERTY</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">()</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">UObject</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">*</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> CachedObjectForGC;</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">// UE5의 새 코드에서 우선 고려할 멤버 포인터 형태</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">UPROPERTY</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">()</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">TObjectPtr</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">&lt;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">UObject</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">></span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> CachedObjectForGCInUE5;</span></span></code></pre></figure>
+<p><code>UPROPERTY()</code>가 붙은 raw pointer의 허용 여부와 권장 수준은 엔진 버전 및 UHT 설정에 따라 달라질 수 있다. UE5의 새 코드에서는 <code>UPROPERTY()</code>와 <code>TObjectPtr</code> 조합을 우선 확인한다.</p>
+<hr/>
+<h2 id="tobjectptr을-사용하는-이유"><code>TObjectPtr</code>을 사용하는 이유<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#tobjectptr을-사용하는-이유" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p><code>TObjectPtr&lt;T></code>는 <code>UObject</code>를 가리키기 위한 Unreal 전용 포인터 래퍼다. 객체를 직접 소유하거나 삭제하는 스마트 포인터라기보다, <strong>UObject 참조를 UE5의 객체 핸들·GC 체계에 맞게 표현하는 타입</strong>이다.</p>
+<h3 id="uproperty와-역할이-다르다"><code>UPROPERTY</code>와 역할이 다르다<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#uproperty와-역할이-다르다" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="cpp" data-theme="github-light github-dark"><code data-language="cpp" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">UPROPERTY</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">()</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">TObjectPtr</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">&lt;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">UWeaponObject</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">></span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> EquippedWeapon;</span></span></code></pre></figure>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>부분</th><th>역할</th></tr></thead><tbody><tr><td><code>UPROPERTY()</code></td><td>UHT가 이 멤버의 메타데이터를 만들고 엔진이 참조를 인식할 수 있게 함</td></tr><tr><td><code>TObjectPtr&lt;UWeaponObject></code></td><td>이 멤버가 로드된 UObject를 저장하는 참조임을 표현</td></tr><tr><td>둘의 조합</td><td>소유 객체가 도달 가능한 동안 대상을 살려두는 GC 강한 참조</td></tr></tbody></table></div>
+<p><code>UPROPERTY</code>는 멤버를 리플렉션 시스템에 알리는 표식이다. GC 추적 외의 직렬화, 에디터 노출, 복제 같은 동작은 포인터 타입과 <code>EditAnywhere</code>, <code>Replicated</code>, <code>Transient</code> 등의 지정자에 따라 달라진다.</p>
+<h3 id="네-가지-경우를-구분한다">네 가지 경우를 구분한다<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#네-가지-경우를-구분한다" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>선언</th><th style="text-align:center;">지속적인 GC 강한 참조인가?</th><th>해석</th></tr></thead><tbody><tr><td><code>UObject* Object</code></td><td style="text-align:center;">아니요</td><td>엔진이 추적하지 않는 일반 C++ 포인터</td></tr><tr><td><code>UPROPERTY() UObject* Object</code></td><td style="text-align:center;">기존 코드·설정에 따라 가능</td><td>예전 코드에서 볼 수 있는 형태</td></tr><tr><td><code>TObjectPtr&lt;UObject> Object</code></td><td style="text-align:center;">아니요</td><td>래퍼만 있고 리플렉션에 등록되지 않은 멤버</td></tr><tr><td><code>UPROPERTY() TObjectPtr&lt;UObject> Object</code></td><td style="text-align:center;">예</td><td>UE5 새 코드의 기본 형태</td></tr></tbody></table></div>
+<blockquote class="callout tip" data-callout="tip">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Important</p></div>
+                  
+                </div>
+<div class="callout-content">
+<p><code>TObjectPtr</code>만 쓴다고 GC가 자동으로 추적하지 않는다. 지속적인 강한 멤버 참조라면 <code>UPROPERTY()</code>와 함께 사용한다.</p>
+</div>
+</blockquote>
+<p>기존의 <code>UPROPERTY() UObject*</code>도 프로젝트의 UE 버전과 UHT 설정에 따라 GC가 추적할 수 있다. 차이는 “raw pointer는 절대 추적 불가, <code>TObjectPtr</code>만 추적 가능”이 아니다. UE5 새 코드에서는 다음 이유로 <code>TObjectPtr</code> 조합을 권장한다.</p>
+<ul>
+<li>GC 쓰기 장벽과 증분 GC 마킹 지원</li>
+<li>cook-time 의존성 추적 지원</li>
+<li>직렬화와 복제 지원</li>
+<li>지속적인 UObject 멤버 참조라는 의도 표현</li>
+</ul>
+<h3 id="객체를-만들거나-삭제하지-않는다">객체를 만들거나 삭제하지 않는다<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#객체를-만들거나-삭제하지-않는다" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><code>TObjectPtr</code>는 <code>TSharedPtr</code>처럼 참조 카운트가 0이 되면 객체를 삭제하지 않는다.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="text" data-theme="github-light github-dark"><code data-language="text" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>TSharedPtr       → 참조 카운트로 일반 C++ 객체 수명 관리</span></span>
+<span data-line><span>TObjectPtr       → Unreal GC가 따라갈 UObject 참조 표현</span></span></code></pre></figure>
+<p>객체 생성은 별도로 한다.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="cpp" data-theme="github-light github-dark"><code data-language="cpp" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">EquippedWeapon </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> NewObject</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">&lt;</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="property">UWeaponObject</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">>(</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">this</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">);</span></span></code></pre></figure>
+<p><code>UObject</code>에 <code>delete EquippedWeapon</code>을 호출하면 안 된다. 대상 정리는 Unreal의 객체 생명주기와 GC가 담당한다.</p>
+<p><code>UPROPERTY()</code>가 붙었다고 해서 대상이 무조건 영원히 살아남는 것도 아니다. <strong>Root Set에서 소유 객체까지 도달할 수 있고, 그 객체에서 대상까지 강한 참조가 이어질 때</strong> GC가 대상을 유지한다.</p>
+<hr/>
+<h2 id="incremental-gc와-write-barrier">Incremental GC와 Write Barrier<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#incremental-gc와-write-barrier" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<blockquote class="callout abstract" data-callout="abstract">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Summary</p></div>
+                  
+                </div>
+<div class="callout-content">
+<p><strong>Incremental Reachability Analysis</strong>는 살아 있는 UObject를 찾는 작업을 한 프레임에 몰아서 하지 않고 여러 프레임으로 나눈다.<br/>
+그 사이 게임 코드가 참조를 바꿀 수 있으므로, <code>TObjectPtr</code>의 <strong>Write Barrier</strong>가 새 참조를 GC에 알려준다.</p>
+</div>
+</blockquote>
+<h2 id="incremental-gc가-필요한-이유">Incremental GC가 필요한 이유<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#incremental-gc가-필요한-이유" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Unreal GC의 Reachability Analysis는 Root Set에서 참조 그래프를 따라가며 살아 있는 UObject를 표시하는 단계다. UObject가 많을 때 이 작업을 한 프레임에 끝내면 해당 프레임이 길어지는 <strong>GC Hitch</strong>가 생길 수 있다.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="text" data-theme="github-light github-dark"><code data-language="text" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>기존 방식</span></span>
+<span data-line><span>Frame N: 게임 ─ Reachability 전체 검사 ─ 게임 계속</span></span>
+<span data-line><span>                    ↑ 한 프레임이 길어질 수 있음</span></span>
+<span data-line> </span>
+<span data-line><span>Incremental 방식</span></span>
+<span data-line><span>Frame N:     게임 + Reachability 일부</span></span>
+<span data-line><span>Frame N + 1: 게임 + Reachability 일부</span></span>
+<span data-line><span>Frame N + 2: 게임 + Reachability 일부</span></span></code></pre></figure>
+<p>Incremental Reachability는 프레임별 soft time limit을 두고 이 분석을 나눠 수행하여 한 프레임의 긴 정지 시간을 줄인다.</p>
+<h2 id="write-barrier가-필요한-이유">Write Barrier가 필요한 이유<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#write-barrier가-필요한-이유" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>여러 프레임에 걸쳐 분석하는 동안 게임도 계속 실행된다.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="text" data-theme="github-light github-dark"><code data-language="text" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>Frame 100</span></span>
+<span data-line><span>GC가 Player → EnemyA 관계를 검사함</span></span>
+<span data-line> </span>
+<span data-line><span>Frame 101</span></span>
+<span data-line><span>게임 코드가 Player.CurrentTarget을 EnemyB로 변경함</span></span>
+<span data-line> </span>
+<span data-line><span>문제</span></span>
+<span data-line><span>GC는 Player 검사를 이미 끝냈으므로 EnemyB 참조를 놓칠 수 있음</span></span></code></pre></figure>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="cpp" data-theme="github-light github-dark"><code data-language="cpp" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">UPROPERTY</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">()</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">TObjectPtr</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">&lt;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">AActor</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">></span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> CurrentTarget;</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">CurrentTarget </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> EnemyB;</span></span></code></pre></figure>
+<p>Incremental Reachability가 진행 중일 때 <code>UPROPERTY</code>로 노출된 <code>TObjectPtr</code>에 새 객체를 대입하면 엔진이 그 변경을 감지해 새 대상을 reachable로 표시한다. 이 참조 변경 감지 장치가 <strong>GC Write Barrier</strong>다.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="text" data-theme="github-light github-dark"><code data-language="text" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>Incremental Reachability</span></span>
+<span data-line><span>→ 분석 중 참조가 바뀔 수 있음</span></span>
+<span data-line><span>→ TObjectPtr에 대입</span></span>
+<span data-line><span>→ Write Barrier가 새 참조를 GC에 알림</span></span>
+<span data-line><span>→ 살아 있는 객체를 놓치지 않음</span></span></code></pre></figure>
+<p>그래서 <code>TObjectPtr</code> 권장은 단순한 코딩 스타일 문제가 아니다. Incremental Reachability를 사용할 때 <code>UPROPERTY</code> UObject 참조를 raw pointer로 남겨 두면 Write Barrier가 변경을 추적하지 못할 수 있다.</p>
+<blockquote class="callout warning" data-callout="warning">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Caution</p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>Incremental GC가 GC의 모든 단계를 하나의 기능으로 전부 나눈다는 뜻은 아니다. 여기서 말하는 핵심 기능은 <strong>Reachability Analysis를 여러 프레임으로 나누는 것</strong>이다. 객체 파괴와 메모리 정리에는 별도의 점진적 처리 경로가 존재할 수 있다.</p>
+</div>
+</blockquote>
+<p>UE 5.8 문서 기준 Incremental Reachability Analysis는 Experimental이며 완전히 thread-safe하지 않다. 공식 문서는 worker thread에서 조작되는 객체가 조기에 수거될 수 있어 single-threaded build에서 사용하도록 안내한다. 프로젝트에 적용할 때는 사용하는 엔진 버전의 제한을 다시 확인한다.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="ini" data-theme="github-light github-dark"><code data-language="ini" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="punctuation">[ConsoleVariables]</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">gc.AllowIncrementalReachability</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">=1</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">gc.AllowIncrementalGather</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">=1</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">gc.IncrementalReachabilityTimeLimit</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">=0.002</span></span></code></pre></figure>
+<p>위 설정은 기능을 켜고 프레임당 soft time limit을 2ms로 정한 예시다. 실제 값은 UObject 수와 목표 프레임 시간으로 측정해야 한다.</p>
+<hr/>
+<h2 id="uobject-참조-유형-선택">UObject 참조 유형 선택<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#uobject-참조-유형-선택" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>참조 유형</th><th>객체를 살려두는가</th><th>주된 용도</th></tr></thead><tbody><tr><td><code>UPROPERTY() TObjectPtr&lt;T></code></td><td>예</td><td><code>UObject</code>/<code>USTRUCT</code> 멤버의 지속적인 강한 참조</td></tr><tr><td><code>TWeakObjectPtr&lt;T></code></td><td>아니요</td><td>사라질 수 있는 객체의 비소유 참조와 캐시</td></tr><tr><td><code>TSoftObjectPtr&lt;T></code></td><td>아니요</td><td>경로를 보관하고 필요할 때 로드할 에셋 참조</td></tr><tr><td><code>TStrongObjectPtr&lt;T></code></td><td>예</td><td><code>UPROPERTY</code>를 쓸 수 없는 비-UObject 소유자에서 강한 참조가 필요할 때</td></tr></tbody></table></div>
+<blockquote class="callout note" data-callout="note">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Note</p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>“강한 참조”는 참조가 유지되는 동안 GC가 대상을 수집하지 못하게 한다는 뜻이다. <code>TWeakObjectPtr</code>과 <code>TSoftObjectPtr</code>은 대상을 살려두지 않으므로 사용 전에 유효성이나 로드 상태를 확인해야 한다.</p>
+</div>
+</blockquote>
+<hr/>
+<h2 id="저장하는-참조와-잠깐-쓰는-포인터">저장하는 참조와 잠깐 쓰는 포인터<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#저장하는-참조와-잠깐-쓰는-포인터" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p><code>TObjectPtr</code>를 선택하는 기준은 <code>.h</code>와 <code>.cpp</code>가 아니다. <strong>함수가 끝난 뒤에도 참조를 저장할 것인지</strong>가 핵심이다.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="text" data-theme="github-light github-dark"><code data-language="text" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>보관(Store)  → UPROPERTY() TObjectPtr&lt;T></span></span>
+<span data-line><span>사용(Borrow) → T*</span></span></code></pre></figure>
+<ul>
+<li><strong>Store</strong>: 함수가 끝난 뒤에도 멤버에 남겨 두고, 대상을 GC로부터 살려 둔다.</li>
+<li><strong>Borrow</strong>: 다른 곳에서 수명이 관리되는 객체를 함수 실행 중 잠깐 받아서 사용한다.</li>
+</ul>
+<p>대상을 저장하되 이 참조 때문에 살려 두고 싶지 않다면 Store의 예외로 <code>TWeakObjectPtr&lt;T></code>를 사용한다.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="cpp" data-theme="github-light github-dark"><code data-language="cpp" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">UCLASS</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">()</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">class</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="property"> UCombatComponent</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> : </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">public</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="property"> UActorComponent</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">{</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">    GENERATED_BODY</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">()</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">private:</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">    // 여러 프레임 동안 저장하며 대상을 살려둔다.</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">    UPROPERTY</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">()</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    TObjectPtr</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">&lt;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">AActor</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">></span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> CurrentTarget;</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">public:</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">    // 함수가 실행되는 동안 잠깐 전달받고 반환한다.</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    void</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> SetTarget</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="property">AActor</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">*</span><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;" data-token-type="important"> NewTarget</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">);</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="property">    AActor</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">*</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> GetTarget</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">() </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">const</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">};</span></span></code></pre></figure>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="cpp" data-theme="github-light github-dark"><code data-language="cpp" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">void</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> UCombatComponent</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">::</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">SetTarget</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="property">AActor</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">*</span><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;" data-token-type="important"> NewTarget</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">)</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">{</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    CurrentTarget </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> NewTarget;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">}</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="property">AActor</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">*</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> UCombatComponent</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">::</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">GetTarget</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">() </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">const</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">{</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    return</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal"> CurrentTarget.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">Get</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">();</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">}</span></span></code></pre></figure>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="text" data-theme="github-light github-dark"><code data-language="text" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>CurrentTarget  → 함수가 끝난 뒤에도 저장됨 → TObjectPtr&lt;AActor></span></span>
+<span data-line><span>NewTarget      → 함수에서 잠깐 빌려 씀     → AActor*</span></span>
+<span data-line><span>GetTarget()    → 주소를 잠깐 전달함         → AActor*</span></span></code></pre></figure>
+<p>지역 변수와 함수 매개변수에는 <code>UPROPERTY()</code>를 붙일 수 없다. 이 자리에서 <code>TObjectPtr</code>를 쓴다고 대상을 GC로부터 보호하는 것도 아니므로 일반적으로 raw pointer를 사용한다.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="cpp" data-theme="github-light github-dark"><code data-language="cpp" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">void</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> UCombatComponent</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">::</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">FindTarget</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">()</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">{</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    AActor</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">*</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> FoundTarget </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> FindNearestEnemy</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">();</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    if</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> (</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">IsValid</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(FoundTarget))</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    {</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">        CurrentTarget </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> FoundTarget;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    }</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">}</span></span></code></pre></figure>
+<p><code>if (Pointer)</code>는 null인지 확인한다. <code>IsValid(Pointer)</code>는 null이거나 Unreal 객체가 파괴 예정인 경우까지 확인한다. 대상이 <code>Destroy()</code>될 수 있는 Actor라면 <code>IsValid</code>가 필요한 상황이 있다.</p>
+<hr/>
+<h2 id="컨테이너에-저장할-때">컨테이너에 저장할 때<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#컨테이너에-저장할-때" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>컨테이너 멤버 자체에 <code>UPROPERTY()</code>를 붙이고 원소 타입으로 <code>TObjectPtr</code>를 사용한다.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="cpp" data-theme="github-light github-dark"><code data-language="cpp" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">UPROPERTY</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">()</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">TArray</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">&lt;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">TObjectPtr</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">&lt;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">UItemObject</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">>></span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> Inventory;</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">UPROPERTY</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">()</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">TSet</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">&lt;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">TObjectPtr</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">&lt;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">AActor</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">>></span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> TrackedActors;</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">UPROPERTY</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">()</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">TMap</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">&lt;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">FName, TObjectPtr</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">&lt;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">UAbilityData</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">>></span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> Abilities;</span></span></code></pre></figure>
+<p>중요한 것은 <code>TArray</code>는 안전하고 <code>TSet</code>/<code>TMap</code>은 위험하다는 구분이 아니다. <strong>컨테이너가 리플렉션에 등록된 강한 UObject 참조를 담고 있는가</strong>가 기준이다.</p>
+<h2 id="tmapfind의-반환-타입"><code>TMap::Find</code>의 반환 타입<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#tmapfind의-반환-타입" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="cpp" data-theme="github-light github-dark"><code data-language="cpp" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">UPROPERTY</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">()</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">TMap</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">&lt;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">FName, TObjectPtr</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">&lt;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">UItemObject</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">>></span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> Items;</span></span></code></pre></figure>
+<p>이 Map의 값 타입은 <code>TObjectPtr&lt;UItemObject></code>다. <code>Find()</code>는 저장된 값의 주소를 반환하므로 반환 타입은 <code>TObjectPtr&lt;UItemObject>*</code>가 된다.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="cpp" data-theme="github-light github-dark"><code data-language="cpp" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">if</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> (TObjectPtr</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">&lt;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">UItemObject</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">>*</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> Found </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal"> Items.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">Find</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(ItemId))</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">{</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    if</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> (UItemObject</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">*</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> Item </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal"> Found-></span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">Get</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">())</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    {</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal">        Item-></span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">Use</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">();</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    }</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">}</span></span></code></pre></figure>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="cpp" data-theme="github-light github-dark"><code data-language="cpp" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">UItemObject</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">**</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> Found </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal"> Items.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">Find</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(ItemId);</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"> // 타입이 다르므로 오류</span></span></code></pre></figure>
+<p>컨테이너 원소의 실제 타입을 직접 다루는 경우에는 <code>.cpp</code>에서도 <code>TObjectPtr&lt;T></code>가 나타날 수 있다.</p>
+<h2 id="t를-요구하는-api에는-바로-넘길-수-없다"><code>T**</code>를 요구하는 API에는 바로 넘길 수 없다<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#t를-요구하는-api에는-바로-넘길-수-없다" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p><code>TObjectPtr&lt;T></code>가 <code>T*</code>처럼 사용될 수 있어도 둘의 주소 타입까지 같아지는 것은 아니다.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="text" data-theme="github-light github-dark"><code data-language="text" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>TObjectPtr&lt;UObject>의 주소 → TObjectPtr&lt;UObject>*</span></span>
+<span data-line><span>UObject*의 주소            → UObject**</span></span></code></pre></figure>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="cpp" data-theme="github-light github-dark"><code data-language="cpp" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">bool</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> FindSomething</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="property">UObject</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">**</span><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;" data-token-type="important"> OutObject</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">);</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">TObjectPtr</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">&lt;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">UObject</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">></span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> StoredObject;</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">FindSomething</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">&amp;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">StoredObject);</span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment"> // 오류: TObjectPtr&lt;UObject>*는 UObject**가 아님</span></span></code></pre></figure>
+<p>이 경우 API가 요구하는 raw pointer 임시 변수를 사용한 뒤 결과를 저장한다.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="cpp" data-theme="github-light github-dark"><code data-language="cpp" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">UObject</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">*</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> RawObject </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> nullptr</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">;</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">if</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> (</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">FindSomething</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">&amp;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">RawObject))</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">{</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    StoredObject </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> RawObject;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">}</span></span></code></pre></figure>
+<h2 id="raw-pointer를-명시적으로-꺼낼-때">raw pointer를 명시적으로 꺼낼 때<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#raw-pointer를-명시적으로-꺼낼-때" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>함수 인수처럼 많은 문맥에서는 <code>TObjectPtr&lt;T></code>가 <code>T*</code>로 변환된다. 암시적 변환이 적용되지 않거나 타입을 분명히 쓰고 싶다면 <code>Get()</code> 또는 <code>ToRawPtr()</code>를 사용한다.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="cpp" data-theme="github-light github-dark"><code data-language="cpp" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">AActor</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">*</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> RawA </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal"> CurrentTarget.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">Get</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">();</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">AActor</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">*</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> RawB </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> ToRawPtr</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(CurrentTarget);</span></span></code></pre></figure>
+<p><code>TObjectPtr</code> 컨테이너를 실제 원소 타입으로 순회할 때는 포인터 자체가 아니라 포인터 래퍼의 참조를 받는다.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="cpp" data-theme="github-light github-dark"><code data-language="cpp" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">for</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> (</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">const</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> TObjectPtr</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">&lt;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">AActor</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">>&amp;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> TargetPtr : TrackedActors)</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">{</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    if</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> (AActor</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">*</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> Target </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal"> TargetPtr.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">Get</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">())</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    {</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal">        Target-></span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">SetActorHiddenInGame</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value">false</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">);</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    }</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">}</span></span></code></pre></figure>
+<hr/>
+<h2 id="actor와-uobject의-차이">Actor와 UObject의 차이<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#actor와-uobject의-차이" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p><code>AActor</code>도 <code>UObject</code>의 자식이지만, Actor 생명주기는 월드와 레벨 시스템의 영향을 강하게 받는다.</p>
+<p><code>Destroy()</code>를 호출하면 보통 즉시 메모리가 해제되지 않는다. 파괴 예정 상태가 된 뒤 엔진 흐름과 GC를 통해 정리된다.</p>
+<p>따라서 비동기 작업에서 Actor를 오래 붙잡을 때는 생 포인터 대신 <code>TWeakObjectPtr&lt;AActor></code>를 사용하고, GameThread로 돌아온 뒤 <code>IsValid()</code>를 확인하는 것이 안전하다.</p>
+<hr/>
+<h2 id="비동기-코드와-tweakobjectptr">비동기 코드와 <code>TWeakObjectPtr</code><a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#비동기-코드와-tweakobjectptr" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>비동기 작업은 시작한 시점과 끝나는 시점이 다르다. 작업을 Worker Thread에 넘긴 뒤, 그 작업이 끝나기 전에 Actor가 <code>Destroy()</code>되거나 레벨 전환으로 사라질 수 있다.</p>
+<p>이때 생 포인터를 람다에 그대로 캡처하면 문제가 생긴다.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="cpp" data-theme="github-light github-dark"><code data-language="cpp" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">Async</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">EAsyncExecution</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">::ThreadPool, [</span><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;" data-token-type="important">Actor</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">]()</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">{</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    const</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> FVector Result </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> CalculateHeavyMath</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">();</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">    AsyncTask</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">ENamedThreads</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">::GameThread, [</span><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;" data-token-type="important">Actor</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">, </span><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;" data-token-type="important">Result</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">]()</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    {</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;" data-token-type="comment">        // Actor가 이미 삭제되었거나 파괴 예정이면 위험하다.</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal">        Actor-></span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">SetActorLocation</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(Result);</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    });</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">});</span></span></code></pre></figure>
+<p><code>TWeakObjectPtr</code>은 객체를 강제로 살려두지 않는 약한 참조다. 대신 “아직 유효한 객체인지”를 확인할 수 있게 해준다.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="cpp" data-theme="github-light github-dark"><code data-language="cpp" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">TWeakObjectPtr</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">&lt;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">AActor</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">></span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> WeakActor </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> Actor;</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">Async</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">EAsyncExecution</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">::ThreadPool, [</span><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;" data-token-type="important">WeakActor</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">]()</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">{</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    const</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> FVector Result </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">=</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function"> CalculateHeavyMath</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">();</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">    AsyncTask</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">ENamedThreads</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">::GameThread, [</span><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;" data-token-type="important">WeakActor</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">, </span><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;" data-token-type="important">Result</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">]()</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    {</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">        if</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation"> (</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">!</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal">WeakActor.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">IsValid</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">())</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">        {</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">            return</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">        }</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="normal">        WeakActor-></span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;" data-token-type="function">SetActorLocation</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">(Result);</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">    });</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">});</span></span></code></pre></figure>
+<p><code>TWeakObjectPtr</code>은 객체를 보호하지 않는다. <strong>객체가 아직 살아 있는지 확인할 수 있는 안전장치</strong>다.</p>
+<p>비동기 작업에서는 UObject를 약한 참조로 들고 있다가 GameThread로 돌아온다. 객체가 유효하면 결과를 적용하고, 사라졌다면 작업 결과를 버린다.</p>
+<blockquote class="callout warning" data-callout="warning">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Caution</p></div>
+                  
+                </div>
+<div class="callout-content">
+<p><code>TWeakObjectPtr</code>을 사용해도 Worker Thread에서 UObject를 직접 읽거나 수정하면 안 된다. 유효성 확인과 결과 반영은 GameThread에서 수행한다.</p>
+</div>
+</blockquote>
+<hr/>
+<h2 id="gc와-멀티스레드">GC와 멀티스레드<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#gc와-멀티스레드" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Unreal의 UObject 생명주기와 GC는 GameThread 중심으로 설계되어 있다.</p>
+<p>Worker Thread에서 UObject를 직접 읽거나 수정하면 GC, Destroy, 레벨 전환, GameThread의 상태 변경과 충돌할 수 있다.</p>
+<p>이것이 <a href="../unreal/async--and--threadpool" class="internal internal-link alias" data-slug="unreal/async--and--threadpool">Async &amp; ThreadPool</a> 작업에서 Worker Thread가 UObject를 직접 조작하면 안 되는 핵심 이유다. 필요한 값은 GameThread에서 미리 복사하고, Worker Thread는 복사된 순수 데이터만 처리하는 편이 안전하다.</p>
+<hr/>
+<h2 id="정리">정리<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#정리" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li>GC는 <code>UObject</code> 참조 그래프를 기반으로 수집 대상을 판단한다.</li>
+<li><code>UPROPERTY()</code>는 엔진이 멤버를 인식하게 하고, <code>TObjectPtr</code>는 지속적인 UObject 참조를 표현한다.</li>
+<li><code>UPROPERTY() TObjectPtr&lt;T></code>는 GC가 추적하는 강한 멤버 참조이며 UE5 새 코드의 기본 형태다.</li>
+<li>Incremental Reachability는 도달 가능성 분석을 여러 프레임으로 나누고, <code>TObjectPtr</code>의 Write Barrier는 그 사이 생긴 새 참조를 GC에 알린다.</li>
+<li>함수 인수·반환값·지역 변수처럼 잠깐 사용하는 참조에는 일반적으로 <code>T*</code>를 쓴다.</li>
+<li><code>TObjectPtr</code>는 객체를 생성·삭제하거나 <code>TSharedPtr</code>처럼 참조 카운트를 관리하지 않는다.</li>
+<li><code>TWeakObjectPtr</code>는 대상을 살려두지 않고, <code>TSoftObjectPtr</code>는 에셋 경로를 보관한다.</li>
+<li>Actor는 <code>Destroy()</code>와 월드 생명주기를 함께 고려해야 한다.</li>
+<li>비동기 코드에서는 UObject 참조를 <code>TWeakObjectPtr</code>로 다루고 GameThread에서 유효성을 확인한다.</li>
+</ul>
+<blockquote class="callout note" data-callout="note">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>Note</p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>이 글은 UE5 계열의 일반적인 개념을 기준으로 한다. 포인터 권장 형태와 GC 구현 세부 사항은 엔진 버전에 따라 달라질 수 있다.</p>
+</div>
+</blockquote>
+<hr/>
+<h2 id="검증-자료">검증 자료<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#검증-자료" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li><a href="https://dev.epicgames.com/documentation/en-us/unreal-engine/object-pointers-in-unreal-engine" class="external external-link">Epic Games: Object Pointers<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://dev.epicgames.com/documentation/en-us/unreal-engine/unreal-object-handling-in-unreal-engine" class="external external-link">Epic Games: Unreal Object Handling<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://dev.epicgames.com/documentation/en-us/unreal-engine/incremental-garbage-collection-in-unreal-engine" class="external external-link">Epic Games: Incremental Garbage Collection<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://dev.epicgames.com/documentation/en-us/unreal-engine/unreal-engine-5-migration-guide" class="external external-link">Epic Games: Unreal Engine 5 Migration Guide<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+</ul>
+<hr/>
+<p><a href="../unreal/unreal-정리-목차" class="internal internal-link alias" data-slug="unreal/unreal-정리-목차">Unreal 정리 목차</a> · <a href="../unreal/reflection" class="internal internal-link" data-slug="unreal/reflection">Reflection</a> · <a href="../unreal/tinlineallocator와-tchunkedarray" class="internal internal-link alias" data-slug="unreal/tinlineallocator와-tchunkedarray">TInlineAllocator와 TChunkedArray</a> · <a href="../unreal/async--and--threadpool" class="internal internal-link alias" data-slug="unreal/async--and--threadpool">Async &amp; ThreadPool</a></p></div></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="toc"><button type="button" class="toc-header" aria-controls="toc-38" aria-expanded="true"><h3>목차</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-0" class="toc-content overflow"><li class="depth-0"><a href="#unreal-engine-gc" data-for="unreal-engine-gc">Unreal Engine GC</a></li><li class="depth-1"><a href="#uobject-포인터는-이것부터" data-for="uobject-포인터는-이것부터">UObject 포인터는 이것부터</a></li><li class="depth-1"><a href="#gc-동작-흐름" data-for="gc-동작-흐름">GC 동작 흐름</a></li><li class="depth-1"><a href="#왜-unreal에는-gc가-있을까" data-for="왜-unreal에는-gc가-있을까">왜 Unreal에는 GC가 있을까</a></li><li class="depth-1"><a href="#gc는-어떻게-객체를-판단할까" data-for="gc는-어떻게-객체를-판단할까">GC는 어떻게 객체를 판단할까</a></li><li class="depth-1"><a href="#tobjectptr을-사용하는-이유" data-for="tobjectptr을-사용하는-이유">TObjectPtr을 사용하는 이유</a></li><li class="depth-2"><a href="#uproperty와-역할이-다르다" data-for="uproperty와-역할이-다르다">UPROPERTY와 역할이 다르다</a></li><li class="depth-2"><a href="#네-가지-경우를-구분한다" data-for="네-가지-경우를-구분한다">네 가지 경우를 구분한다</a></li><li class="depth-2"><a href="#객체를-만들거나-삭제하지-않는다" data-for="객체를-만들거나-삭제하지-않는다">객체를 만들거나 삭제하지 않는다</a></li><li class="depth-1"><a href="#incremental-gc와-write-barrier" data-for="incremental-gc와-write-barrier">Incremental GC와 Write Barrier</a></li><li class="depth-1"><a href="#incremental-gc가-필요한-이유" data-for="incremental-gc가-필요한-이유">Incremental GC가 필요한 이유</a></li><li class="depth-1"><a href="#write-barrier가-필요한-이유" data-for="write-barrier가-필요한-이유">Write Barrier가 필요한 이유</a></li><li class="depth-1"><a href="#uobject-참조-유형-선택" data-for="uobject-참조-유형-선택">UObject 참조 유형 선택</a></li><li class="depth-1"><a href="#저장하는-참조와-잠깐-쓰는-포인터" data-for="저장하는-참조와-잠깐-쓰는-포인터">저장하는 참조와 잠깐 쓰는 포인터</a></li><li class="depth-1"><a href="#컨테이너에-저장할-때" data-for="컨테이너에-저장할-때">컨테이너에 저장할 때</a></li><li class="depth-1"><a href="#tmapfind의-반환-타입" data-for="tmapfind의-반환-타입">TMap::Find의 반환 타입</a></li><li class="depth-1"><a href="#t를-요구하는-api에는-바로-넘길-수-없다" data-for="t를-요구하는-api에는-바로-넘길-수-없다">T**를 요구하는 API에는 바로 넘길 수 없다</a></li><li class="depth-1"><a href="#raw-pointer를-명시적으로-꺼낼-때" data-for="raw-pointer를-명시적으로-꺼낼-때">raw pointer를 명시적으로 꺼낼 때</a></li><li class="depth-1"><a href="#actor와-uobject의-차이" data-for="actor와-uobject의-차이">Actor와 UObject의 차이</a></li><li class="depth-1"><a href="#비동기-코드와-tweakobjectptr" data-for="비동기-코드와-tweakobjectptr">비동기 코드와 TWeakObjectPtr</a></li><li class="depth-1"><a href="#gc와-멀티스레드" data-for="gc와-멀티스레드">GC와 멀티스레드</a></li><li class="depth-1"><a href="#정리" data-for="정리">정리</a></li><li class="depth-1"><a href="#검증-자료" data-for="검증-자료">검증 자료</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Created with <a href="https://quartz.jzhao.xyz/">Quartz v5.0.0</a> © 2026</p><ul><li><a href="https://github.com/HyeseonLikesPizza/yeoeunseon/tree/main/yeoeunseon/%EC%9C%A4%EC%97%AC%EB%AF%BC">원본 기록</a></li></ul></footer></div></div></body><script src="../static/resource-after-e13fffa1.js" type="application/javascript" data-persist="true"></script><script src="../static/resource-after-8b336f9a.js" type="application/javascript" data-persist="true"></script><script src="../static/resource-after-baba652b.js" type="application/javascript" data-persist="true"></script><script src="../static/resource-after-5eb75950.js" type="module" data-persist="true"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript" data-persist="true"></script><script src="../postscript-5e06a1c1.js" type="module" data-persist="true"></script></html>
